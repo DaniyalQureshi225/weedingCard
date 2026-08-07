@@ -89,6 +89,10 @@
         <button class="music-btn" id="musicToggle" aria-label="Play or pause background music" aria-pressed="false">
             <i class="fas fa-music note-icon" aria-hidden="true"></i>
             <span class="music-text">Play Music</span>
+            <span class="music-icon-mobile" aria-hidden="true">
+                <i class="fas fa-play" id="musicPlayIcon"></i>
+                <i class="fas fa-pause" id="musicPauseIcon" style="display: none;"></i>
+            </span>
             <span class="sound-wave" aria-hidden="true">
                 <span></span><span></span><span></span><span></span>
             </span>
@@ -220,7 +224,7 @@
                     <svg class="reveal-sun" viewBox="0 0 100 100" aria-hidden="true"><use href="#sun-emblem"></use></svg>
                     <p class="reveal-label">THE BIG DAY</p>
                     <h3 class="reveal-date">October 18, 2026</h3>
-                    <p class="reveal-day">Sunday &middot; A Royal Wedding</p>
+                    <!-- <p class="reveal-day">Sunday &middot; A Royal Wedding</p> -->
                     <p class="reveal-time"><i class="far fa-clock" aria-hidden="true"></i> Pheras at 7:30 PM</p>
                 </div>
                 <canvas class="scratch-canvas" id="scratchCanvas" role="button" tabindex="0" aria-label="Scratch the golden surface to reveal the wedding date"></canvas>
@@ -280,7 +284,7 @@
         <section id="couple" class="section couple-section">
             <div class="section-header fade-in" data-reveal="up">
                 <span class="sub-title">SAVE THE DATE</span>
-                <h2 class="section-title">The Royal Couple</h2>
+                <h2 class="section-title">The Main Characters</h2>
                 <div class="divider-ornament" aria-hidden="true"><i class="fas fa-gem"></i></div>
             </div>
 
@@ -296,17 +300,17 @@
                 </div>
 
                 <div class="couple-info">
-                    <span class="tagline">TO BE WED IN THE KINGDOM</span>
+                    <span class="tagline">THE BEGINNING OF FOREVER</span>
                     <h3 class="couple-names">
                         <span class="groom-name">Bakhtawar</span>
                         <span class="ampersand">&amp;</span>
                         <span class="bride-name">Khizar</span>
                     </h3>
                     <p class="parents-info">
-                       Daughter of Mrs. Abdul Khaliq &amp; Mr. Abdul Khaliq <br>
+                      Beloved Daughter of Mr. & Mrs. Abdul Khaliq <br>
                         <span class="ampersand-mini" aria-hidden="true"><i class="fas fa-heart"></i></span>
                         
-                        Son of Mrs. Adil Akhter &amp; Mr. Adil Akhter
+                        Son of Mr. & Mrs. Adil Akhter
                     </p>
                     <div class="couple-date-box">
                         <i class="fas fa-calendar-alt" aria-hidden="true"></i>
@@ -469,7 +473,7 @@
             <div class="venue-location-card glass-frame fade-in" data-reveal="up">
                 <div class="venue-location-icon"><i class="fas fa-location-dot" aria-hidden="true"></i></div>
                 <h3 class="venue-location-name">Largesse Banquet</h3>
-                <p class="venue-location-desc">An exquisite royal banquet hall, beautifully dressed for an evening of love, laughter, and celebration.</p>
+                <p class="venue-location-desc">An exquisite Largesse Banquet, beautifully dressed for an evening of love, laughter, and celebration.</p>
                 <p class="venue-location-address"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Karachi, Pakistan</p>
                 <a href="https://www.google.com/maps/place/Largesse+Banquet/@24.9757029,67.1143014,16.04z/data=!4m6!3m5!1s0x3eb3471dd8e49d89:0xb68bc9e5beb235b0!8m2!3d24.9753393!4d67.1191277!16s%2Fg%2F11ny06spv1" target="_blank" rel="noopener" class="btn btn-gold ripple">
                     Open in Google Maps
@@ -534,13 +538,13 @@
                 <div class="family-card glass-frame fade-in" data-reveal="left">
                     <div class="family-ornament" aria-hidden="true"><i class="fas fa-crown"></i></div>
                     <h3 class="family-role">The Groom's Family</h3>
-                    <p class="family-names">Son of Mrs. Adil Akhtar &amp; Mr. Adil Akhtar</p>
+                    <p class="family-names">Son of Mr. & Mrs. Adil Akhter</p>
                     <div class="family-seal" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#sun-emblem"></use></svg></div>
                 </div>
                 <div class="family-card glass-frame fade-in" data-reveal="right">
-                    <div class="family-ornament" aria-hidden="true"><i class="fas fa-flower"></i></div>
+                   <div class="family-ornament" aria-hidden="true"><i class="fas fa-crown"></i></div>
                     <h3 class="family-role">The Bride's Family</h3>
-                    <p class="family-names">Daughter of Mrs. Abdul Khaliq &amp; Mr. Abdul Khaliq</p>
+                    <p class="family-names">Daughter of Mr. & Mrs. Abdul Khaliq</p>
                     <div class="family-seal" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#sun-emblem"></use></svg></div>
                 </div>
             </div>
@@ -592,7 +596,7 @@
 
                 <div class="gift-card glass-dark fade-in" data-reveal="up">
                     <div class="gift-icon"><i class="fas fa-gift" aria-hidden="true"></i></div>
-                    <p class="gift-intro">The most treasured gift is your presence at our celebration. Should you wish to honour us further, a contribution towards our new kingdom would be warmly received.</p>
+                    <p class="gift-intro">Your presence will make our celebration truly special. We look forward to sharing this joyful occasion with you and creating beautiful memories together.</p>
                     <div class="gift-details">
                         <div class="gift-row"><span>Gathering</span><strong>8:00 PM</strong></div>
                         <div class="gift-row"><span>Nikha</span><strong>9:00 PM</strong></div>
@@ -645,7 +649,7 @@
                 </div>
             </div>
             <div class="footer-divider" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#sun-emblem"></use></svg></div>
-            <p class="footer-note">Crafted with <i class="fas fa-heart" aria-hidden="true"></i> for Bakhtawar &amp; Khizar's Royal Wedding</p>
+            <p class="footer-note">Crafted with <i class="fas fa-heart" aria-hidden="true"></i> for Bakhtawar &amp; Khizar's Wedding</p>
             <p class="footer-credit">Bakhtawar <i class="fas fa-heart" aria-hidden="true"></i> Khizar · October 18, 2026</p>
         </footer>
 
@@ -717,10 +721,10 @@
             <div class="mehndi-hero-content">
                 <span class="mehndi-eyebrow fade-in" data-reveal="up">✨ With the blessings of Allah ✨</span>
                 <h1 class="mehndi-hero-title fade-in" data-reveal="up">
-                    Good Vibes, Great Music<br>Bakhtawar's Mehndi See You There!
+                    Good Vibes, Great Host<br>Bakhtawar's Mehndi See You There!
                 </h1>
                 <p class="mehndi-hero-subtitle fade-in" data-reveal="up">
-                    Join us for an evening filled with colors, music, laughter, and unforgettable memories, with Zunera, Sajjal and Benazeer
+                    Join us for an evening filled with colors, music, laughter, and unforgettable memories, with Zunaira, Sajjal and Benazir
                 </p>
                 <!-- <div class="mehndi-hero-date fade-in" data-reveal="up">
                     <i class="fas fa-calendar-alt" aria-hidden="true"></i>

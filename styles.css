@@ -271,6 +271,7 @@ a { color: inherit; }
 .music-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     padding: 13px 22px;
     border-radius: 999px;
@@ -284,13 +285,14 @@ a { color: inherit; }
     border: 1.5px solid var(--border-gold);
     backdrop-filter: blur(12px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 18px rgba(244, 196, 48, 0.25);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 .music-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45), 0 0 28px rgba(244, 196, 48, 0.45);
 }
 .music-btn .note-icon { color: var(--gold); }
+.music-btn .music-icon-mobile { display: none; }
 
 .sound-wave { display: flex; align-items: flex-end; gap: 3px; height: 14px; }
 .sound-wave span {
@@ -304,6 +306,37 @@ a { color: inherit; }
 .music-btn.playing .sound-wave span:nth-child(3) { animation: wave 0.8s infinite ease-in-out 0.4s; }
 .music-btn.playing .sound-wave span:nth-child(4) { animation: wave 0.8s infinite ease-in-out 0.1s; }
 @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 14px; } }
+
+/* Mobile music button - circular icon-only */
+@media (max-width: 768px) {
+    .music-control-wrapper { bottom: 18px; right: 18px; }
+    .music-btn {
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        border-radius: 50%;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 16px rgba(244, 196, 48, 0.3);
+    }
+    .music-btn .note-icon { display: none; }
+    .music-btn .music-text { display: none; }
+    .music-btn .sound-wave { display: none; }
+    .music-btn .music-icon-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .music-btn .music-icon-mobile i {
+        font-size: 1.3rem;
+        color: var(--gold);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .music-btn.playing #musicPlayIcon { display: none; }
+    .music-btn.playing #musicPauseIcon { display: block; }
+    .music-btn:not(.playing) #musicPlayIcon { display: block; }
+    .music-btn:not(.playing) #musicPauseIcon { display: none; }
+    .music-btn:hover { transform: translateY(-2px) scale(1.05); }
+    .music-btn:active { transform: scale(0.95); }
+}
 
 /* ---------- Envelope overlay ---------- */
 .envelope-overlay {

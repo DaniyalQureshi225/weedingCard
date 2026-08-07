@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         envelopeOverlay.setAttribute('aria-hidden', 'true');
         mainContent.classList.remove('hidden');
 
-        startBackgroundMusic();
+        tryPlayMusic();
         initPetalCanvas();
         initStarCanvas();
         spawnLanterns();
@@ -71,22 +71,58 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
     const musicToggle = document.getElementById('musicToggle');
     const musicText = musicToggle ? musicToggle.querySelector('.music-text') : null;
+    const musicPlayIcon = document.getElementById('musicPlayIcon');
+    const musicPauseIcon = document.getElementById('musicPauseIcon');
+
+    const DEFAULT_VOLUME = 0.15;
 
     if (bgAudio) {
-        bgAudio.volume = 0.2;
+        bgAudio.volume = DEFAULT_VOLUME;
     }
 
-    function startBackgroundMusic() {
+    function updateMusicIcons() {
+        if (!musicToggle) return;
+        const playing = musicToggle.classList.contains('playing');
+        if (musicPlayIcon) musicPlayIcon.style.display = playing ? 'none' : 'block';
+        if (musicPauseIcon) musicPauseIcon.style.display = playing ? 'block' : 'none';
+    }
+
+    // Attempt to start music; if blocked, set up one-time interaction listener
+    function tryPlayMusic() {
         if (isPlaying || !bgAudio) return;
-        bgAudio.volume = 0.2;
-        bgAudio.play().then(() => {
-            isPlaying = true;
-            musicToggle.classList.add('playing');
-            musicToggle.setAttribute('aria-pressed', 'true');
-            musicText.textContent = 'Pause Music';
-        }).catch((e) => {
-            console.log('Audio autoplay restricted:', e);
-        });
+        bgAudio.volume = DEFAULT_VOLUME;
+        const playPromise = bgAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                musicToggle.classList.add('playing');
+                musicToggle.setAttribute('aria-pressed', 'true');
+                if (musicText) musicText.textContent = 'Pause Music';
+                updateMusicIcons();
+            }).catch((e) => {
+                console.log('Audio autoplay restricted:', e);
+                enablePlayOnInteraction();
+            });
+        }
+    }
+
+    // Set up one-time interaction listener to start music on first user interaction
+    function enablePlayOnInteraction() {
+        if (!bgAudio || isPlaying) return;
+        const events = ['click', 'touchstart', 'scroll', 'keydown'];
+        const handler = () => {
+            if (!isPlaying && bgAudio) {
+                bgAudio.play().then(() => {
+                    isPlaying = true;
+                    musicToggle.classList.add('playing');
+                    musicToggle.setAttribute('aria-pressed', 'true');
+                    if (musicText) musicText.textContent = 'Pause Music';
+                    updateMusicIcons();
+                }).catch(() => { /* ignore */ });
+            }
+            events.forEach(evt => document.removeEventListener(evt, handler, { passive: true }));
+        };
+        events.forEach(evt => document.addEventListener(evt, handler, { passive: true }));
     }
 
     function toggleMusic() {
@@ -96,13 +132,16 @@ document.addEventListener('DOMContentLoaded', () => {
             isPlaying = false;
             musicToggle.classList.remove('playing');
             musicToggle.setAttribute('aria-pressed', 'false');
-            musicText.textContent = 'Play Music';
+            if (musicText) musicText.textContent = 'Play Music';
+            updateMusicIcons();
         } else {
+            bgAudio.volume = DEFAULT_VOLUME;
             bgAudio.play().then(() => {
                 isPlaying = true;
                 musicToggle.classList.add('playing');
                 musicToggle.setAttribute('aria-pressed', 'true');
-                musicText.textContent = 'Pause Music';
+                if (musicText) musicText.textContent = 'Pause Music';
+                updateMusicIcons();
             }).catch((e) => {
                 console.log('Audio play restricted:', e);
             });
@@ -113,12 +152,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize mehndi features (after music vars are declared)
     if (isMehndi) {
-        startBackgroundMusic();
+        tryPlayMusic();
+        // Also try to enable interaction handler immediately for mehndi mode
+        enablePlayOnInteraction();
         initMehndiScratchCard();
         initMehndiPetals();
         triggerScrollObserver();
         initMehndiHashtagCopy();
+    } else {
+        // Wedding mode: start music after envelope opens
+        // (handled by openInvitation calling tryPlayMusic)
     }
+
+    // Ensure music icons are correct on initial load
+    updateMusicIcons();
 
     /* ------------------------------------------------------------------
        3. COUNTDOWN TIMER (wedding: October 18, 2026, 7:30 PM)
