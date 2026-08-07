@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shubh Vivah | Baktawer & Khizar Wedding Invitation</title>
+    <meta name="description" content="You are cordially invited to celebrate the wedding of Baktawer & Khizar. Explore event schedule, venue details, and RSVP.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Canvas for Floating Flower Petals -->
+    <canvas id="petalCanvas"></canvas>
+
+    <!-- Music Player Toggle Widget -->
+    <div class="music-control-wrapper" id="musicControl">
+        <button class="music-btn" id="musicToggle" aria-label="Toggle Music">
+            <i class="fas fa-music note-icon"></i>
+            <span class="music-text">Play Music</span>
+            <div class="sound-wave">
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </button>
+    </div>
+
+    <!-- Interactive Envelope Unseal Splash Overlay -->
+    <div class="envelope-overlay" id="envelopeOverlay">
+        <div class="envelope-card">
+            <div class="envelope-top"></div>
+            <div class="wax-seal" id="openInviteBtn">
+                <img src="assets/ganesha_motif.png" alt="Blessing Emblem" class="seal-img">
+                <span class="seal-text">TAP TO OPEN</span>
+            </div>
+            <div class="envelope-details">
+                <p class="sub-heading">TOGETHER WITH THEIR FAMILIES</p>
+                <h1 class="couple-preview">Baktawer & Khizar</h1>
+                <p class="date-preview">OCTOBER 18, 2026</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="main-content hidden" id="mainContent">
+
+        <!-- Header / Navigation Bar -->
+        <header class="navbar">
+            <div class="logo">A & A</div>
+            <nav class="nav-links">
+                <a href="#blessing">Blessings</a>
+                <a href="#couple">Save The Date</a>
+                <a href="#events">Ceremonies</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#rsvp" class="rsvp-nav-btn">RSVP</a>
+            </nav>
+        </header>
+
+        <!-- Section 1: Blessing & Auspicious Invocation -->
+        <section id="blessing" class="section blessing-section">
+            <div class="card-glass frame-border fade-in">
+                <div class="ganesha-container">
+                    <img src="assets/ganesha_motif.png" alt="Shree Ganesha" class="ganesha-img glow-pulse">
+                </div>
+                <div class="sanskrit-verse">
+                    <p class="shloka">॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ॥</p>
+                    <p class="shloka">॥ निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</p>
+                </div>
+                <div class="divider-gold"></div>
+                <p class="invitation-lead">
+                    With the divine blessings of Almighty & our beloved Ancestors,<br>
+                    we request the honor of your presence to grace the wedding celebrations of
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: Couple Spotlight & Save The Date -->
+        <section id="couple" class="section couple-section">
+            <div class="couple-card-container fade-in">
+                <div class="couple-frame">
+                    <img src="assets/hero_couple.png" alt="Baktawer & Khizar" class="couple-hero-img">
+                    <div class="frame-overlay"></div>
+                </div>
+
+                <div class="couple-title-box">
+                    <span class="tagline">SHUBH VIVAH</span>
+                    <h1 class="couple-names">
+                        <span class="groom-name">Aarav</span>
+                        <span class="ampersand">&</span>
+                        <span class="bride-name">Ananya</span>
+                    </h1>
+                    <p class="parents-info">
+                        Son of Mrs. Sunita & Mr. Rajesh Sharma<br>
+                        &<br>
+                        Daughter of Mrs. Kavita & Mr. Suresh Verma
+                    </p>
+                </div>
+
+                <!-- Countdown Timer -->
+                <div class="countdown-wrapper">
+                    <h3 class="countdown-title">COUNTING DOWN TO THE BIG DAY</h3>
+                    <div class="timer-grid" id="countdownTimer">
+                        <div class="timer-box">
+                            <span class="number" id="days">00</span>
+                            <span class="label">Days</span>
+                        </div>
+                        <div class="timer-box">
+                            <span class="number" id="hours">00</span>
+                            <span class="label">Hours</span>
+                        </div>
+                        <div class="timer-box">
+                            <span class="number" id="minutes">00</span>
+                            <span class="label">Mins</span>
+                        </div>
+                        <div class="timer-box">
+                            <span class="number" id="seconds">00</span>
+                            <span class="label">Secs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Event Ceremonies / Itinerary -->
+        <section id="events" class="section events-section">
+            <div class="section-header">
+                <span class="sub-title">WEDDING PROGRAM</span>
+                <h2 class="section-title">Auspicious Ceremonies</h2>
+                <div class="divider-gold center"></div>
+            </div>
+
+            <div class="events-grid">
+                <!-- Event 1: Haldi -->
+                <div class="event-card fade-in">
+                    <div class="event-badge yellow">HALDI CEREMONY</div>
+                    <div class="event-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3 class="event-name">Haldi & Chooda</h3>
+                    <p class="event-desc">An auspicious morning filled with turmeric blessings, floral laughter, and love.</p>
+                    <div class="event-details">
+                        <p><i class="far fa-calendar-alt"></i> Thursday, Dec 17, 2026</p>
+                        <p><i class="far fa-clock"></i> 10:00 AM Onwards</p>
+                        <p><i class="fas fa-user-tag"></i> Dress Code: Sunlit Yellow / Traditional</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Grand Courtyard, Royal Palace Hotel</p>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+
+                <!-- Event 2: Mehendi & Sangeet -->
+                <div class="event-card fade-in">
+                    <div class="event-badge green">SANGEET NIGHT</div>
+                    <div class="event-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3 class="event-name">Mehendi & Sangeet</h3>
+                    <p class="event-desc">A magical evening of intricate henna art, rhythmic beats, dance, and music.</p>
+                    <div class="event-details">
+                        <p><i class="far fa-calendar-alt"></i> Thursday, Dec 17, 2026</p>
+                        <p><i class="far fa-clock"></i> 07:00 PM Onwards</p>
+                        <p><i class="fas fa-user-tag"></i> Dress Code: Emerald & Glitz</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Royal Ballroom, Palace Grounds</p>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+
+                <!-- Event 3: Shubh Vivah -->
+                <div class="event-card featured fade-in">
+                    <div class="event-badge gold">THE WEDDING</div>
+                    <div class="event-img-wrap">
+                        <img src="assets/vivah_wedding.png" alt="Vivah Mandap" class="event-img">
+                    </div>
+                    <h3 class="event-name">Shubh Vivah (Pheras)</h3>
+                    <p class="event-desc">The sacred union of seven vows amidst Vedic chants and royal celebrations.</p>
+                    <div class="event-details">
+                        <p><i class="far fa-calendar-alt"></i> Friday, Dec 18, 2026</p>
+                        <p><i class="far fa-clock"></i> Baarat: 05:00 PM | Pheras: 07:30 PM</p>
+                        <p><i class="fas fa-user-tag"></i> Dress Code: Royal Traditional Couture</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Main Mandap, The Heritage Palace</p>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn primary">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+
+                <!-- Event 4: Grand Reception -->
+                <div class="event-card fade-in">
+                    <div class="event-badge maroon">RECEPTION</div>
+                    <div class="event-icon">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h3 class="event-name">Grand Reception</h3>
+                    <p class="event-desc">Join us for a magnificent dinner, toasts, and joyful celebration with the newlyweds.</p>
+                    <div class="event-details">
+                        <p><i class="far fa-calendar-alt"></i> Saturday, Dec 19, 2026</p>
+                        <p><i class="far fa-clock"></i> 07:30 PM Onwards</p>
+                        <p><i class="fas fa-user-tag"></i> Dress Code: Elegant Evening Formal</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Crystal Hall, The Heritage Palace</p>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Photo Gallery -->
+        <section id="gallery" class="section gallery-section">
+            <div class="section-header">
+                <span class="sub-title">MEMORIES</span>
+                <h2 class="section-title">Our Moments</h2>
+                <div class="divider-gold center"></div>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item fade-in">
+                    <img src="assets/hero_couple.png" alt="Gallery Photo 1" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="assets/vivah_wedding.png" alt="Gallery Photo 2" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="assets/ganesha_motif.png" alt="Gallery Photo 3" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: RSVP Form -->
+        <section id="rsvp" class="section rsvp-section">
+            <div class="card-glass rsvp-card fade-in">
+                <div class="section-header">
+                    <span class="sub-title">JOIN OUR CELEBRATION</span>
+                    <h2 class="section-title">R.S.V.P</h2>
+                    <p class="rsvp-subtext">Please respond by November 30, 2026 to help us prepare for your presence.</p>
+                    <div class="divider-gold center"></div>
+                </div>
+
+                <form id="rsvpForm" class="rsvp-form">
+                    <div class="form-group">
+                        <label for="guestName"><i class="fas fa-user"></i> Full Name *</label>
+                        <input type="text" id="guestName" required placeholder="e.g. Ramesh Kumar">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="guestEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" id="guestEmail" placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="guestPhone"><i class="fas fa-phone"></i> Phone Number *</label>
+                            <input type="tel" id="guestPhone" required placeholder="+91 98765 43210">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="attendance"><i class="fas fa-check-circle"></i> Will You Attend? *</label>
+                            <select id="attendance" required>
+                                <option value="Yes! Delighted to attend">Joyfully Accepts</option>
+                                <option value="Regretfully Decline">Regretfully Declines</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="guestCount"><i class="fas fa-users"></i> Total Guests</label>
+                            <select id="guestCount">
+                                <option value="1">1 Person</option>
+                                <option value="2">2 Persons</option>
+                                <option value="3">3 Persons</option>
+                                <option value="4+">4+ Persons</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="blessings"><i class="fas fa-heart"></i> Warm Wishes & Blessings for the Couple</label>
+                        <textarea id="blessings" rows="3" placeholder="Write your heartfelt message..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-rsvp-btn">
+                        <span>CONFIRM RSVP</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+
+                <!-- RSVP Success Confirmation Box -->
+                <div class="rsvp-success hidden" id="rsvpSuccess">
+                    <i class="fas fa-heart-circle-check success-icon"></i>
+                    <h3>Thank You for Responding!</h3>
+                    <p id="successMessage">Your response has been saved. We eagerly await to celebrate together!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Wedding Hashtag & Footer -->
+        <footer class="footer">
+            <div class="hashtag-box">
+                <p class="hashtag-text">Share your memories with us using our hashtag</p>
+                <div class="hashtag-pill" id="hashtagPill">
+                    <span id="hashtagText">#AaravWedsAnanya</span>
+                    <button id="copyHashtag" class="copy-btn"><i class="far fa-copy"></i> Copy</button>
+                </div>
+            </div>
+            <div class="footer-divider"></div>
+            <p class="footer-note">Crafted with ❤️ for Baktawer & Khizar's Shubh Vivah</p>
+        </footer>
+
+    </main>
+
+    <!-- Canvas Confetti Library CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
