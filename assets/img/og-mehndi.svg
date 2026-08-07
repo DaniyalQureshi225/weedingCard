@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="mbg" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#FFFBE6"/>
+      <stop offset="40%" stop-color="#FFF9C4"/>
+      <stop offset="100%" stop-color="#FFF3C4"/>
+    </linearGradient>
+    <linearGradient id="mgold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFD54F"/>
+      <stop offset="50%" stop-color="#FFB300"/>
+      <stop offset="100%" stop-color="#F9A825"/>
+    </linearGradient>
+    <radialGradient id="mglow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,179,0,0.15)"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <filter id="mshadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="#F57C00" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#mbg)"/>
+  <rect width="1200" height="630" fill="url(#mglow)"/>
+
+  <!-- Decorative mandala circles -->
+  <circle cx="150" cy="100" r="120" fill="none" stroke="rgba(249,168,37,0.1)" stroke-width="1"/>
+  <circle cx="150" cy="100" r="90" fill="none" stroke="rgba(249,168,37,0.08)" stroke-width="1"/>
+  <circle cx="1050" cy="530" r="110" fill="none" stroke="rgba(46,125,50,0.08)" stroke-width="1"/>
+  <circle cx="1050" cy="530" r="80" fill="none" stroke="rgba(46,125,50,0.06)" stroke-width="1"/>
+  <circle cx="600" cy="315" r="260" fill="none" stroke="rgba(249,168,37,0.06)" stroke-width="0.8"/>
+
+  <!-- Marigold flowers (top) -->
+  <g font-size="28" opacity="0.7">
+    <text x="100" y="50">🌼</text><text x="180" y="42">🌼</text><text x="260" y="50">🌼</text>
+    <text x="340" y="42">🌼</text><text x="420" y="50">🌼</text><text x="500" y="42">🌼</text>
+    <text x="580" y="50">🌼</text><text x="660" y="42">🌼</text><text x="740" y="50">🌼</text>
+    <text x="820" y="42">🌼</text><text x="900" y="50">🌼</text><text x="980" y="42">🌼</text>
+    <text x="1060" y="50">🌼</text><text x="1140" y="42">🌼</text>
+  </g>
+
+  <!-- Marigold flowers (bottom) -->
+  <g font-size="28" opacity="0.7">
+    <text x="100" y="600">🌼</text><text x="180" y="608">🌼</text><text x="260" y="600">🌼</text>
+    <text x="340" y="608">🌼</text><text x="420" y="600">🌼</text><text x="500" y="608">🌼</text>
+    <text x="580" y="600">🌼</text><text x="660" y="608">🌼</text><text x="740" y="600">🌼</text>
+    <text x="820" y="608">🌼</text><text x="900" y="600">🌼</text><text x="980" y="608">🌼</text>
+    <text x="1060" y="600">🌼</text><text x="1140" y="608">🌼</text>
+  </g>
+
+  <!-- Frame -->
+  <rect x="40" y="40" width="1120" height="550" rx="20" fill="none" stroke="rgba(249,168,37,0.35)" stroke-width="2"/>
+  <rect x="55" y="55" width="1090" height="520" rx="14" fill="none" stroke="rgba(249,168,37,0.2)" stroke-width="1"/>
+
+  <!-- Dhol icons -->
+  <g font-size="32" opacity="0.5">
+    <text x="250" y="155">🪘</text>
+    <text x="920" y="155">🪘</text>
+  </g>
+
+  <!-- Eyebrow -->
+  <text x="600" y="155" text-anchor="middle" fill="#F57C00" font-family="Georgia, serif" font-size="13" letter-spacing="5" font-weight="600">WITH THE BLESSINGS OF ALLAH</text>
+
+  <!-- Decorative line -->
+  <line x1="350" y1="175" x2="850" y2="175" stroke="url(#mgold)" stroke-width="1" opacity="0.5"/>
+
+  <!-- Names -->
+  <text x="600" y="260" text-anchor="middle" fill="#E65100" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="700" filter="url(#mshadow)">Baktawer</text>
+  <text x="600" y="315" text-anchor="middle" fill="#FF9800" font-family="Georgia, serif" font-size="36" font-style="italic">&amp;</text>
+  <text x="600" y="385" text-anchor="middle" fill="#E65100" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="700" filter="url(#mshadow)">Khizar</text>
+
+  <!-- Divider -->
+  <line x1="400" y1="415" x2="800" y2="415" stroke="url(#mgold)" stroke-width="1" opacity="0.5"/>
+
+  <!-- Subtitle -->
+  <text x="600" y="450" text-anchor="middle" fill="#558B2F" font-family="Georgia, serif" font-size="16" letter-spacing="3" font-weight="500">Mehndi Celebration</text>
+
+  <!-- Date -->
+  <text x="600" y="490" text-anchor="middle" fill="#F57C00" font-family="Georgia, serif" font-size="20" letter-spacing="2" font-weight="600">FRIDAY · 16 OCTOBER 2026</text>
+
+  <!-- Bottom line -->
+  <line x1="350" y1="515" x2="850" y2="515" stroke="url(#mgold)" stroke-width="1" opacity="0.5"/>
+
+  <!-- Bottom tagline -->
+  <text x="600" y="548" text-anchor="middle" fill="rgba(249,168,37,0.5)" font-family="Georgia, serif" font-size="12" letter-spacing="4">WEEDINGCARDBK.NETLIFY.APP/?MEHNDI=TRUE</text>
+</svg>
