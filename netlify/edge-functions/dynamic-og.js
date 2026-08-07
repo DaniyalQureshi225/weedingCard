@@ -12,7 +12,7 @@ export default async (request, context) => {
   if (isMehndi) {
     const mehndiTitle = "\uD83D\uDC9B You\u2019re Invited to Our Mehndi Celebration";
     const mehndiDesc = "Join us for a colorful Mehndi celebration filled with music, laughter, traditions, and unforgettable memories.";
-    const mehndiImage = origin + "/assets/img/og-mehndi.svg";
+    const mehndiImage = origin + "/assets/img/og-mehndi.png";
     const mehndiUrl = origin + "/?mehndi=true";
 
     html = replaceMeta(html, {
@@ -20,12 +20,12 @@ export default async (request, context) => {
       desc: mehndiDesc,
       image: mehndiImage,
       url: mehndiUrl,
-      siteName: "Baktawar & Khizar Mehndi Invitation"
+      siteName: "Bakhtawar & Khizar Mehndi Invitation"
     });
   } else {
     const wedTitle = "\uD83D\uDC8D You\u2019re Invited to Our Wedding";
     const wedDesc = "Join us as we celebrate the beginning of our forever. Your presence will make our special day even more memorable.";
-    const wedImage = origin + "/assets/img/og-wedding.svg";
+    const wedImage = origin + "/assets/img/og-wedding.png";
     const wedUrl = origin + "/";
 
     html = replaceMeta(html, {
@@ -33,7 +33,7 @@ export default async (request, context) => {
       desc: wedDesc,
       image: wedImage,
       url: wedUrl,
-      siteName: "Baktawar & Khizar Wedding Invitation"
+      siteName: "Bakhtawar & Khizar Wedding Invitation"
     });
   }
 
@@ -48,6 +48,8 @@ function replaceMeta(html, { title, desc, image, url, siteName }) {
     <meta property="og:title" content="${esc(title)}">
     <meta property="og:description" content="${esc(desc)}">
     <meta property="og:image" content="${esc(image)}">
+    <meta property="og:image:secure_url" content="${esc(image)}">
+    <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="${esc(url)}">
