@@ -3,48 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shubh Vivah | Baktawer & Khizar Wedding Invitation</title>
-    <meta name="description" content="You are cordially invited to celebrate the wedding of Baktawer & Khizar. Explore event schedule, venue details, and RSVP.">
-    
+    <title>Baktawer & Khizar | A Royal Fairytale Wedding Invitation</title>
+    <meta name="description" content="You are cordially invited to the royal fairytale wedding of Baktawer & Khizar on Sunday, October 18, 2026. Explore our story, ceremonies, venue and RSVP.">
+    <meta property="og:title" content="Baktawer & Khizar | A Royal Fairytale Wedding">
+    <meta property="og:description" content="Join us for a magical celebration of love on October 18, 2026.">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%235A189A'/%3E%3Ccircle cx='50' cy='50' r='30' fill='%23FFD166'/%3E%3C/svg%3E">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Dancing+Script:wght@400;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Canvas for Floating Flower Petals -->
-    <canvas id="petalCanvas"></canvas>
+    <!-- Hidden SVG symbol library (golden sun emblem, butterfly, lantern) -->
+    <svg class="svg-defs" aria-hidden="true" focusable="false">
+        <symbol id="sun-emblem" viewBox="0 0 100 100">
+            <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(0 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(15 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(30 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(45 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(60 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(75 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(90 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(105 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(120 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(135 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(150 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(165 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(180 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(195 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(210 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(225 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(240 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(255 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(270 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(285 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(300 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(315 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(330 50 50)"/>
+                <line x1="50" y1="46" x2="50" y2="7" transform="rotate(345 50 50)"/>
+            </g>
+            <circle cx="50" cy="50" r="16" fill="currentColor"/>
+            <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".5"/>
+        </symbol>
+        <symbol id="lantern-float" viewBox="0 0 40 64">
+            <path d="M20 4c3 6 3 10 0 14h-2c-3-4-3-8 0-14z" fill="currentColor"/>
+            <rect x="10" y="18" width="20" height="30" rx="10" fill="currentColor"/>
+            <rect x="13" y="21" width="14" height="24" rx="7" fill="rgba(255,255,255,.35)"/>
+            <path d="M20 48v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M14 56h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </symbol>
+    </svg>
+
+    <!-- Twinkling starfield -->
+    <canvas id="starsCanvas" aria-hidden="true"></canvas>
+    <!-- Floating golden petals / magic dust -->
+    <canvas id="petalCanvas" aria-hidden="true"></canvas>
+
+    <!-- Floating lanterns across the site -->
+    <div class="floating-lanterns" id="floatingLanterns" aria-hidden="true"></div>
 
     <!-- Music Player Toggle Widget -->
     <div class="music-control-wrapper" id="musicControl">
-        <button class="music-btn" id="musicToggle" aria-label="Toggle Music">
-            <i class="fas fa-music note-icon"></i>
+        <button class="music-btn" id="musicToggle" aria-label="Play or pause background music" aria-pressed="false">
+            <i class="fas fa-music note-icon" aria-hidden="true"></i>
             <span class="music-text">Play Music</span>
-            <div class="sound-wave">
+            <span class="sound-wave" aria-hidden="true">
                 <span></span><span></span><span></span><span></span>
-            </div>
+            </span>
         </button>
+        <audio id="bgAudio" src="assets/sound/bkw.mp3" loop preload="metadata"></audio>
     </div>
 
     <!-- Interactive Envelope Unseal Splash Overlay -->
-    <div class="envelope-overlay" id="envelopeOverlay">
+    <div class="envelope-overlay" id="envelopeOverlay" role="dialog" aria-modal="true" aria-label="Wedding invitation">
+        <div class="envelope-sky" aria-hidden="true">
+            <div class="envelope-lanterns" id="envelopeLanterns"></div>
+            <span class="sparkle sp-1">✦</span>
+            <span class="sparkle sp-2">✦</span>
+            <span class="sparkle sp-3">✦</span>
+            <span class="sparkle sp-4">✦</span>
+        </div>
         <div class="envelope-card">
-            <div class="envelope-top"></div>
-            <div class="wax-seal" id="openInviteBtn">
-                <img src="assets/ganesha_motif.png" alt="Blessing Emblem" class="seal-img">
+            <span class="envelope-crown" aria-hidden="true"><i class="fas fa-crown"></i></span>
+            <p class="sub-heading">TOGETHER WITH THEIR FAMILIES</p>
+            <h1 class="couple-preview">Baktawer & Khizar</h1>
+            <p class="date-preview">SUNDAY · OCTOBER 18, 2026</p>
+            <button class="wax-seal" id="openInviteBtn" aria-label="Tap to open the invitation">
+                <svg class="seal-sun" viewBox="0 0 100 100" aria-hidden="true"><use href="#sun-emblem"></use></svg>
                 <span class="seal-text">TAP TO OPEN</span>
-            </div>
-            <div class="envelope-details">
-                <p class="sub-heading">TOGETHER WITH THEIR FAMILIES</p>
-                <h1 class="couple-preview">Baktawer & Khizar</h1>
-                <p class="date-preview">OCTOBER 18, 2026</p>
-            </div>
+            </button>
         </div>
     </div>
 
@@ -52,61 +108,61 @@
     <main class="main-content hidden" id="mainContent">
 
         <!-- Header / Navigation Bar -->
-        <header class="navbar">
-            <div class="logo">A & A</div>
-            <nav class="nav-links">
+        <header class="navbar" id="navbar">
+            <a href="#home" class="logo" aria-label="Back to top">
+                <svg class="logo-sun" viewBox="0 0 100 100" aria-hidden="true"><use href="#sun-emblem"></use></svg>
+                <span class="logo-text">B &amp; K</span>
+            </a>
+            <nav class="nav-links" id="navLinks" aria-label="Primary navigation">
                 <a href="#blessing">Blessings</a>
+                <a href="#story">Story</a>
                 <a href="#couple">Save The Date</a>
                 <a href="#events">Ceremonies</a>
                 <a href="#gallery">Gallery</a>
                 <a href="#rsvp" class="rsvp-nav-btn">RSVP</a>
             </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+                <span></span><span></span><span></span>
+            </button>
         </header>
 
-        <!-- Section 1: Blessing & Auspicious Invocation -->
-        <section id="blessing" class="section blessing-section">
-            <div class="card-glass frame-border fade-in">
-                <div class="ganesha-container">
-                    <img src="assets/ganesha_motif.png" alt="Shree Ganesha" class="ganesha-img glow-pulse">
-                </div>
-                <div class="sanskrit-verse">
-                    <p class="shloka">॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ ॥</p>
-                    <p class="shloka">॥ निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥</p>
-                </div>
-                <div class="divider-gold"></div>
-                <p class="invitation-lead">
-                    With the divine blessings of Almighty & our beloved Ancestors,<br>
-                    we request the honor of your presence to grace the wedding celebrations of
-                </p>
+        <!-- HERO -->
+        <section id="home" class="hero">
+            <div class="hero-bg" id="heroBg">
+                <img src="assets/img/hero-castle.jpg" alt="The royal castle glowing at dusk beneath a sky full of lanterns" class="hero-img" width="1920" height="1080" fetchpriority="high">
             </div>
-        </section>
+            <div class="hero-overlay" aria-hidden="true"></div>
+            <div class="hero-vignette" aria-hidden="true"></div>
 
-        <!-- Section 2: Couple Spotlight & Save The Date -->
-        <section id="couple" class="section couple-section">
-            <div class="couple-card-container fade-in">
-                <div class="couple-frame">
-                    <img src="assets/hero_couple.png" alt="Baktawer & Khizar" class="couple-hero-img">
-                    <div class="frame-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-eyebrow fade-in" data-reveal="up">
+                    <i class="fas fa-crown eyebrow-icon" aria-hidden="true"></i>
+                    <span>Together With Their Families</span>
                 </div>
 
-                <div class="couple-title-box">
-                    <span class="tagline">SHUBH VIVAH</span>
-                    <h1 class="couple-names">
-                        <span class="groom-name">Aarav</span>
-                        <span class="ampersand">&</span>
-                        <span class="bride-name">Ananya</span>
-                    </h1>
-                    <p class="parents-info">
-                        Son of Mrs. Sunita & Mr. Rajesh Sharma<br>
-                        &<br>
-                        Daughter of Mrs. Kavita & Mr. Suresh Verma
-                    </p>
+                <h1 class="hero-names fade-in" data-reveal="up">
+                    <span class="groom-name">Baktawer</span>
+                    <span class="ampersand" aria-hidden="true"><i class="fas fa-heart"></i></span>
+                    <span class="bride-name">Khizar</span>
+                </h1>
+
+                <p class="hero-invite fade-in" data-reveal="up">
+                    request the honour of your presence at the celebration of their union
+                </p>
+
+                <!-- <div class="hero-date fade-in" data-reveal="up">
+                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                    Sunday, October 18, 2026
+                </div> -->
+
+                <div class="hero-cta fade-in" data-reveal="up">
+                    <a href="#rsvp" class="btn btn-gold ripple"><i class="fas fa-ring" aria-hidden="true"></i> RSVP Now</a>
+                    <a href="#story" class="btn btn-ghost ripple"><i class="fas fa-book-open" aria-hidden="true"></i> Our Story</a>
                 </div>
 
-                <!-- Countdown Timer -->
-                <div class="countdown-wrapper">
-                    <h3 class="countdown-title">COUNTING DOWN TO THE BIG DAY</h3>
-                    <div class="timer-grid" id="countdownTimer">
+                <div class="hero-countdown fade-in" data-reveal="up">
+                    <p class="countdown-label"><i class="fas fa-hourglass-half" aria-hidden="true"></i> Counting down to happily ever after</p>
+                    <div class="timer-grid" id="countdownTimer" role="timer" aria-live="off">
                         <div class="timer-box">
                             <span class="number" id="days">00</span>
                             <span class="label">Days</span>
@@ -126,205 +182,698 @@
                     </div>
                 </div>
             </div>
+
+            <a href="#blessing" class="scroll-down" aria-label="Scroll to explore">
+                <span></span>
+            </a>
         </section>
 
-        <!-- Section 3: Event Ceremonies / Itinerary -->
-        <section id="events" class="section events-section">
-            <div class="section-header">
+         <!-- SCRATCH & REVEAL -->
+        <section id="scratch" class="section scratch-section">
+            <div class="section-header fade-in" data-reveal="up">
+                <span class="sub-title">A LITTLE MAGIC</span>
+                <h2 class="section-title">Scratch &amp; Reveal</h2>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-wand-magic-sparkles"></i></div>
+            </div>
+
+            <div class="scratch-card fade-in" data-reveal="up" id="scratchCard">
+                <div class="scratch-reveal" id="scratchReveal">
+                    <span class="reveal-sparkle rsp-1" aria-hidden="true">✦</span>
+                    <span class="reveal-sparkle rsp-2" aria-hidden="true">✦</span>
+                    <span class="reveal-sparkle rsp-3" aria-hidden="true">✦</span>
+                    <span class="reveal-heart rh-1" aria-hidden="true"><i class="fas fa-heart"></i></span>
+                    <span class="reveal-heart rh-2" aria-hidden="true"><i class="fas fa-heart"></i></span>
+                    <span class="reveal-heart rh-3" aria-hidden="true"><i class="fas fa-heart"></i></span>
+                    <svg class="reveal-sun" viewBox="0 0 100 100" aria-hidden="true"><use href="#sun-emblem"></use></svg>
+                    <p class="reveal-label">THE BIG DAY</p>
+                    <h3 class="reveal-date">October 18, 2026</h3>
+                    <p class="reveal-day">Sunday &middot; A Royal Wedding</p>
+                    <p class="reveal-time"><i class="far fa-clock" aria-hidden="true"></i> Pheras at 7:30 PM</p>
+                </div>
+                <canvas class="scratch-canvas" id="scratchCanvas" role="button" tabindex="0" aria-label="Scratch the golden surface to reveal the wedding date"></canvas>
+            </div>
+            <p class="scratch-hint">Use your finger or cursor to scratch away the gold foil</p>
+        </section>
+
+        <!-- BLESSING -->
+        <section id="blessing" class="section blessing-section">
+            <div class="card-glass frame-border fade-in" data-reveal="up">
+                <div class="blessing-sun">
+                    <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#sun-emblem"></use></svg>
+                </div>
+                <div class="sanskrit-verse">
+                    <p class="shloka">॥ اللہ تعالیٰ اس رشتے کو محبت، رحمت، ॥</p>
+                    <p class="shloka">॥ برکت اور سکون سے ہمیشہ آباد رکھے۔ آمین ॥</p>
+                </div>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-star-and-crescent"></i></div>
+                <p class="invitation-lead">
+                    With the divine blessings of Almighty &amp; our beloved Ancestors,<br>
+                    we request the honor of your presence to grace the wedding celebrations of
+                </p>
+            </div>
+        </section>
+
+        <!-- STORY -->
+      <!-- <section id="story" class="section story-section">
+            <div class="section-header fade-in" data-reveal="up">
+                <span class="sub-title"><i class="fas fa-crown" aria-hidden="true"></i> OUR LOVE STORY <i class="fas fa-crown" aria-hidden="true"></i></span>
+                <h2 class="section-title">Once Upon a Time</h2>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-feather"></i></div>
+            </div>
+
+            <div class="story-grid">
+                <div class="story-image-frame fade-in" data-reveal="left">
+                    <img src="assets/img/story-forest.jpg" alt="An enchanted forest path wrapped in golden mist" class="story-img" width="1600" height="1000" loading="lazy">
+                    <div class="story-img-frame-glow" aria-hidden="true"></div>
+                </div>
+                <div class="story-text fade-in" data-reveal="right">
+                    <p>It began on a golden evening, in a kingdom that felt a little like magic. Two souls, brought together by a twist of fate, discovered that the world had quietly been writing a story for them all along.</p>
+                    <p>What started as a single glance bloomed into endless conversations, shared dreams, and a love that grew brighter with every passing day — like lanterns rising into a night sky.</p>
+                    <div class="story-quote">
+                        <i class="fas fa-quote-left" aria-hidden="true"></i>
+                        <span>“Some things are so extraordinary they could only be destiny.”</span>
+                        <i class="fas fa-quote-right" aria-hidden="true"></i>
+                    </div>
+                    <div class="story-tags">
+                        <span class="story-tag"><i class="fas fa-heart" aria-hidden="true"></i> A fairytale in the making</span>
+                        <span class="story-tag"><i class="fas fa-star" aria-hidden="true"></i> Two hearts, one kingdom</span>
+                        <span class="story-tag"><i class="fas fa-feather" aria-hidden="true"></i> Happily ever after awaits</span>
+                    </div>
+                </div>
+            </div>
+        </section>  -->
+
+        <!-- COUPLE / SAVE THE DATE -->
+        <section id="couple" class="section couple-section">
+            <div class="section-header fade-in" data-reveal="up">
+                <span class="sub-title">SAVE THE DATE</span>
+                <h2 class="section-title">The Royal Couple</h2>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-gem"></i></div>
+            </div>
+
+            <div class="couple-card glass-frame fade-in" data-reveal="up">
+                <div class="couple-media">
+                    <div class="couple-frame">
+                        <img src="assets/img/couple.jpg" alt="The royal couple Baktawer and Khizar" class="couple-hero-img" width="900" height="1150" loading="lazy">
+                        <span class="frame-corner tl" aria-hidden="true"></span>
+                        <span class="frame-corner tr" aria-hidden="true"></span>
+                        <span class="frame-corner bl" aria-hidden="true"></span>
+                        <span class="frame-corner br" aria-hidden="true"></span>
+                    </div>
+                </div>
+
+                <div class="couple-info">
+                    <span class="tagline">TO BE WED IN THE KINGDOM</span>
+                    <h3 class="couple-names">
+                        <span class="groom-name">Baktawer</span>
+                        <span class="ampersand">&amp;</span>
+                        <span class="bride-name">Khizar</span>
+                    </h3>
+                    <p class="parents-info">
+                        Son of Mrs. Adil Akhter &amp; Mr. Adil Akhter<br>
+                        <span class="ampersand-mini" aria-hidden="true"><i class="fas fa-heart"></i></span>
+                        Daughter of Mrs. Abdul Khaliq &amp; Mr. Abdul Khaliq
+                    </p>
+                    <div class="couple-date-box">
+                        <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                        <span>Sunday, October 18, 2026</span>
+                    </div>
+                    <a href="#rsvp" class="btn btn-gold ripple"><i class="fas fa-feather-alt" aria-hidden="true"></i> Join Our Celebration</a>
+                </div>
+            </div>
+        </section>
+
+       
+
+        <!-- TIMELINE -->
+        <!-- <section id="timeline" class="section timeline-section">
+            <div class="section-header fade-in" data-reveal="up">
+                <span class="sub-title">HOW WE GOT HERE</span>
+                <h2 class="section-title">Our Journey</h2>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-seedling"></i></div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item fade-in" data-reveal="left">
+                    <div class="timeline-dot" aria-hidden="true"><i class="fas fa-hand-sparkles"></i></div>
+                    <div class="timeline-card glass-dark">
+                        <span class="timeline-year">2019</span>
+                        <h3>The First Meeting</h3>
+                        <p>It began with a hello that neither of us ever forgot — a chance encounter that felt like the turning of a fairytale page.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in" data-reveal="right">
+                    <div class="timeline-dot" aria-hidden="true"><i class="fas fa-seedling"></i></div>
+                    <div class="timeline-card glass-dark">
+                        <span class="timeline-year">2021</span>
+                        <h3>Falling in Love</h3>
+                        <p>Shared dreams and long conversations slowly wove two separate lives into one golden thread of devotion.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in" data-reveal="left">
+                    <div class="timeline-dot" aria-hidden="true"><i class="fas fa-ring"></i></div>
+                    <div class="timeline-card glass-dark">
+                        <span class="timeline-year">2025</span>
+                        <h3>The Proposal</h3>
+                        <p>On a lantern-lit evening, beneath a sky full of stars, one heart asked the other for forever.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in" data-reveal="right">
+                    <div class="timeline-dot" aria-hidden="true"><i class="fas fa-crown"></i></div>
+                    <div class="timeline-card glass-dark">
+                        <span class="timeline-year">2026</span>
+                        <h3>Happily Ever After</h3>
+                        <p>Two families, one kingdom, and the celebration of a love story meant to be told for generations.</p>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+        <!-- EVENTS -->
+        <!-- <section id="events" class="section events-section">
+            <div class="section-header fade-in" data-reveal="up">
                 <span class="sub-title">WEDDING PROGRAM</span>
-                <h2 class="section-title">Auspicious Ceremonies</h2>
-                <div class="divider-gold center"></div>
+                <h2 class="section-title">Royal Ceremonies</h2>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-landmark"></i></div>
             </div>
 
             <div class="events-grid">
-                <!-- Event 1: Haldi -->
-                <div class="event-card fade-in">
-                    <div class="event-badge yellow">HALDI CEREMONY</div>
-                    <div class="event-icon">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <h3 class="event-name">Haldi & Chooda</h3>
+                <article class="event-card glass-frame fade-in" data-reveal="up">
+                    <div class="event-badge sun">HALDI CEREMONY</div>
+                    <div class="event-icon"><i class="fas fa-sun" aria-hidden="true"></i></div>
+                    <h3 class="event-name">Haldi &amp; Chooda</h3>
                     <p class="event-desc">An auspicious morning filled with turmeric blessings, floral laughter, and love.</p>
                     <div class="event-details">
-                        <p><i class="far fa-calendar-alt"></i> Thursday, Dec 17, 2026</p>
-                        <p><i class="far fa-clock"></i> 10:00 AM Onwards</p>
-                        <p><i class="fas fa-user-tag"></i> Dress Code: Sunlit Yellow / Traditional</p>
-                        <p><i class="fas fa-map-marker-alt"></i> Grand Courtyard, Royal Palace Hotel</p>
+                        <p><i class="far fa-calendar-alt" aria-hidden="true"></i> Thursday, Oct 15, 2026</p>
+                        <p><i class="far fa-clock" aria-hidden="true"></i> 10:00 AM Onwards</p>
+                        <p><i class="fas fa-user-tag" aria-hidden="true"></i> Dress Code: Sunlit Yellow / Traditional</p>
+                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Grand Courtyard, Royal Palace Hotel</p>
                     </div>
-                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn">
-                        <i class="fas fa-directions"></i> Get Directions
-                    </a>
-                </div>
+                    <a href="https://maps.app.goo.gl/ybD6WEpdtkSGtnef6?g_st=ac" target="_blank" rel="noopener" class="map-link-btn ripple"><i class="fas fa-directions" aria-hidden="true"></i> Get Directions</a>
+                </article>
 
-                <!-- Event 2: Mehendi & Sangeet -->
-                <div class="event-card fade-in">
-                    <div class="event-badge green">SANGEET NIGHT</div>
-                    <div class="event-icon">
-                        <i class="fas fa-music"></i>
-                    </div>
-                    <h3 class="event-name">Mehendi & Sangeet</h3>
+                <article class="event-card glass-frame fade-in" data-reveal="up">
+                    <div class="event-badge bloom">SANGEET NIGHT</div>
+                    <div class="event-icon"><i class="fas fa-music" aria-hidden="true"></i></div>
+                    <h3 class="event-name">Mehendi &amp; Sangeet</h3>
                     <p class="event-desc">A magical evening of intricate henna art, rhythmic beats, dance, and music.</p>
                     <div class="event-details">
-                        <p><i class="far fa-calendar-alt"></i> Thursday, Dec 17, 2026</p>
-                        <p><i class="far fa-clock"></i> 07:00 PM Onwards</p>
-                        <p><i class="fas fa-user-tag"></i> Dress Code: Emerald & Glitz</p>
-                        <p><i class="fas fa-map-marker-alt"></i> Royal Ballroom, Palace Grounds</p>
+                        <p><i class="far fa-calendar-alt" aria-hidden="true"></i> Friday, Oct 16, 2026</p>
+                        <p><i class="far fa-clock" aria-hidden="true"></i> 07:00 PM Onwards</p>
+                        <p><i class="fas fa-user-tag" aria-hidden="true"></i> Dress Code: Emerald &amp; Glitz</p>
+                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Royal Ballroom, Palace Grounds</p>
                     </div>
-                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn">
-                        <i class="fas fa-directions"></i> Get Directions
-                    </a>
-                </div>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn ripple"><i class="fas fa-directions" aria-hidden="true"></i> Get Directions</a>
+                </article>
 
-                <!-- Event 3: Shubh Vivah -->
-                <div class="event-card featured fade-in">
+                <article class="event-card glass-frame featured fade-in" data-reveal="up">
                     <div class="event-badge gold">THE WEDDING</div>
                     <div class="event-img-wrap">
-                        <img src="assets/vivah_wedding.png" alt="Vivah Mandap" class="event-img">
+                        <img src="assets/img/event-vivah.jpg" alt="The royal couple on their wedding day" class="event-img" width="900" height="700" loading="lazy">
                     </div>
                     <h3 class="event-name">Shubh Vivah (Pheras)</h3>
                     <p class="event-desc">The sacred union of seven vows amidst Vedic chants and royal celebrations.</p>
                     <div class="event-details">
-                        <p><i class="far fa-calendar-alt"></i> Friday, Dec 18, 2026</p>
-                        <p><i class="far fa-clock"></i> Baarat: 05:00 PM | Pheras: 07:30 PM</p>
-                        <p><i class="fas fa-user-tag"></i> Dress Code: Royal Traditional Couture</p>
-                        <p><i class="fas fa-map-marker-alt"></i> Main Mandap, The Heritage Palace</p>
+                        <p><i class="far fa-calendar-alt" aria-hidden="true"></i> Sunday, Oct 18, 2026</p>
+                        <p><i class="far fa-clock" aria-hidden="true"></i> Baarat: 05:00 PM | Pheras: 07:30 PM</p>
+                        <p><i class="fas fa-user-tag" aria-hidden="true"></i> Dress Code: Royal Traditional Couture</p>
+                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Main Mandap, The Heritage Palace</p>
                     </div>
-                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn primary">
-                        <i class="fas fa-directions"></i> Get Directions
-                    </a>
-                </div>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn primary ripple"><i class="fas fa-directions" aria-hidden="true"></i> Get Directions</a>
+                </article>
 
-                <!-- Event 4: Grand Reception -->
-                <div class="event-card fade-in">
-                    <div class="event-badge maroon">RECEPTION</div>
-                    <div class="event-icon">
-                        <i class="fas fa-glass-cheers"></i>
-                    </div>
+                <article class="event-card glass-frame fade-in" data-reveal="up">
+                    <div class="event-badge twilight">RECEPTION</div>
+                    <div class="event-icon"><i class="fas fa-champagne-glasses" aria-hidden="true"></i></div>
                     <h3 class="event-name">Grand Reception</h3>
                     <p class="event-desc">Join us for a magnificent dinner, toasts, and joyful celebration with the newlyweds.</p>
                     <div class="event-details">
-                        <p><i class="far fa-calendar-alt"></i> Saturday, Dec 19, 2026</p>
-                        <p><i class="far fa-clock"></i> 07:30 PM Onwards</p>
-                        <p><i class="fas fa-user-tag"></i> Dress Code: Elegant Evening Formal</p>
-                        <p><i class="fas fa-map-marker-alt"></i> Crystal Hall, The Heritage Palace</p>
+                        <p><i class="far fa-calendar-alt" aria-hidden="true"></i> Monday, Oct 19, 2026</p>
+                        <p><i class="far fa-clock" aria-hidden="true"></i> 07:30 PM Onwards</p>
+                        <p><i class="fas fa-user-tag" aria-hidden="true"></i> Dress Code: Elegant Evening Formal</p>
+                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Crystal Hall, The Heritage Palace</p>
                     </div>
-                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn">
-                        <i class="fas fa-directions"></i> Get Directions
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="map-link-btn ripple"><i class="fas fa-directions" aria-hidden="true"></i> Get Directions</a>
+                </article>
+            </div>
+        </section> -->
+
+        <!-- VENUE -->
+        <!-- <section id="venue" class="section venue-section">
+            <div class="venue-backdrop" aria-hidden="true">
+                <img src="assets/img/venue-castle.jpg" alt="" class="venue-bg-img" width="1600" height="1000" loading="lazy">
+                <div class="venue-overlay" aria-hidden="true"></div>
+            </div>
+            <div class="venue-content">
+                <div class="section-header fade-in" data-reveal="up">
+                    <span class="sub-title">WHERE WE GATHER</span>
+                    <h2 class="section-title">The Royal Venue</h2>
+                    <div class="divider-ornament" aria-hidden="true"><i class="fas fa-castle"></i></div>
+                </div>
+                <div class="venue-card glass-dark fade-in" data-reveal="up">
+                    <div class="venue-icon"><i class="fas fa-castle" aria-hidden="true"></i></div>
+                    <h3 class="venue-name">The Largesse Banquet</h3>
+                    <p class="venue-address"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Super Highway</p>
+                    <div class="venue-features">
+                        <span class="feature-chip"><i class="fas fa-columns" aria-hidden="true"></i> Hall B</span>
+                        <span class="feature-chip"><i class="fas fa-gem" aria-hidden="true"></i> Valet Parking</span>
+                    
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn-gold ripple"><i class="fas fa-directions" aria-hidden="true"></i> Get Directions</a>
+                </div>
+            </div>
+        </section> -->
+
+        <!-- VENUE LOCATION -->
+        <section id="venue-location" class="section venue-location-section">
+            <div class="section-header fade-in" data-reveal="up">
+                <span class="sub-title">FIND THE VENUE</span>
+                <h2 class="section-title">Venue Location</h2>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-map-location-dot"></i></div>
+            </div>
+
+            <div class="venue-location-card glass-frame fade-in" data-reveal="up">
+                <div class="venue-location-icon"><i class="fas fa-location-dot" aria-hidden="true"></i></div>
+                <h3 class="venue-location-name">Largesse Banquet</h3>
+                <p class="venue-location-desc">An exquisite royal banquet hall, beautifully dressed for an evening of love, laughter, and celebration.</p>
+                <p class="venue-location-address"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Karachi, Pakistan</p>
+                <a href="https://www.google.com/maps/place/Largesse+Banquet/@24.9757029,67.1143014,16.04z/data=!4m6!3m5!1s0x3eb3471dd8e49d89:0xb68bc9e5beb235b0!8m2!3d24.9753393!4d67.1191277!16s%2Fg%2F11ny06spv1" target="_blank" rel="noopener" class="btn btn-gold ripple">
+                    Open in Google Maps
+                    <i class="fas fa-arrow-right map-arrow" aria-hidden="true"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- GALLERY -->
+        <!-- <section id="gallery" class="section gallery-section">
+            <div class="section-header fade-in" data-reveal="up">
+                <span class="sub-title">CHERISHED MOMENTS</span>
+                <h2 class="section-title">Gallery of Memories</h2>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-camera"></i></div>
+            </div>
+
+            <div class="gallery-masonry">
+                <figure class="gallery-item fade-in" data-reveal="up" tabindex="0" role="button" aria-label="View full image: Floating lanterns rising into the night sky">
+                    <img src="assets/img/gallery-lanterns.jpg" alt="Floating lanterns rising into the night sky" class="gallery-img" width="800" height="1000" loading="lazy">
+                    <figcaption class="gallery-caption"><i class="fas fa-search-plus" aria-hidden="true"></i> Night of the Lanterns</figcaption>
+                </figure>
+                <figure class="gallery-item fade-in" data-reveal="up" tabindex="0" role="button" aria-label="View full image: The royal castle at sunset">
+                    <img src="assets/img/gallery-castle.jpg" alt="The royal castle glowing at sunset" class="gallery-img" width="1000" height="800" loading="lazy">
+                    <figcaption class="gallery-caption"><i class="fas fa-search-plus" aria-hidden="true"></i> Kingdom at Dusk</figcaption>
+                </figure>
+                <figure class="gallery-item fade-in" data-reveal="up" tabindex="0" role="button" aria-label="View full image: Purple and pink sunset sky">
+                    <img src="assets/img/gallery-sunset.jpg" alt="A serene purple and pink sunset sky" class="gallery-img" width="900" height="700" loading="lazy">
+                    <figcaption class="gallery-caption"><i class="fas fa-search-plus" aria-hidden="true"></i> Golden Hour</figcaption>
+                </figure>
+                <figure class="gallery-item fade-in" data-reveal="up" tabindex="0" role="button" aria-label="View full image: Bouquet of purple roses">
+                    <img src="assets/img/gallery-roses.jpg" alt="A bouquet of deep purple roses" class="gallery-img" width="900" height="1100" loading="lazy">
+                    <figcaption class="gallery-caption"><i class="fas fa-search-plus" aria-hidden="true"></i> Forever Blooming</figcaption>
+                </figure>
+                <figure class="gallery-item fade-in" data-reveal="up" tabindex="0" role="button" aria-label="View full image: Enchanted forest wrapped in fog">
+                    <img src="assets/img/gallery-forest.jpg" alt="An enchanted forest wrapped in soft fog" class="gallery-img" width="900" height="1100" loading="lazy">
+                    <figcaption class="gallery-caption"><i class="fas fa-search-plus" aria-hidden="true"></i> The Enchanted Woods</figcaption>
+                </figure>
+                <figure class="gallery-item fade-in" data-reveal="up" tabindex="0" role="button" aria-label="View full image: Lakeside sunset with reflections">
+                    <img src="assets/img/gallery-lake.jpg" alt="A tranquil lakeside sunset with golden reflections" class="gallery-img" width="1000" height="700" loading="lazy">
+                    <figcaption class="gallery-caption"><i class="fas fa-search-plus" aria-hidden="true"></i> Mirror of the Sky</figcaption>
+                </figure>
+                <figure class="gallery-item fade-in" data-reveal="up" tabindex="0" role="button" aria-label="View full image: The couple sharing a romantic moment">
+                    <img src="assets/img/gallery-couple.jpg" alt="Baktawer and Khizar sharing a romantic moment" class="gallery-img" width="900" height="1100" loading="lazy">
+                    <figcaption class="gallery-caption"><i class="fas fa-search-plus" aria-hidden="true"></i> Two Hearts</figcaption>
+                </figure>
+                <figure class="gallery-item fade-in" data-reveal="up" tabindex="0" role="button" aria-label="View full image: Golden glowing bokeh lights">
+                    <img src="assets/img/gallery-bokeh.jpg" alt="Warm golden glowing bokeh lights" class="gallery-img" width="900" height="700" loading="lazy">
+                    <figcaption class="gallery-caption"><i class="fas fa-search-plus" aria-hidden="true"></i> Magic Dust</figcaption>
+                </figure>
+            </div>
+        </section> -->
+
+        <!-- FAMILY -->
+        <section id="family" class="section family-section">
+            <div class="section-header fade-in" data-reveal="up">
+                <span class="sub-title">WITH LOVE &amp; GRATITUDE</span>
+                <h2 class="section-title">Our Families</h2>
+                <div class="divider-ornament" aria-hidden="true"><i class="fas fa-people-roof"></i></div>
+            </div>
+
+            <div class="family-grid">
+                <div class="family-card glass-frame fade-in" data-reveal="left">
+                    <div class="family-ornament" aria-hidden="true"><i class="fas fa-crown"></i></div>
+                    <h3 class="family-role">The Groom's Family</h3>
+                    <p class="family-names">Son of Mrs. Babu &amp; Mr. Babu</p>
+                    <div class="family-seal" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#sun-emblem"></use></svg></div>
+                </div>
+                <div class="family-card glass-frame fade-in" data-reveal="right">
+                    <div class="family-ornament" aria-hidden="true"><i class="fas fa-flower"></i></div>
+                    <h3 class="family-role">The Bride's Family</h3>
+                    <p class="family-names">Daughter of Mrs. Abdul Khaliq &amp; Mr. Abdul Khaliq</p>
+                    <div class="family-seal" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#sun-emblem"></use></svg></div>
+                </div>
+            </div>
+            <p class="family-note fade-in" data-reveal="up">Two families, joined by love, invite you to celebrate a new beginning.</p>
+        </section>
+
+        <!-- RSVP & CONTACT -->
+        <section id="rsvp" class="section rsvp-section">
+            <div class="card-glass rsvp-card frame-border fade-in" data-reveal="up">
+                <div class="section-header">
+                    <span class="sub-title">REACH OUT TO US</span>
+                    <h2 class="section-title">RSVP &amp; Contact</h2>
+                    <p class="rsvp-subtext">For confirmations or any questions regarding the wedding, please contact us directly.</p>
+                    <div class="divider-ornament" aria-hidden="true"><i class="fas fa-feather-alt"></i></div>
+                </div>
+
+                <div class="contact-grid">
+                    <a href="tel:+923333137783" class="contact-card fade-in" data-reveal="up" aria-label="Call A. Basit Qureshi at 0333-3137783">
+                        <span class="contact-sparkle cs-1" aria-hidden="true">✦</span>
+                        <span class="contact-sparkle cs-2" aria-hidden="true">✦</span>
+                        <span class="contact-avatar" aria-hidden="true">AB</span>
+                        <span class="contact-name">A. Basit Qureshi</span>
+                        <span class="contact-phone"><i class="fas fa-phone-volume" aria-hidden="true"></i> 0333-3137783</span>
+                        <span class="contact-call-btn"><i class="fas fa-phone-alt" aria-hidden="true"></i> Call Now</span>
+                    </a>
+
+                    <a href="tel:+9231110126177" class="contact-card fade-in" data-reveal="up" aria-label="Call Daniyal Qureshi at 0311-0126177">
+                        <span class="contact-sparkle cs-1" aria-hidden="true">✦</span>
+                        <span class="contact-sparkle cs-2" aria-hidden="true">✦</span>
+                        <span class="contact-avatar" aria-hidden="true">DQ</span>
+                        <span class="contact-name">Daniyal Qureshi</span>
+                        <span class="contact-phone"><i class="fas fa-phone-volume" aria-hidden="true"></i> 0311-0126177</span>
+                        <span class="contact-call-btn"><i class="fas fa-phone-alt" aria-hidden="true"></i> Call Now</span>
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- Section 4: Photo Gallery -->
-        <section id="gallery" class="section gallery-section">
-            <div class="section-header">
-                <span class="sub-title">MEMORIES</span>
-                <h2 class="section-title">Our Moments</h2>
-                <div class="divider-gold center"></div>
-            </div>
+        <!-- GIFT -->
+        <section id="gift" class="section gift-section">
+            <div class="gift-bokeh" aria-hidden="true"><img src="assets/img/gift-bokeh.jpg" alt="" width="1600" height="900" loading="lazy"></div>
+            <div class="gift-overlay" aria-hidden="true"></div>
+            <div class="gift-content">
+                <div class="section-header fade-in" data-reveal="up">
+                    <span class="sub-title">GIFTS &amp; BLESSINGS</span>
+                    <h2 class="section-title">Your Presence Is Our Present</h2>
+                    <div class="divider-ornament" aria-hidden="true"><i class="fas fa-gift"></i></div>
+                </div>
 
-            <div class="gallery-grid">
-                <div class="gallery-item fade-in">
-                    <img src="assets/hero_couple.png" alt="Gallery Photo 1" class="gallery-img">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+                <div class="gift-card glass-dark fade-in" data-reveal="up">
+                    <div class="gift-icon"><i class="fas fa-gift" aria-hidden="true"></i></div>
+                    <p class="gift-intro">The most treasured gift is your presence at our celebration. Should you wish to honour us further, a contribution towards our new kingdom would be warmly received.</p>
+                    <div class="gift-details">
+                        <div class="gift-row"><span>Gathering</span><strong>8:00 PM</strong></div>
+                        <div class="gift-row"><span>Nikha</span><strong>9:00 PM</strong></div>
+                        <div class="gift-row"><span>Dinner</span><strong>10:00 PM</strong></div>
+                        
                     </div>
-                </div>
-                <div class="gallery-item fade-in">
-                    <img src="assets/vivah_wedding.png" alt="Gallery Photo 2" class="gallery-img">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-                <div class="gallery-item fade-in">
-                    <img src="assets/ganesha_motif.png" alt="Gallery Photo 3" class="gallery-img">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
+                    <!-- <button class="copy-value-btn ripple" data-copy="Account Name: Baktawer & Khizar | Bank: The Royal Bank | Account: 5010 1234 5678 9012 | IFSC: ROYAL0001234 | UPI: baktawer.weds.khizar@upi">
+                        <i class="far fa-copy" aria-hidden="true"></i><span>Copy Bank Details</span>
+                    </button> -->
                 </div>
             </div>
         </section>
 
-        <!-- Section 5: RSVP Form -->
-        <section id="rsvp" class="section rsvp-section">
-            <div class="card-glass rsvp-card fade-in">
-                <div class="section-header">
-                    <span class="sub-title">JOIN OUR CELEBRATION</span>
-                    <h2 class="section-title">R.S.V.P</h2>
-                    <p class="rsvp-subtext">Please respond by November 30, 2026 to help us prepare for your presence.</p>
-                    <div class="divider-gold center"></div>
+        <!-- LOCATION -->
+        <!-- <section id="location" class="section location-section">
+            <div class="location-backdrop" aria-hidden="true">
+                <img src="assets/img/hero-castle-alt.jpg" alt="" class="location-bg-img" width="1920" height="1080" loading="lazy">
+                <div class="location-overlay" aria-hidden="true"></div>
+            </div>
+            <div class="location-content">
+                <div class="section-header fade-in" data-reveal="up">
+                    <span class="sub-title">FIND YOUR WAY</span>
+                    <h2 class="section-title">Where We Gather</h2>
+                    <div class="divider-ornament" aria-hidden="true"><i class="fas fa-map-location-dot"></i></div>
                 </div>
-
-                <form id="rsvpForm" class="rsvp-form">
-                    <div class="form-group">
-                        <label for="guestName"><i class="fas fa-user"></i> Full Name *</label>
-                        <input type="text" id="guestName" required placeholder="e.g. Ramesh Kumar">
+                <div class="location-card glass-dark fade-in" data-reveal="up">
+                    <div class="location-pin" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3 class="location-name">The Heritage Palace</h3>
+                    <p class="location-address">
+                        Palace Grounds, Royal Gardens Avenue<br>
+                        Grand City, Kingdom of Corona District
+                    </p>
+                    <div class="location-actions">
+                        <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn-gold ripple"><i class="fas fa-directions" aria-hidden="true"></i> Get Directions</a>
+                        <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn-ghost ripple"><i class="fas fa-share-alt" aria-hidden="true"></i> Share Location</a>
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="guestEmail"><i class="fas fa-envelope"></i> Email Address</label>
-                            <input type="email" id="guestEmail" placeholder="name@example.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="guestPhone"><i class="fas fa-phone"></i> Phone Number *</label>
-                            <input type="tel" id="guestPhone" required placeholder="+91 98765 43210">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="attendance"><i class="fas fa-check-circle"></i> Will You Attend? *</label>
-                            <select id="attendance" required>
-                                <option value="Yes! Delighted to attend">Joyfully Accepts</option>
-                                <option value="Regretfully Decline">Regretfully Declines</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="guestCount"><i class="fas fa-users"></i> Total Guests</label>
-                            <select id="guestCount">
-                                <option value="1">1 Person</option>
-                                <option value="2">2 Persons</option>
-                                <option value="3">3 Persons</option>
-                                <option value="4+">4+ Persons</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="blessings"><i class="fas fa-heart"></i> Warm Wishes & Blessings for the Couple</label>
-                        <textarea id="blessings" rows="3" placeholder="Write your heartfelt message..."></textarea>
-                    </div>
-
-                    <button type="submit" class="submit-rsvp-btn">
-                        <span>CONFIRM RSVP</span>
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
-
-                <!-- RSVP Success Confirmation Box -->
-                <div class="rsvp-success hidden" id="rsvpSuccess">
-                    <i class="fas fa-heart-circle-check success-icon"></i>
-                    <h3>Thank You for Responding!</h3>
-                    <p id="successMessage">Your response has been saved. We eagerly await to celebrate together!</p>
+                    <p class="location-note"><i class="fas fa-car" aria-hidden="true"></i> Valet parking available · Shuttle from the Royal Gardens Gate</p>
                 </div>
             </div>
-        </section>
+        </section> -->
 
-        <!-- Section 6: Wedding Hashtag & Footer -->
+        <!-- FOOTER -->
         <footer class="footer">
-            <div class="hashtag-box">
-                <p class="hashtag-text">Share your memories with us using our hashtag</p>
+            <div class="footer-lanterns" aria-hidden="true"></div>
+            <div class="hashtag-box fade-in" data-reveal="up">
+                <p class="hashtag-text">Share your memories with us using our royal hashtag</p>
                 <div class="hashtag-pill" id="hashtagPill">
-                    <span id="hashtagText">#AaravWedsAnanya</span>
-                    <button id="copyHashtag" class="copy-btn"><i class="far fa-copy"></i> Copy</button>
+                    <span id="hashtagText">#BaktawerWedsKhizar</span>
+                    <button id="copyHashtag" class="copy-btn" aria-label="Copy hashtag"><i class="far fa-copy" aria-hidden="true"></i> Copy</button>
                 </div>
             </div>
-            <div class="footer-divider"></div>
-            <p class="footer-note">Crafted with ❤️ for Baktawer & Khizar's Shubh Vivah</p>
+            <div class="footer-divider" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#sun-emblem"></use></svg></div>
+            <p class="footer-note">Crafted with <i class="fas fa-heart" aria-hidden="true"></i> for Baktawer &amp; Khizar's Royal Wedding</p>
+            <p class="footer-credit">Baktawer <i class="fas fa-heart" aria-hidden="true"></i> Khizar · October 18, 2026</p>
         </footer>
 
     </main>
+
+    <!-- ================================================================
+         MEHNDI MODE ROOT — Hidden by default, shown only when ?mehndi=true
+         ================================================================ -->
+    <div id="mehndiRoot" class="mehndi-root hidden" aria-label="Mehndi invitation">
+
+        <!-- Falling Marigold Petals (generated by JS) -->
+        <div class="mehndi-petals" id="mehndiPetals" aria-hidden="true"></div>
+
+        <!-- ===== MEHNDI HERO ===== -->
+        <section class="mehndi-hero" id="mehndiHome">
+            <div class="mehndi-hero-bg" aria-hidden="true"></div>
+            <div class="mehndi-mandala" aria-hidden="true">
+                <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="200" cy="200" r="190" stroke="currentColor" stroke-width="1" opacity="0.18"/>
+                    <circle cx="200" cy="200" r="160" stroke="currentColor" stroke-width="1" opacity="0.14"/>
+                    <circle cx="200" cy="200" r="130" stroke="currentColor" stroke-width="1" opacity="0.12"/>
+                    <circle cx="200" cy="200" r="100" stroke="currentColor" stroke-width="1" opacity="0.10"/>
+                    <g fill="currentColor" opacity="0.10">
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(0 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(30 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(60 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(90 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(120 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(150 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(180 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(210 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(240 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(270 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(300 200 200)"/>
+                        <ellipse cx="200" cy="30" rx="12" ry="30" transform="rotate(330 200 200)"/>
+                    </g>
+                    <g fill="currentColor" opacity="0.07">
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(15 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(45 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(75 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(105 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(135 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(165 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(195 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(225 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(255 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(285 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(315 200 200)"/>
+                        <ellipse cx="200" cy="65" rx="8" ry="22" transform="rotate(345 200 200)"/>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Fairy Lights -->
+            <div class="mehndi-fairy-lights" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+
+            <!-- Marigold Garland Border -->
+            <div class="mehndi-garland-top" aria-hidden="true">
+                <span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span>
+                <span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span>
+                <span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span>
+                <span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span>
+            </div>
+
+            <div class="mehndi-hero-content">
+                <span class="mehndi-eyebrow fade-in" data-reveal="up">✨ With the blessings of Allah ✨</span>
+                <h1 class="mehndi-hero-title fade-in" data-reveal="up">
+                    You're Invited to Our<br>Mehndi Celebration
+                </h1>
+                <p class="mehndi-hero-subtitle fade-in" data-reveal="up">
+                    Join us for an evening filled with colors, music, laughter, and unforgettable memories.
+                </p>
+                <div class="mehndi-hero-date fade-in" data-reveal="up">
+                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                    Friday, 16 October 2026
+                </div>
+                <div class="mehndi-hero-decorations fade-in" data-reveal="up" aria-hidden="true">
+                    <span class="md-dhol">🪘</span>
+                    <span class="md-flower">🌼</span>
+                    <span class="md-cone">🌿</span>
+                    <span class="md-flower">🌸</span>
+                    <span class="md-dhol">🪘</span>
+                </div>
+                <a href="#mehndiScratch" class="mehndi-hero-btn fade-in ripple" data-reveal="up">
+                    <i class="fas fa-hand-sparkles" aria-hidden="true"></i> Scratch to Reveal
+                </a>
+            </div>
+
+            <!-- Tassels -->
+            <div class="mehndi-tassels" aria-hidden="true">
+                <span class="tassel ts-1"></span>
+                <span class="tassel ts-2"></span>
+                <span class="tassel ts-3"></span>
+                <span class="tassel ts-4"></span>
+                <span class="tassel ts-5"></span>
+            </div>
+
+            <!-- Marigold Garland Border Bottom -->
+            <div class="mehndi-garland-bottom" aria-hidden="true">
+                <span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span>
+                <span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span>
+                <span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span>
+                <span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span><span>🌼</span>
+            </div>
+        </section>
+
+        <!-- ===== MEHNDI SCRATCH & REVEAL ===== -->
+        <section class="mehndi-section" id="mehndiScratch">
+            <div class="mehndi-section-header fade-in" data-reveal="up">
+                <span class="mehndi-sub-title">A LITTLE SURPRISE</span>
+                <h2 class="mehndi-section-title">Scratch &amp; Reveal</h2>
+                <div class="mehndi-divider" aria-hidden="true">🌼</div>
+            </div>
+
+            <div class="mehndi-scratch-card fade-in" data-reveal="up" id="mehndiScratchCard">
+                <div class="mehndi-scratch-reveal" id="mehndiScratchReveal">
+                    <span class="mehndi-reveal-deco mrd-1" aria-hidden="true">✦</span>
+                    <span class="mehndi-reveal-deco mrd-2" aria-hidden="true">✦</span>
+                    <span class="mehndi-reveal-deco mrd-3" aria-hidden="true">🌼</span>
+                    <span class="mehndi-reveal-deco mrd-4" aria-hidden="true">🌸</span>
+                    <p class="mehndi-reveal-label">MEHNDI CEREMONY</p>
+                    <h3 class="mehndi-reveal-date">16 October 2026</h3>
+                    <p class="mehndi-reveal-day">Friday · A Night of Colors &amp; Music</p>
+                    <p class="mehndi-reveal-time"><i class="fas fa-drum" aria-hidden="true"></i> Dholki at 7:00 PM</p>
+                </div>
+                <canvas class="mehndi-scratch-canvas" id="mehndiScratchCanvas" role="button" tabindex="0" aria-label="Scratch the golden surface to reveal the mehndi date"></canvas>
+            </div>
+            <p class="mehndi-scratch-hint">Use your finger or cursor to scratch away the gold foil</p>
+        </section>
+
+        <!-- ===== MEHNDI VENUE ===== -->
+        <section class="mehndi-section" id="mehndiVenue">
+            <div class="mehndi-section-header fade-in" data-reveal="up">
+                <span class="mehndi-sub-title"><i class="fas fa-location-dot" aria-hidden="true"></i> MEHNDI VENUE</span>
+                <h2 class="mehndi-section-title">The Celebration Begins Here</h2>
+                <p class="mehndi-section-subtitle">The celebration begins here! Join us for a colorful Mehndi evening filled with music, laughter, and unforgettable memories.</p>
+                <div class="mehndi-divider" aria-hidden="true">🌼</div>
+            </div>
+
+            <div class="mehndi-venue-card fade-in" data-reveal="up">
+                <span class="mehndi-venue-sparkle mvs-1" aria-hidden="true">✦</span>
+                <span class="mehndi-venue-sparkle mvs-2" aria-hidden="true">✦</span>
+                <span class="mehndi-venue-sparkle mvs-3" aria-hidden="true">🌼</span>
+                <span class="mehndi-venue-sparkle mvs-4" aria-hidden="true">✦</span>
+
+                <div class="mehndi-venue-mandala" aria-hidden="true">
+                    <svg viewBox="0 0 200 200" fill="none">
+                        <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="0.8" opacity="0.15"/>
+                        <circle cx="100" cy="100" r="70" stroke="currentColor" stroke-width="0.8" opacity="0.12"/>
+                        <circle cx="100" cy="100" r="50" stroke="currentColor" stroke-width="0.8" opacity="0.10"/>
+                        <g fill="currentColor" opacity="0.08">
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(0 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(30 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(60 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(90 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(120 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(150 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(180 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(210 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(240 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(270 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(300 100 100)"/>
+                            <ellipse cx="100" cy="18" rx="6" ry="16" transform="rotate(330 100 100)"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="mehndi-venue-icon" aria-hidden="true">
+                    <i class="fas fa-location-dot"></i>
+                </div>
+                <h3 class="mehndi-venue-name">Ahmed Garden Banquet</h3>
+                <div class="mehndi-venue-flower-divider" aria-hidden="true">🌼</div>
+                <p class="mehndi-venue-desc">A beautiful venue adorned with marigold garlands, fairy lights, and traditional Mehndi decorations — the perfect setting for an unforgettable evening.</p>
+
+                <div class="mehndi-venue-map-preview">
+                    <div class="mehndi-venue-map-frame">
+                        <div class="mehndi-venue-map-inner">
+                            <i class="fas fa-map-location-dot" aria-hidden="true"></i>
+                            <span>Ahmed Garden Banquet · Karachi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="https://maps.app.goo.gl/LRdxiYy9TE7s6ufb7" target="_blank" rel="noopener" class="mehndi-venue-btn ripple" aria-label="Open venue in Google Maps">
+                    <i class="fas fa-location-arrow" aria-hidden="true"></i>
+                    Open Venue in Google Maps
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== MEHNDI CONTACT ===== -->
+        <section class="mehndi-section" id="mehndiContact">
+            <div class="mehndi-section-header fade-in" data-reveal="up">
+                <span class="mehndi-sub-title">REACH OUT TO US</span>
+                <h2 class="mehndi-section-title">RSVP &amp; Contact</h2>
+                <p class="mehndi-section-subtitle">For confirmations or questions about the mehndi, please contact us directly.</p>
+                <div class="mehndi-divider" aria-hidden="true">🌼</div>
+            </div>
+
+            <div class="mehndi-contact-grid">
+                <a href="tel:+923333137783" class="mehndi-contact-card fade-in" data-reveal="up" aria-label="Call A. Basit Qureshi at 0333-3137783">
+                    <span class="mehndi-contact-avatar">AB</span>
+                    <span class="mehndi-contact-name">A. Basit Qureshi</span>
+                    <span class="mehndi-contact-phone"><i class="fas fa-phone-volume" aria-hidden="true"></i> 0333-3137783</span>
+                    <span class="mehndi-contact-btn"><i class="fas fa-phone-alt" aria-hidden="true"></i> Call Now</span>
+                </a>
+                <a href="tel:+9231110126177" class="mehndi-contact-card fade-in" data-reveal="up" aria-label="Call Daniyal Qureshi at 0311-0126177">
+                    <span class="mehndi-contact-avatar">DQ</span>
+                    <span class="mehndi-contact-name">Daniyal Qureshi</span>
+                    <span class="mehndi-contact-phone"><i class="fas fa-phone-volume" aria-hidden="true"></i> 0311-0126177</span>
+                    <span class="mehndi-contact-btn"><i class="fas fa-phone-alt" aria-hidden="true"></i> Call Now</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== MEHNDI FOOTER ===== -->
+        <footer class="mehndi-footer">
+            <div class="mehndi-footer-divider" aria-hidden="true">🌼 🪘 🌼</div>
+            <p class="mehndi-footer-note">Share your memories with us using our hashtag</p>
+            <div class="mehndi-hashtag">
+                <span id="mehndiHashtagText">#BaktawerWedsKhizar</span>
+                <button id="mehndiCopyHashtag" class="mehndi-copy-btn" aria-label="Copy hashtag"><i class="far fa-copy" aria-hidden="true"></i> Copy</button>
+            </div>
+            <p class="mehndi-footer-credit">Baktawer <i class="fas fa-heart" aria-hidden="true"></i> Khizar · October 16, 2026</p>
+        </footer>
+    </div>
+
+    <!-- Gallery Lightbox -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox" aria-hidden="true">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer"><i class="fas fa-times" aria-hidden="true"></i></button>
+        <button class="lightbox-nav prev" id="lightboxPrev" aria-label="Previous image"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+        <button class="lightbox-nav next" id="lightboxNext" aria-label="Next image"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+        <div class="lightbox-stage">
+            <img id="lightboxImg" src="" alt="" />
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
+    </div>
 
     <!-- Canvas Confetti Library CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
