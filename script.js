@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicPlayIcon = document.getElementById('musicPlayIcon');
     const musicPauseIcon = document.getElementById('musicPauseIcon');
 
-    const DEFAULT_VOLUME = 0.02;
+    const DEFAULT_VOLUME = 0.25;
 
     if (bgAudio) {
         bgAudio.volume = DEFAULT_VOLUME;
