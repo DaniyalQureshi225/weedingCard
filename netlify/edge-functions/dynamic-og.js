@@ -20,7 +20,7 @@ export default async (request, context) => {
       desc: mehndiDesc,
       image: mehndiImage,
       url: mehndiUrl,
-      siteName: "Bakhtawar & Khizar Mehndi Invitation"
+      siteName: "Hania & Zaroon Mehndi Invitation"
     });
   } else {
     const wedTitle = "\uD83D\uDC8D You\u2019re Invited to Our Wedding";
@@ -33,7 +33,7 @@ export default async (request, context) => {
       desc: wedDesc,
       image: wedImage,
       url: wedUrl,
-      siteName: "Bakhtawar & Khizar Wedding Invitation"
+      siteName: "Hania & Zaroon Wedding Invitation"
     });
   }
 

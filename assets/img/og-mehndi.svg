@@ -65,9 +65,9 @@
   <line x1="350" y1="175" x2="850" y2="175" stroke="url(#mgold)" stroke-width="1" opacity="0.5"/>
 
   <!-- Names -->
-  <text x="600" y="260" text-anchor="middle" fill="#E65100" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="700" filter="url(#mshadow)">Bakhtawar</text>
+  <text x="600" y="260" text-anchor="middle" fill="#E65100" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="700" filter="url(#mshadow)">Hania</text>
   <text x="600" y="315" text-anchor="middle" fill="#FF9800" font-family="Georgia, serif" font-size="36" font-style="italic">&amp;</text>
-  <text x="600" y="385" text-anchor="middle" fill="#E65100" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="700" filter="url(#mshadow)">Khizar</text>
+  <text x="600" y="385" text-anchor="middle" fill="#E65100" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="700" filter="url(#mshadow)">Zaroon</text>
 
   <!-- Divider -->
   <line x1="400" y1="415" x2="800" y2="415" stroke="url(#mgold)" stroke-width="1" opacity="0.5"/>
