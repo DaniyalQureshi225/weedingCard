@@ -27,6 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ------------------------------------------------------------------
+       MUSIC TRACK SELECTION — bkw1.mp3 for mehndi, bkw.mp3 otherwise
+       ------------------------------------------------------------------ */
+    const bgAudioEl = document.getElementById('bgAudio');
+    if (bgAudioEl) {
+        bgAudioEl.src = isMehndi
+            ? 'assets/sound/bkw1.mp3'
+            : 'assets/sound/bkw.mp3';
+        bgAudioEl.load(); // reload with the new source
+    }
+
+    /* ------------------------------------------------------------------
        1. ENVELOPE UNSEAL / OPEN INVITATION
        ------------------------------------------------------------------ */
     const openInviteBtn = document.getElementById('openInviteBtn');
@@ -74,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicPlayIcon = document.getElementById('musicPlayIcon');
     const musicPauseIcon = document.getElementById('musicPauseIcon');
 
-    const DEFAULT_VOLUME = 0.25;
+    const DEFAULT_VOLUME = 0.15;
 
     if (bgAudio) {
         bgAudio.volume = DEFAULT_VOLUME;
