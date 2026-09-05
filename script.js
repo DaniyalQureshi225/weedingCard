@@ -163,9 +163,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize mehndi features (after music vars are declared)
     if (isMehndi) {
-        tryPlayMusic();
-        // Also try to enable interaction handler immediately for mehndi mode
-        enablePlayOnInteraction();
+        // Mehndi entrance splash — a single tap both reveals the invite and
+        // acts as the user gesture browsers require before audio can play,
+        // mirroring how the wedding envelope's "Tap to Open" seal works.
+        const mehndiSplash = document.getElementById('mehndiSplash');
+        const mehndiEnterBtn = document.getElementById('mehndiEnterBtn');
+        if (mehndiSplash) mehndiSplash.classList.remove('hidden');
+
+        const enterMehndi = () => {
+            if (mehndiSplash) mehndiSplash.classList.add('opened');
+            tryPlayMusic();
+        };
+        if (mehndiEnterBtn) {
+            mehndiEnterBtn.addEventListener('click', enterMehndi);
+            mehndiEnterBtn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterMehndi(); }
+            });
+        }
+
         initMehndiScratchCard();
         initMehndiPetals();
         triggerScrollObserver();
