@@ -1,5 +1,7 @@
 /* ==========================================================================
-   WALIMA INVITATION — INTERACTIVE JAVASCRIPT
+   LUXURY WALIMA INVITATION — INTERACTIVE JAVASCRIPT
+   Complete rewrite with grand entrance, scratch card, circular countdown,
+   particle effects, confetti, and all interactive features.
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,55 +10,204 @@ document.addEventListener('DOMContentLoaded', () => {
        CONFIGURATION — Single source of truth for all invitation details
        ------------------------------------------------------------------ */
     const CONFIG = {
-        bride: 'Ayesha Khan',
-        groom: 'Zain Ahmed',
-        brideParents: 'Mr. & Mrs. Imran Khan',
-        groomParents: 'Mr. & Mrs. Farooq Ahmed',
+        bride: 'Zaryab',
+        groom: 'Abu Bakar',
+        brideParents: 'Mr. & Mrs. Tariq Malik',
+        groomParents: 'Mr. & Mrs. Farooq Siddiqui',
         event: 'Walima Reception',
-        date: 'Sunday, November 15, 2026',
+        date: 'Saturday, December 19, 2026',
         guestArrival: '7:30 PM',
         dinner: '8:30 PM',
-        venue: 'The Grand Pearl Banquet',
+        venue: 'The Royale Palace Banquet',
+        venueAddress: 'Main Clifton / Karsaz',
         location: 'Karachi, Pakistan',
         rsvpContact: '+92 300 1234567',
-        // Walima at 7:30 PM PKT (UTC+5) → November 15, 2026, 14:30 UTC
-        eventDateISO: '2026-11-15T19:30:00+05:00',
-        mapsUrl: 'https://maps.google.com/?q=The+Grand+Pearl+Banquet+Karachi+Pakistan',
-        hashtag: '#AyeshaWedsZain'
+        // Walima at 7:30 PM PKT (UTC+5) → December 19, 2026
+        eventDateISO: '2026-12-19T19:30:00+05:00',
+        mapsUrl: 'https://maps.google.com/?q=The+Royale+Palace+Banquet+Clifton+Karachi+Pakistan',
+        hashtag: '#ZaryabWedsAbuBakar'
     };
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ------------------------------------------------------------------
-       1. INVITATION COVER — Open Invitation
+       1. FLOATING PARTICLE CANVAS — Gold dust / petal background
        ------------------------------------------------------------------ */
-    const coverOverlay = document.getElementById('coverOverlay');
+    const particleCanvas = document.getElementById('particleCanvas');
+    const pCtx = particleCanvas ? particleCanvas.getContext('2d') : null;
+    let particles = [];
+    const PARTICLE_COUNT = 40;
+
+    function initParticles() {
+        if (!particleCanvas || !pCtx || prefersReducedMotion) return;
+
+        function resize() {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // Create particles
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push({
+                x: Math.random() * particleCanvas.width,
+                y: Math.random() * particleCanvas.height,
+                size: Math.random() * 2.5 + 0.5,
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: Math.random() * 0.4 + 0.1,
+                opacity: Math.random() * 0.5 + 0.1,
+                wobble: Math.random() * Math.PI * 2,
+                wobbleSpeed: Math.random() * 0.02 + 0.005
+            });
+        }
+
+        function animateParticles() {
+            pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+            particles.forEach(p => {
+                p.wobble += p.wobbleSpeed;
+                p.x += p.speedX + Math.sin(p.wobble) * 0.3;
+                p.y += p.speedY;
+
+                // Wrap around
+                if (p.y > particleCanvas.height + 10) {
+                    p.y = -10;
+                    p.x = Math.random() * particleCanvas.width;
+                }
+                if (p.x > particleCanvas.width + 10) p.x = -10;
+                if (p.x < -10) p.x = particleCanvas.width + 10;
+
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                pCtx.fillStyle = `rgba(212, 175, 55, ${p.opacity})`;
+                pCtx.fill();
+
+                // Subtle glow
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+                pCtx.fillStyle = `rgba(212, 175, 55, ${p.opacity * 0.1})`;
+                pCtx.fill();
+            });
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+    }
+
+    initParticles();
+
+
+    /* ------------------------------------------------------------------
+       2. GRAND ENTRANCE — 3D Door Opening Animation
+       ------------------------------------------------------------------ */
+    const grandEntrance = document.getElementById('grandEntrance');
     const mainContent = document.getElementById('mainContent');
     const openInviteBtn = document.getElementById('openInviteBtn');
     const musicControl = document.getElementById('musicControl');
+    const sparkleCanvas = document.getElementById('sparkleCanvas');
+    const sparkleCtx = sparkleCanvas ? sparkleCanvas.getContext('2d') : null;
 
-    function openInvitation() {
-        if (!coverOverlay || !mainContent) return;
-        if (!mainContent.classList.contains('hidden')) return;
+    function createSparkles() {
+        if (!sparkleCanvas || !sparkleCtx || prefersReducedMotion) return;
 
-        coverOverlay.classList.add('opened');
-        coverOverlay.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
+        sparkleCanvas.width = window.innerWidth;
+        sparkleCanvas.height = window.innerHeight;
 
-        mainContent.classList.remove('hidden');
+        const sparkles = [];
+        const centerX = sparkleCanvas.width / 2;
+        const centerY = sparkleCanvas.height / 2;
 
-        // Show music control
-        if (musicControl) {
-            setTimeout(() => musicControl.classList.add('visible'), 600);
+        for (let i = 0; i < 60; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 4 + 2;
+            sparkles.push({
+                x: centerX,
+                y: centerY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                size: Math.random() * 3 + 1,
+                opacity: 1,
+                decay: Math.random() * 0.02 + 0.01,
+                color: Math.random() > 0.5 ? '212, 175, 55' : '232, 201, 103'
+            });
         }
 
-        tryPlayMusic();
-        triggerScrollObserver();
+        function animateSparkles() {
+            sparkleCtx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
+            let alive = false;
 
-        // Remove cover from DOM after transition
+            sparkles.forEach(s => {
+                if (s.opacity <= 0) return;
+                alive = true;
+
+                s.x += s.vx;
+                s.y += s.vy;
+                s.vy += 0.05; // gravity
+                s.opacity -= s.decay;
+
+                sparkleCtx.beginPath();
+                sparkleCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                sparkleCtx.fillStyle = `rgba(${s.color}, ${Math.max(0, s.opacity)})`;
+                sparkleCtx.fill();
+
+                // Glowing trail
+                sparkleCtx.beginPath();
+                sparkleCtx.arc(s.x, s.y, s.size * 2.5, 0, Math.PI * 2);
+                sparkleCtx.fillStyle = `rgba(${s.color}, ${Math.max(0, s.opacity * 0.2)})`;
+                sparkleCtx.fill();
+            });
+
+            if (alive) {
+                requestAnimationFrame(animateSparkles);
+            }
+        }
+
+        animateSparkles();
+    }
+
+    function openInvitation() {
+        if (!grandEntrance || !mainContent) return;
+        if (!mainContent.classList.contains('hidden')) return;
+
+        // 1. Sparkle burst from center
+        createSparkles();
+
+        // 2. Animate doors open
+        grandEntrance.classList.add('opened');
+
+        // 3. After doors are mostly open, show main content
         setTimeout(() => {
-            coverOverlay.style.display = 'none';
-        }, 1000);
+            mainContent.classList.remove('hidden');
+            mainContent.style.opacity = '0';
+            mainContent.style.transform = 'scale(0.97)';
+            mainContent.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            
+            requestAnimationFrame(() => {
+                mainContent.style.opacity = '1';
+                mainContent.style.transform = 'scale(1)';
+            });
+
+            // Show music control
+            if (musicControl) {
+                setTimeout(() => musicControl.classList.add('visible'), 300);
+            }
+
+            tryPlayMusic();
+            triggerScrollObserver();
+        }, 800);
+
+        // 4. Fade out entrance completely
+        setTimeout(() => {
+            grandEntrance.classList.add('fade-out');
+        }, 600);
+
+        // 5. Remove from DOM after all transitions
+        setTimeout(() => {
+            grandEntrance.style.display = 'none';
+            document.body.style.overflow = '';
+        }, 2400);
     }
 
     if (openInviteBtn) {
@@ -66,17 +217,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Prevent scroll while cover is visible
-    if (coverOverlay && !coverOverlay.classList.contains('opened')) {
+    // Prevent scroll while entrance is visible
+    if (grandEntrance && !grandEntrance.classList.contains('opened')) {
         document.body.style.overflow = 'hidden';
     }
 
+
     /* ------------------------------------------------------------------
-       2. BACKGROUND MUSIC (assets/sound/bkw.mp3)
+       3. BACKGROUND MUSIC (assets/sound/bkw.mp3)
        ------------------------------------------------------------------ */
     const bgAudio = document.getElementById('bgAudio');
     const musicToggle = document.getElementById('musicToggle');
-    const musicText = musicToggle ? musicToggle.querySelector('.music-text') : null;
     let isPlaying = false;
     const DEFAULT_VOLUME = 0.2;
 
@@ -130,15 +281,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!musicToggle) return;
         musicToggle.classList.toggle('playing', playing);
         musicToggle.setAttribute('aria-pressed', String(playing));
-        if (musicText) musicText.textContent = playing ? 'Pause' : 'Music';
     }
 
     if (musicToggle) musicToggle.addEventListener('click', toggleMusic);
 
+
     /* ------------------------------------------------------------------
-       3. COUNTDOWN TIMER (Karachi, PKT UTC+5)
+       4. CIRCULAR COUNTDOWN TIMER
        ------------------------------------------------------------------ */
     const eventTime = new Date(CONFIG.eventDateISO).getTime();
+    const CIRCUMFERENCE = 2 * Math.PI * 52; // ring radius = 52
 
     function updateCountdown() {
         const now = Date.now();
@@ -165,13 +317,272 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
         if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
         if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+
+        // Update ring progress
+        const ringDays = document.getElementById('ringDays');
+        const ringHours = document.getElementById('ringHours');
+        const ringMinutes = document.getElementById('ringMinutes');
+        const ringSeconds = document.getElementById('ringSeconds');
+
+        // Calculate remaining fraction for each (max 365 days)
+        const totalDaysMax = 365;
+        if (ringDays) ringDays.style.strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * Math.min(days / totalDaysMax, 1));
+        if (ringHours) ringHours.style.strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * (hours / 24));
+        if (ringMinutes) ringMinutes.style.strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * (minutes / 60));
+        if (ringSeconds) ringSeconds.style.strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * (seconds / 60));
     }
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
+
     /* ------------------------------------------------------------------
-       4. SCROLL REVEAL OBSERVER
+       5. SCRATCH TO REVEAL DATE CARD
+       ------------------------------------------------------------------ */
+    const scratchCanvas = document.getElementById('scratchCard');
+    const scratchContainer = document.getElementById('scratchContainer');
+    let scratchCtx = null;
+    let isScratching = false;
+    let scratchRevealed = false;
+
+    function initScratchCard() {
+        if (!scratchCanvas || !scratchContainer) return;
+
+        scratchCtx = scratchCanvas.getContext('2d');
+        const rect = scratchContainer.getBoundingClientRect();
+        scratchCanvas.width = rect.width;
+        scratchCanvas.height = rect.height;
+
+        // Draw the gold metallic cover
+        drawScratchCover();
+
+        // Event listeners
+        scratchCanvas.addEventListener('mousedown', startScratch);
+        scratchCanvas.addEventListener('mousemove', doScratch);
+        scratchCanvas.addEventListener('mouseup', endScratch);
+        scratchCanvas.addEventListener('mouseleave', endScratch);
+
+        scratchCanvas.addEventListener('touchstart', startScratch, { passive: false });
+        scratchCanvas.addEventListener('touchmove', doScratch, { passive: false });
+        scratchCanvas.addEventListener('touchend', endScratch);
+    }
+
+    function drawScratchCover() {
+        if (!scratchCtx) return;
+        const w = scratchCanvas.width;
+        const h = scratchCanvas.height;
+
+        // Metallic gold gradient
+        const gradient = scratchCtx.createLinearGradient(0, 0, w, h);
+        gradient.addColorStop(0, '#C5A046');
+        gradient.addColorStop(0.25, '#E8C967');
+        gradient.addColorStop(0.5, '#D4AF37');
+        gradient.addColorStop(0.75, '#B8942D');
+        gradient.addColorStop(1, '#C5A046');
+        scratchCtx.fillStyle = gradient;
+        scratchCtx.fillRect(0, 0, w, h);
+
+        // Add shimmer sparkle dots
+        for (let i = 0; i < 80; i++) {
+            const x = Math.random() * w;
+            const y = Math.random() * h;
+            const size = Math.random() * 2 + 0.5;
+            const alpha = Math.random() * 0.5 + 0.2;
+            scratchCtx.beginPath();
+            scratchCtx.arc(x, y, size, 0, Math.PI * 2);
+            scratchCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            scratchCtx.fill();
+        }
+
+        // Subtle diamond/crosshatch pattern
+        scratchCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        scratchCtx.lineWidth = 0.5;
+        for (let i = -h; i < w + h; i += 20) {
+            scratchCtx.beginPath();
+            scratchCtx.moveTo(i, 0);
+            scratchCtx.lineTo(i + h, h);
+            scratchCtx.stroke();
+            scratchCtx.beginPath();
+            scratchCtx.moveTo(i + h, 0);
+            scratchCtx.lineTo(i, h);
+            scratchCtx.stroke();
+        }
+
+        // Text
+        scratchCtx.fillStyle = 'rgba(13, 27, 42, 0.7)';
+        scratchCtx.font = `600 ${Math.min(w * 0.04, 16)}px 'Plus Jakarta Sans', sans-serif`;
+        scratchCtx.textAlign = 'center';
+        scratchCtx.textBaseline = 'middle';
+        scratchCtx.fillText('✨  Scratch here to reveal the date  ✨', w / 2, h / 2);
+    }
+
+    function getPosition(e) {
+        const rect = scratchCanvas.getBoundingClientRect();
+        if (e.touches && e.touches.length > 0) {
+            return {
+                x: e.touches[0].clientX - rect.left,
+                y: e.touches[0].clientY - rect.top
+            };
+        }
+        return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+
+    function startScratch(e) {
+        if (scratchRevealed) return;
+        e.preventDefault();
+        isScratching = true;
+        const pos = getPosition(e);
+        scratch(pos.x, pos.y);
+    }
+
+    function doScratch(e) {
+        if (!isScratching || scratchRevealed) return;
+        e.preventDefault();
+        const pos = getPosition(e);
+        scratch(pos.x, pos.y);
+    }
+
+    function endScratch() {
+        isScratching = false;
+        if (!scratchRevealed) {
+            checkScratchProgress();
+        }
+    }
+
+    function scratch(x, y) {
+        if (!scratchCtx) return;
+        scratchCtx.globalCompositeOperation = 'destination-out';
+        scratchCtx.beginPath();
+        scratchCtx.arc(x, y, 22, 0, Math.PI * 2);
+        scratchCtx.fill();
+
+        // Extra softness
+        scratchCtx.beginPath();
+        scratchCtx.arc(x, y, 30, 0, Math.PI * 2);
+        const grad = scratchCtx.createRadialGradient(x, y, 10, x, y, 30);
+        grad.addColorStop(0, 'rgba(0,0,0,1)');
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        scratchCtx.fillStyle = grad;
+        scratchCtx.fill();
+
+        scratchCtx.globalCompositeOperation = 'source-over';
+    }
+
+    function checkScratchProgress() {
+        if (!scratchCtx || scratchRevealed) return;
+        const imageData = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
+        const pixels = imageData.data;
+        let transparent = 0;
+        const total = pixels.length / 4;
+
+        for (let i = 3; i < pixels.length; i += 4) {
+            if (pixels[i] < 128) transparent++;
+        }
+
+        const percent = (transparent / total) * 100;
+
+        if (percent >= 50) {
+            revealScratchCard();
+        }
+    }
+
+    function revealScratchCard() {
+        scratchRevealed = true;
+
+        // Dissolve remaining cover with animation
+        scratchCanvas.style.transition = 'opacity 0.8s ease';
+        scratchCanvas.style.opacity = '0';
+
+        setTimeout(() => {
+            scratchCanvas.style.display = 'none';
+        }, 800);
+
+        // Fire confetti!
+        fireConfetti();
+    }
+
+
+    /* ------------------------------------------------------------------
+       6. GOLD CONFETTI BURST
+       ------------------------------------------------------------------ */
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    let confettiCtx = null;
+
+    function fireConfetti() {
+        if (!confettiCanvas || prefersReducedMotion) return;
+        confettiCtx = confettiCanvas.getContext('2d');
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+        confettiCanvas.classList.add('active');
+
+        const confettiPieces = [];
+        const colors = [
+            '#D4AF37', '#E8C967', '#B8942D', '#C5A046',
+            '#FAF7F0', '#F5EFE0', '#FFD700'
+        ];
+
+        for (let i = 0; i < 120; i++) {
+            confettiPieces.push({
+                x: confettiCanvas.width / 2 + (Math.random() - 0.5) * 200,
+                y: confettiCanvas.height * 0.5,
+                vx: (Math.random() - 0.5) * 12,
+                vy: Math.random() * -14 - 4,
+                rotation: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 10,
+                width: Math.random() * 8 + 4,
+                height: Math.random() * 6 + 2,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                opacity: 1,
+                gravity: 0.25 + Math.random() * 0.1,
+                drag: 0.98 + Math.random() * 0.01
+            });
+        }
+
+        function animateConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            let alive = false;
+
+            confettiPieces.forEach(c => {
+                if (c.opacity <= 0) return;
+                alive = true;
+
+                c.vy += c.gravity;
+                c.vx *= c.drag;
+                c.x += c.vx;
+                c.y += c.vy;
+                c.rotation += c.rotationSpeed;
+                c.opacity -= 0.005;
+
+                if (c.y > confettiCanvas.height + 20) {
+                    c.opacity = 0;
+                    return;
+                }
+
+                confettiCtx.save();
+                confettiCtx.translate(c.x, c.y);
+                confettiCtx.rotate((c.rotation * Math.PI) / 180);
+                confettiCtx.globalAlpha = Math.max(0, c.opacity);
+                confettiCtx.fillStyle = c.color;
+                confettiCtx.fillRect(-c.width / 2, -c.height / 2, c.width, c.height);
+                confettiCtx.restore();
+            });
+
+            if (alive) {
+                requestAnimationFrame(animateConfetti);
+            } else {
+                confettiCanvas.classList.remove('active');
+            }
+        }
+
+        animateConfetti();
+    }
+
+
+    /* ------------------------------------------------------------------
+       7. SCROLL REVEAL OBSERVER
        ------------------------------------------------------------------ */
     function triggerScrollObserver() {
         const fadeElements = document.querySelectorAll('.fade-in');
@@ -187,10 +598,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
         fadeElements.forEach(el => observer.observe(el));
+
+        // Also init scratch card when it comes into view
+        const scratchObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    initScratchCard();
+                    scratchObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        if (scratchContainer) {
+            scratchObs.observe(scratchContainer);
+        }
     }
 
+
     /* ------------------------------------------------------------------
-       5. NAVBAR SCROLL STATE + PARALLAX
+       8. NAVBAR SCROLL STATE + PARALLAX
        ------------------------------------------------------------------ */
     const navbar = document.getElementById('navbar');
     const heroImg = document.querySelector('.hero-img');
@@ -229,8 +655,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     /* ------------------------------------------------------------------
-       6. MOBILE NAVIGATION TOGGLE
+       9. MOBILE NAVIGATION TOGGLE
        ------------------------------------------------------------------ */
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
@@ -257,13 +684,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     /* ------------------------------------------------------------------
-       7. RSVP FORM VALIDATION & DEMO SUBMISSION
+       10. RSVP FORM — with Guest Counter, Validation & Toast
        ------------------------------------------------------------------ */
     const rsvpForm = document.getElementById('rsvpForm');
     const rsvpSubmitBtn = document.getElementById('rsvpSubmitBtn');
     const rsvpConfirmation = document.getElementById('rsvpConfirmation');
     const confirmationText = document.getElementById('confirmationText');
+    const rsvpToast = document.getElementById('rsvpToast');
+    const toastMessage = document.getElementById('toastMessage');
+
+    // Guest counter
+    const guestCountInput = document.getElementById('guestCount');
+    const guestMinus = document.getElementById('guestMinus');
+    const guestPlus = document.getElementById('guestPlus');
+
+    if (guestMinus && guestPlus && guestCountInput) {
+        guestMinus.addEventListener('click', () => {
+            let val = parseInt(guestCountInput.value) || 1;
+            if (val > 1) {
+                guestCountInput.value = val - 1;
+            }
+        });
+
+        guestPlus.addEventListener('click', () => {
+            let val = parseInt(guestCountInput.value) || 1;
+            if (val < 10) {
+                guestCountInput.value = val + 1;
+            }
+        });
+    }
+
+    function showToast(message, duration = 4000) {
+        if (!rsvpToast || !toastMessage) return;
+        toastMessage.textContent = message;
+        rsvpToast.classList.add('show');
+        setTimeout(() => {
+            rsvpToast.classList.remove('show');
+        }, duration);
+    }
 
     if (rsvpForm) {
         rsvpForm.addEventListener('submit', (e) => {
@@ -281,14 +741,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 isValid = false;
                 nameInput.classList.add('error');
                 document.getElementById('guestNameError').classList.add('show');
-            }
-
-            // Validate guest count
-            const countInput = document.getElementById('guestCount');
-            if (!countInput.value) {
-                isValid = false;
-                countInput.classList.add('error');
-                document.getElementById('guestCountError').classList.add('show');
             }
 
             // Validate attendance
@@ -309,11 +761,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const guestName = nameInput.value.trim();
                 const isAccepting = attendance.value === 'accept';
+                const guestNum = guestCountInput ? guestCountInput.value : '1';
 
                 if (isAccepting) {
-                    confirmationText.textContent = `Thank you, ${guestName}! We're delighted you'll be joining us for the Walima Reception.`;
+                    confirmationText.textContent = `Thank you, ${guestName}! We're delighted you'll be joining us for the Walima Reception with ${guestNum} guest(s).`;
+                    showToast(`🎉 RSVP confirmed for ${guestName} — ${guestNum} guest(s)!`);
                 } else {
                     confirmationText.textContent = `Thank you, ${guestName}. We're sorry you won't be able to make it, but we appreciate your kind response.`;
+                    showToast(`Thank you for your response, ${guestName}.`);
                 }
 
                 rsvpConfirmation.classList.remove('hidden');
@@ -321,8 +776,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Log to console for demo purposes
                 console.log('RSVP Demo Submission:', {
                     name: guestName,
-                    guests: countInput.value,
+                    guests: guestNum,
                     attendance: attendance.value,
+                    meal: document.getElementById('mealPref') ? document.getElementById('mealPref').value : '',
                     message: document.getElementById('guestMessage').value
                 });
             }, 1500);
@@ -344,15 +800,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     /* ------------------------------------------------------------------
-       8. SAVE THE DATE — ICS Calendar Download
+       11. SAVE THE DATE — ICS Calendar Download
        ------------------------------------------------------------------ */
     const saveTheDateBtn = document.getElementById('saveTheDateBtn');
 
     if (saveTheDateBtn) {
         saveTheDateBtn.addEventListener('click', () => {
-            const startDate = '20261115T193000';
-            const endDate = '20261115T230000';
+            const startDate = '20261219T193000';
+            const endDate = '20261219T230000';
 
             const icsContent = [
                 'BEGIN:VCALENDAR',
@@ -364,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `DTEND;TZID=Asia/Karachi:${endDate}`,
                 `SUMMARY:${CONFIG.event} — ${CONFIG.bride} & ${CONFIG.groom}`,
                 `DESCRIPTION:Walima Reception of ${CONFIG.bride} & ${CONFIG.groom}.\\nGuest Arrival: ${CONFIG.guestArrival}\\nDinner: ${CONFIG.dinner}\\nVenue: ${CONFIG.venue}\\nRSVP: ${CONFIG.rsvpContact}`,
-                `LOCATION:${CONFIG.venue}\\, ${CONFIG.location}`,
+                `LOCATION:${CONFIG.venue}\\, ${CONFIG.venueAddress}\\, ${CONFIG.location}`,
                 'STATUS:CONFIRMED',
                 'BEGIN:VALARM',
                 'TRIGGER:-PT2H',
@@ -379,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'walima-reception-ayesha-zain.ics';
+            link.download = 'walima-reception-zaryab-abubakar.ics';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -387,8 +844,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     /* ------------------------------------------------------------------
-       9. SMOOTH SCROLL for anchor links
+       12. SMOOTH SCROLL for anchor links
        ------------------------------------------------------------------ */
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -402,6 +860,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.scrollTo({ top, behavior: 'smooth' });
             }
         });
+    });
+
+
+    /* ------------------------------------------------------------------
+       13. WINDOW RESIZE HANDLER for Scratch Card
+       ------------------------------------------------------------------ */
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (!scratchRevealed && scratchCtx && scratchContainer) {
+                const rect = scratchContainer.getBoundingClientRect();
+                scratchCanvas.width = rect.width;
+                scratchCanvas.height = rect.height;
+                drawScratchCover();
+            }
+        }, 300);
     });
 
 });
