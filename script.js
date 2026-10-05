@@ -1,882 +1,886 @@
-/* ==========================================================================
-   LUXURY WALIMA INVITATION — INTERACTIVE JAVASCRIPT
-   Complete rewrite with grand entrance, scratch card, circular countdown,
-   particle effects, confetti, and all interactive features.
-   ========================================================================== */
+/**
+ * Zaryab & Abu Bakar — Pakistani Mehndi Celebration Invitation
+ * Interactive Dholki Entrance (3-Beat Dhol), Heart Scratch Date Reveal, Petal Burst Canvas, & Audio
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ------------------------------------------------------------------
-       CONFIGURATION — Single source of truth for all invitation details
-       ------------------------------------------------------------------ */
-    const CONFIG = {
-        bride: 'Zaryab',
-        groom: 'Abu Bakar',
-        brideParents: 'Mr. & Mrs. Tariq Malik',
-        groomParents: 'Mr. & Mrs. Farooq Siddiqui',
-        event: 'Walima Reception',
-        date: 'Saturday, December 19, 2026',
-        guestArrival: '7:30 PM',
-        dinner: '8:30 PM',
-        venue: 'The Royale Palace Banquet',
-        venueAddress: 'Main Clifton / Karsaz',
-        location: 'Karachi, Pakistan',
-        rsvpContact: '+92 300 1234567',
-        // Walima at 7:30 PM PKT (UTC+5) → December 19, 2026
-        eventDateISO: '2026-12-19T19:30:00+05:00',
-        mapsUrl: 'https://maps.google.com/?q=The+Royale+Palace+Banquet+Clifton+Karachi+Pakistan',
-        hashtag: '#ZaryabWedsAbuBakar'
-    };
+    /* ==========================================================================
+       1. WEB AUDIO SYNTH — REALISTIC DHOL DRUM BEAT GENERATOR
+       ========================================================================== */
+    let audioCtx = null;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function getAudioContext() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                audioCtx = new AudioContext();
+            }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
 
-    /* ------------------------------------------------------------------
-       1. FLOATING PARTICLE CANVAS — Gold dust / petal background
-       ------------------------------------------------------------------ */
-    const particleCanvas = document.getElementById('particleCanvas');
-    const pCtx = particleCanvas ? particleCanvas.getContext('2d') : null;
-    let particles = [];
-    const PARTICLE_COUNT = 40;
+    function playDholBeatSound() {
+        try {
+            const ctx = getAudioContext();
+            if (!ctx) return;
 
-    function initParticles() {
-        if (!particleCanvas || !pCtx || prefersReducedMotion) return;
+            const now = ctx.currentTime;
+
+            // 1. Low Resonant Bass Dholki Drum (Dagga Hit)
+            const oscBass = ctx.createOscillator();
+            const gainBass = ctx.createGain();
+
+            oscBass.type = 'sine';
+            oscBass.frequency.setValueAtTime(140, now);
+            oscBass.frequency.exponentialRampToValueAtTime(40, now + 0.28);
+
+            gainBass.gain.setValueAtTime(1.0, now);
+            gainBass.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+            oscBass.connect(gainBass);
+            gainBass.connect(ctx.destination);
+
+            oscBass.start(now);
+            oscBass.stop(now + 0.28);
+
+            // 2. High Treble Stroke (Chanti Snap)
+            const oscTreble = ctx.createOscillator();
+            const gainTreble = ctx.createGain();
+
+            oscTreble.type = 'triangle';
+            oscTreble.frequency.setValueAtTime(450, now);
+            oscTreble.frequency.exponentialRampToValueAtTime(120, now + 0.12);
+
+            gainTreble.gain.setValueAtTime(0.7, now);
+            gainTreble.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+            oscTreble.connect(gainTreble);
+            gainTreble.connect(ctx.destination);
+
+            oscTreble.start(now);
+            oscTreble.stop(now + 0.12);
+        } catch (err) {
+            console.warn('Audio synth warning:', err);
+        }
+    }
+
+
+    /* ==========================================================================
+       2. BEAT THE DHOL 3 TIMES — ENTRANCE INTERACTION
+       ========================================================================== */
+    function initDholOpening() {
+        const dholOpening = document.getElementById('dholOpening');
+        const mainContent = document.getElementById('mainContent');
+        const dholDrum = document.getElementById('dholDrum');
+        const beatCounterText = document.getElementById('beatCounterText');
+        const dholInstruction = document.getElementById('dholInstruction');
+        const dholDirectOpenBtn = document.getElementById('dholDirectOpenBtn');
+        const bgAudio = document.getElementById('bgAudio');
+
+        if (!dholOpening || !dholDrum) return;
+
+        let hitCount = 0;
+        const requiredHits = 3;
+        let isOpening = false;
+
+        function triggerHitEffect(e) {
+            if (isOpening) return;
+
+            // Safe audio initialization on user gesture
+            getAudioContext();
+            if (bgAudio && bgAudio.paused) {
+                bgAudio.play().then(() => {
+                    const musicToggle = document.getElementById('musicToggle');
+                    if (musicToggle) musicToggle.setAttribute('aria-pressed', 'true');
+                }).catch(() => {});
+            }
+
+            hitCount++;
+
+            // Play Synth Dhol Beat
+            playDholBeatSound();
+
+            // Trigger Shake / Pulse animation
+            dholDrum.classList.remove('hit-pulse');
+            void dholDrum.offsetWidth; // Force reflow
+            dholDrum.classList.add('hit-pulse');
+
+            // Update Indicator Dots
+            const dot = document.querySelector(`.beat-dot[data-step="${hitCount}"]`);
+            if (dot) {
+                dot.classList.add('hit');
+            }
+
+            // Particle impact burst at click/tap coordinate
+            let clickX = window.innerWidth / 2;
+            let clickY = window.innerHeight / 2;
+            if (e && e.clientX) {
+                clickX = e.clientX;
+                clickY = e.clientY;
+            } else if (e && e.touches && e.touches[0]) {
+                clickX = e.touches[0].clientX;
+                clickY = e.touches[0].clientY;
+            }
+            triggerPetalBurstAt(clickX, clickY);
+
+            // Update Text Counter
+            if (beatCounterText) {
+                beatCounterText.textContent = `Dhol Beats: ${hitCount} / ${requiredHits}`;
+            }
+
+            if (hitCount >= requiredHits) {
+                isOpening = true;
+                if (dholInstruction) {
+                    dholInstruction.textContent = "✨ Dhol Beats Complete! Welcome! ✨";
+                }
+
+                // Celebratory Confetti & Petals
+                triggerConfetti();
+                triggerPetalBurst();
+
+                setTimeout(() => {
+                    revealMainInvitation();
+                }, 600);
+            }
+        }
+
+        function revealMainInvitation() {
+            if (!mainContent) return;
+
+            dholOpening.style.opacity = '0';
+            dholOpening.style.visibility = 'hidden';
+
+            setTimeout(() => {
+                dholOpening.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+
+                // Initialize animations and interactive elements inside main content
+                initParticleBackground();
+                initScratchCard();
+                initScrollReveal();
+                initCountdownTimer();
+            }, 750);
+        }
+
+        // Pointer & Keyboard Event Listeners for Dhol
+        dholDrum.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            triggerHitEffect(e);
+        });
+
+        dholDrum.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                triggerHitEffect(e);
+            }
+        });
+
+        if (dholDirectOpenBtn) {
+            dholDirectOpenBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                getAudioContext();
+                revealMainInvitation();
+            });
+        }
+    }
+
+
+    /* ==========================================================================
+       3. PETAL BURST & CONFETTI EFFECTS
+       ========================================================================== */
+    function triggerPetalBurstAt(x, y) {
+        const canvas = document.getElementById('petalBurst');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const petals = [];
+        const colors = ['#FAE607', '#F9B800', '#F78B00', '#A92385', '#459951', '#FFFDF2'];
+
+        for (let i = 0; i < 28; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 3 + Math.random() * 8;
+            petals.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 1.5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                radius: 4 + Math.random() * 8,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.2,
+                opacity: 1
+            });
+        }
+
+        let frameCount = 0;
+        function animateBurst() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let alive = false;
+
+            petals.forEach(p => {
+                if (p.opacity > 0.02) {
+                    alive = true;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.15; // Gravity
+                    p.opacity -= 0.025;
+                    p.rotation += p.rotSpeed;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation);
+                    ctx.globalAlpha = Math.max(0, p.opacity);
+                    ctx.fillStyle = p.color;
+
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, p.radius, p.radius * 0.6, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            });
+
+            frameCount++;
+            if (alive && frameCount < 60) {
+                requestAnimationFrame(animateBurst);
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+        animateBurst();
+    }
+
+    function triggerConfetti() {
+        const canvas = document.getElementById('confettiCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const pieces = [];
+        const colors = ['#FAE607', '#F9B800', '#F78B00', '#A92385', '#459951', '#FFFFFF'];
+
+        for (let i = 0; i < 90; i++) {
+            pieces.push({
+                x: Math.random() * canvas.width,
+                y: -20 - Math.random() * 100,
+                size: 6 + Math.random() * 8,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: 2 + Math.random() * 5,
+                speedX: (Math.random() - 0.5) * 3,
+                rotation: Math.random() * 360,
+                rotSpeed: (Math.random() - 0.5) * 10
+            });
+        }
+
+        let duration = 0;
+        function renderConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            duration++;
+
+            pieces.forEach(p => {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.rotation += p.rotSpeed;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate((p.rotation * Math.PI) / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+            });
+
+            if (duration < 140) {
+                requestAnimationFrame(renderConfetti);
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+        renderConfetti();
+    }
+
+    function triggerPetalBurst() {
+        triggerPetalBurstAt(window.innerWidth / 2, window.innerHeight / 3);
+    }
+
+
+    /* ==========================================================================
+       4. PARTICLE CANVAS (FLOATING PETALS IN BACKGROUND)
+       ========================================================================== */
+    function initParticleBackground() {
+        const canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
 
         function resize() {
-            particleCanvas.width = window.innerWidth;
-            particleCanvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
         resize();
         window.addEventListener('resize', resize);
 
-        // Create particles
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push({
-                x: Math.random() * particleCanvas.width,
-                y: Math.random() * particleCanvas.height,
-                size: Math.random() * 2.5 + 0.5,
-                speedX: (Math.random() - 0.5) * 0.3,
-                speedY: Math.random() * 0.4 + 0.1,
-                opacity: Math.random() * 0.5 + 0.1,
-                wobble: Math.random() * Math.PI * 2,
-                wobbleSpeed: Math.random() * 0.02 + 0.005
+        const petals = [];
+        const colors = ['rgba(250,230,7,0.4)', 'rgba(249,184,0,0.4)', 'rgba(247,139,0,0.3)', 'rgba(169,35,133,0.25)', 'rgba(69,153,81,0.25)'];
+
+        for (let i = 0; i < 35; i++) {
+            petals.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: 3 + Math.random() * 6,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: 0.4 + Math.random() * 1.2,
+                speedX: (Math.random() - 0.5) * 0.8,
+                angle: Math.random() * Math.PI * 2,
+                spin: (Math.random() - 0.5) * 0.03
             });
         }
 
-        function animateParticles() {
-            pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            particles.forEach(p => {
-                p.wobble += p.wobbleSpeed;
-                p.x += p.speedX + Math.sin(p.wobble) * 0.3;
+            petals.forEach(p => {
                 p.y += p.speedY;
+                p.x += Math.sin(p.angle) * p.speedX;
+                p.angle += p.spin;
 
-                // Wrap around
-                if (p.y > particleCanvas.height + 10) {
-                    p.y = -10;
-                    p.x = Math.random() * particleCanvas.width;
+                if (p.y > canvas.height + 20) {
+                    p.y = -20;
+                    p.x = Math.random() * canvas.width;
                 }
-                if (p.x > particleCanvas.width + 10) p.x = -10;
-                if (p.x < -10) p.x = particleCanvas.width + 10;
 
-                pCtx.beginPath();
-                pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                pCtx.fillStyle = `rgba(212, 175, 55, ${p.opacity})`;
-                pCtx.fill();
-
-                // Subtle glow
-                pCtx.beginPath();
-                pCtx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-                pCtx.fillStyle = `rgba(212, 175, 55, ${p.opacity * 0.1})`;
-                pCtx.fill();
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.angle);
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, p.radius, p.radius * 0.6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
             });
 
-            requestAnimationFrame(animateParticles);
+            requestAnimationFrame(animate);
         }
-
-        animateParticles();
+        animate();
     }
 
-    initParticles();
 
+    /* ==========================================================================
+       5. HEART-SHAPED SCRATCH DATE REVEAL CARD
+       ========================================================================== */
+    function initScratchCard() {
+        const container = document.getElementById('scratchCardContainer');
+        const wrapper = document.getElementById('scratchHeartWrapper');
+        const canvas = document.getElementById('scratchCanvas');
+        const instruction = document.getElementById('scratchInstruction');
+        const completionMsg = document.getElementById('scratchCompletionMsg');
 
-    /* ------------------------------------------------------------------
-       2. GRAND ENTRANCE — 3D Door Opening Animation
-       ------------------------------------------------------------------ */
-    const grandEntrance = document.getElementById('grandEntrance');
-    const mainContent = document.getElementById('mainContent');
-    const openInviteBtn = document.getElementById('openInviteBtn');
-    const musicControl = document.getElementById('musicControl');
-    const sparkleCanvas = document.getElementById('sparkleCanvas');
-    const sparkleCtx = sparkleCanvas ? sparkleCanvas.getContext('2d') : null;
+        if (!container || !wrapper || !canvas) return;
 
-    function createSparkles() {
-        if (!sparkleCanvas || !sparkleCtx || prefersReducedMotion) return;
+        const ctx = canvas.getContext('2d');
+        let isScratching = false;
+        let isRevealed = false;
+        let lastX = 0;
+        let lastY = 0;
+        let checkThrottleTimeout = null;
 
-        sparkleCanvas.width = window.innerWidth;
-        sparkleCanvas.height = window.innerHeight;
+        function resizeCanvas() {
+            const rect = container.getBoundingClientRect();
+            const w = Math.floor(rect.width);
+            const h = Math.floor(rect.height);
+            if (w === 0 || h === 0) return;
 
-        const sparkles = [];
-        const centerX = sparkleCanvas.width / 2;
-        const centerY = sparkleCanvas.height / 2;
+            canvas.width = w;
+            canvas.height = h;
 
-        for (let i = 0; i < 60; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 4 + 2;
-            sparkles.push({
-                x: centerX,
-                y: centerY,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                size: Math.random() * 3 + 1,
-                opacity: 1,
-                decay: Math.random() * 0.02 + 0.01,
-                color: Math.random() > 0.5 ? '212, 175, 55' : '232, 201, 103'
-            });
-        }
-
-        function animateSparkles() {
-            sparkleCtx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
-            let alive = false;
-
-            sparkles.forEach(s => {
-                if (s.opacity <= 0) return;
-                alive = true;
-
-                s.x += s.vx;
-                s.y += s.vy;
-                s.vy += 0.05; // gravity
-                s.opacity -= s.decay;
-
-                sparkleCtx.beginPath();
-                sparkleCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                sparkleCtx.fillStyle = `rgba(${s.color}, ${Math.max(0, s.opacity)})`;
-                sparkleCtx.fill();
-
-                // Glowing trail
-                sparkleCtx.beginPath();
-                sparkleCtx.arc(s.x, s.y, s.size * 2.5, 0, Math.PI * 2);
-                sparkleCtx.fillStyle = `rgba(${s.color}, ${Math.max(0, s.opacity * 0.2)})`;
-                sparkleCtx.fill();
-            });
-
-            if (alive) {
-                requestAnimationFrame(animateSparkles);
+            if (!isRevealed) {
+                renderScratchCover(w, h);
             }
         }
 
-        animateSparkles();
-    }
+        function drawHeartPath(cCtx, x, y, width, height) {
+            cCtx.beginPath();
+            cCtx.moveTo(x + width * 0.5, y + height * 0.15);
+            cCtx.bezierCurveTo(x + width * 0.35, y - height * 0.05, x, y + height * 0.1, x, y + height * 0.4);
+            cCtx.bezierCurveTo(x, y + height * 0.65, x + width * 0.3, y + height * 0.85, x + width * 0.5, y + height * 0.98);
+            cCtx.bezierCurveTo(x + width * 0.7, y + height * 0.85, x + width, y + height * 0.65, x + width, y + height * 0.4);
+            cCtx.bezierCurveTo(x + width, y + height * 0.1, x + width * 0.65, y - height * 0.05, x + width * 0.5, y + height * 0.15);
+            cCtx.closePath();
+        }
 
-    function openInvitation() {
-        if (!grandEntrance || !mainContent) return;
-        if (!mainContent.classList.contains('hidden')) return;
+        function renderScratchCover(w, h) {
+            ctx.save();
+            ctx.clearRect(0, 0, w, h);
 
-        // 1. Sparkle burst from center
-        createSparkles();
+            // Clip to heart shape
+            drawHeartPath(ctx, 0, 0, w, h);
+            ctx.clip();
 
-        // 2. Animate doors open
-        grandEntrance.classList.add('opened');
+            // Festive Golden Haldi Gradient
+            const grad = ctx.createLinearGradient(0, 0, w, h);
+            grad.addColorStop(0, '#FAE607');    // Haldi Yellow
+            grad.addColorStop(0.35, '#F9B800'); // Golden Yellow
+            grad.addColorStop(0.75, '#F78B00'); // Saffron Orange
+            grad.addColorStop(1, '#A92385');    // Mehndi Magenta
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
 
-        // 3. After doors are mostly open, show main content
-        setTimeout(() => {
-            mainContent.classList.remove('hidden');
-            mainContent.style.opacity = '0';
-            mainContent.style.transform = 'scale(0.97)';
-            mainContent.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-            
-            requestAnimationFrame(() => {
-                mainContent.style.opacity = '1';
-                mainContent.style.transform = 'scale(1)';
-            });
+            // Decorative rings
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.arc(w * 0.5, h * 0.45, w * 0.25, 0, Math.PI * 2);
+            ctx.stroke();
 
-            // Show music control
-            if (musicControl) {
-                setTimeout(() => musicControl.classList.add('visible'), 300);
+            // Scratch overlay text
+            ctx.fillStyle = '#221404';
+            ctx.font = `700 ${Math.max(13, w * 0.054)}px 'Plus Jakarta Sans', sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('✨ SCRATCH HERE ✨', w * 0.5, h * 0.42);
+
+            ctx.fillStyle = '#459951';
+            ctx.font = `600 italic ${Math.max(12, w * 0.044)}px 'Cormorant Garamond', serif`;
+            ctx.fillText('To Reveal Our Wedding Date 💛', w * 0.5, h * 0.53);
+
+            ctx.restore();
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX = e.clientX;
+            let clientY = e.clientY;
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            }
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function scratch(x, y) {
+            if (isRevealed) return;
+            const rect = canvas.getBoundingClientRect();
+            const radius = Math.min(rect.width, rect.height) * 0.12;
+
+            ctx.save();
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (lastX && lastY) {
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.lineWidth = radius * 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            lastX = x;
+            lastY = y;
+
+            throttledCheckScratchProgress();
+        }
+
+        function startScratch(e) {
+            if (isRevealed) return;
+            isScratching = true;
+            const pos = getPos(e);
+            lastX = pos.x;
+            lastY = pos.y;
+            scratch(pos.x, pos.y);
+        }
+
+        function moveScratch(e) {
+            if (!isScratching || isRevealed) return;
+            if (e.cancelable) e.preventDefault();
+            const pos = getPos(e);
+            scratch(pos.x, pos.y);
+        }
+
+        function stopScratch() {
+            isScratching = false;
+            lastX = 0;
+            lastY = 0;
+        }
+
+        function throttledCheckScratchProgress() {
+            if (checkThrottleTimeout) return;
+            checkThrottleTimeout = setTimeout(() => {
+                checkThrottleTimeout = null;
+                checkScratchProgress();
+            }, 100);
+        }
+
+        function checkScratchProgress() {
+            if (isRevealed) return;
+            const w = canvas.width;
+            const h = canvas.height;
+            if (w === 0 || h === 0) return;
+
+            let totalHeartPoints = 0;
+            let clearedPoints = 0;
+            const sampleCanvas = document.createElement('canvas');
+            sampleCanvas.width = 100;
+            sampleCanvas.height = 100;
+            const sCtx = sampleCanvas.getContext('2d');
+            drawHeartPath(sCtx, 0, 0, 100, 100);
+
+            const imgData = ctx.getImageData(0, 0, w, h).data;
+            const stepX = Math.max(1, Math.floor(w / 35));
+            const stepY = Math.max(1, Math.floor(h / 35));
+
+            for (let y = 0; y < h; y += stepY) {
+                for (let x = 0; x < w; x += stepX) {
+                    if (sCtx.isPointInPath((x / w) * 100, (y / h) * 100)) {
+                        totalHeartPoints++;
+                        const index = (Math.floor(y) * w + Math.floor(x)) * 4;
+                        const alpha = imgData[index + 3];
+                        if (alpha < 60) {
+                            clearedPoints++;
+                        }
+                    }
+                }
             }
 
-            tryPlayMusic();
-            triggerScrollObserver();
-        }, 800);
-
-        // 4. Fade out entrance completely
-        setTimeout(() => {
-            grandEntrance.classList.add('fade-out');
-        }, 600);
-
-        // 5. Remove from DOM after all transitions
-        setTimeout(() => {
-            grandEntrance.style.display = 'none';
-            document.body.style.overflow = '';
-        }, 2400);
-    }
-
-    if (openInviteBtn) {
-        openInviteBtn.addEventListener('click', openInvitation);
-        openInviteBtn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openInvitation(); }
-        });
-    }
-
-    // Prevent scroll while entrance is visible
-    if (grandEntrance && !grandEntrance.classList.contains('opened')) {
-        document.body.style.overflow = 'hidden';
-    }
-
-
-    /* ------------------------------------------------------------------
-       3. BACKGROUND MUSIC (assets/sound/bkw.mp3)
-       ------------------------------------------------------------------ */
-    const bgAudio = document.getElementById('bgAudio');
-    const musicToggle = document.getElementById('musicToggle');
-    let isPlaying = false;
-    const DEFAULT_VOLUME = 0.2;
-
-    if (bgAudio) bgAudio.volume = DEFAULT_VOLUME;
-
-    function tryPlayMusic() {
-        if (isPlaying || !bgAudio) return;
-        bgAudio.volume = DEFAULT_VOLUME;
-        const p = bgAudio.play();
-        if (p !== undefined) {
-            p.then(() => {
-                isPlaying = true;
-                updateMusicUI(true);
-            }).catch(() => {
-                enablePlayOnInteraction();
-            });
-        }
-    }
-
-    function enablePlayOnInteraction() {
-        if (!bgAudio || isPlaying) return;
-        const events = ['click', 'touchstart', 'scroll', 'keydown'];
-        const handler = () => {
-            if (!isPlaying && bgAudio) {
-                bgAudio.play().then(() => {
-                    isPlaying = true;
-                    updateMusicUI(true);
-                }).catch(() => { /* ignore */ });
+            if (totalHeartPoints > 0) {
+                const ratio = clearedPoints / totalHeartPoints;
+                if (ratio >= 0.5) {
+                    revealDate();
+                }
             }
-            events.forEach(evt => document.removeEventListener(evt, handler, { passive: true }));
-        };
-        events.forEach(evt => document.addEventListener(evt, handler, { passive: true }));
-    }
-
-    function toggleMusic() {
-        if (!bgAudio) return;
-        if (isPlaying) {
-            bgAudio.pause();
-            isPlaying = false;
-            updateMusicUI(false);
-        } else {
-            bgAudio.volume = DEFAULT_VOLUME;
-            bgAudio.play().then(() => {
-                isPlaying = true;
-                updateMusicUI(true);
-            }).catch(() => { /* ignore */ });
-        }
-    }
-
-    function updateMusicUI(playing) {
-        if (!musicToggle) return;
-        musicToggle.classList.toggle('playing', playing);
-        musicToggle.setAttribute('aria-pressed', String(playing));
-    }
-
-    if (musicToggle) musicToggle.addEventListener('click', toggleMusic);
-
-
-    /* ------------------------------------------------------------------
-       4. CIRCULAR COUNTDOWN TIMER
-       ------------------------------------------------------------------ */
-    const eventTime = new Date(CONFIG.eventDateISO).getTime();
-    const CIRCUMFERENCE = 2 * Math.PI * 52; // ring radius = 52
-
-    function updateCountdown() {
-        const now = Date.now();
-        const diff = eventTime - now;
-        const timerEl = document.getElementById('countdownTimer');
-        if (!timerEl) return;
-
-        if (diff <= 0) {
-            timerEl.innerHTML = '<p class="countdown-ended">The celebration has begun!</p>';
-            return;
         }
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        function revealDate() {
+            if (isRevealed) return;
+            isRevealed = true;
+            isScratching = false;
+
+            const rect = canvas.getBoundingClientRect();
+            ctx.clearRect(0, 0, rect.width, rect.height);
+            wrapper.style.opacity = '0';
+            setTimeout(() => { wrapper.style.display = 'none'; }, 400);
+
+            if (instruction) instruction.classList.add('hidden');
+            if (completionMsg) completionMsg.classList.remove('hidden');
+
+            container.classList.add('bounce');
+            triggerConfetti();
+        }
+
+        canvas.addEventListener('pointerdown', startScratch);
+        window.addEventListener('pointermove', moveScratch, { passive: false });
+        window.addEventListener('pointerup', stopScratch);
+        window.addEventListener('pointercancel', stopScratch);
+
+        canvas.addEventListener('touchstart', startScratch, { passive: false });
+        canvas.addEventListener('touchmove', moveScratch, { passive: false });
+        canvas.addEventListener('touchend', stopScratch);
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+    }
+
+
+    /* ==========================================================================
+       6. COUNTDOWN TIMER
+       ========================================================================== */
+    function initCountdownTimer() {
+        const targetDate = new Date('2026-12-19T19:30:00+05:00').getTime();
 
         const daysEl = document.getElementById('days');
         const hoursEl = document.getElementById('hours');
         const minutesEl = document.getElementById('minutes');
         const secondsEl = document.getElementById('seconds');
 
-        if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
-        if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
-        if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
-        if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+        if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
 
-        // Update ring progress
-        const ringDays = document.getElementById('ringDays');
-        const ringHours = document.getElementById('ringHours');
-        const ringMinutes = document.getElementById('ringMinutes');
-        const ringSeconds = document.getElementById('ringSeconds');
+        function updateTimer() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
 
-        // Calculate remaining fraction for each (max 365 days)
-        const totalDaysMax = 365;
-        if (ringDays) ringDays.style.strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * Math.min(days / totalDaysMax, 1));
-        if (ringHours) ringHours.style.strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * (hours / 24));
-        if (ringMinutes) ringMinutes.style.strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * (minutes / 60));
-        if (ringSeconds) ringSeconds.style.strokeDashoffset = CIRCUMFERENCE - (CIRCUMFERENCE * (seconds / 60));
-    }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-
-    /* ------------------------------------------------------------------
-       5. SCRATCH TO REVEAL DATE CARD
-       ------------------------------------------------------------------ */
-    const scratchCanvas = document.getElementById('scratchCard');
-    const scratchContainer = document.getElementById('scratchContainer');
-    let scratchCtx = null;
-    let isScratching = false;
-    let scratchRevealed = false;
-
-    function initScratchCard() {
-        if (!scratchCanvas || !scratchContainer) return;
-
-        scratchCtx = scratchCanvas.getContext('2d');
-        const rect = scratchContainer.getBoundingClientRect();
-        scratchCanvas.width = rect.width;
-        scratchCanvas.height = rect.height;
-
-        // Draw the gold metallic cover
-        drawScratchCover();
-
-        // Event listeners
-        scratchCanvas.addEventListener('mousedown', startScratch);
-        scratchCanvas.addEventListener('mousemove', doScratch);
-        scratchCanvas.addEventListener('mouseup', endScratch);
-        scratchCanvas.addEventListener('mouseleave', endScratch);
-
-        scratchCanvas.addEventListener('touchstart', startScratch, { passive: false });
-        scratchCanvas.addEventListener('touchmove', doScratch, { passive: false });
-        scratchCanvas.addEventListener('touchend', endScratch);
-    }
-
-    function drawScratchCover() {
-        if (!scratchCtx) return;
-        const w = scratchCanvas.width;
-        const h = scratchCanvas.height;
-
-        // Metallic gold gradient
-        const gradient = scratchCtx.createLinearGradient(0, 0, w, h);
-        gradient.addColorStop(0, '#C5A046');
-        gradient.addColorStop(0.25, '#E8C967');
-        gradient.addColorStop(0.5, '#D4AF37');
-        gradient.addColorStop(0.75, '#B8942D');
-        gradient.addColorStop(1, '#C5A046');
-        scratchCtx.fillStyle = gradient;
-        scratchCtx.fillRect(0, 0, w, h);
-
-        // Add shimmer sparkle dots
-        for (let i = 0; i < 80; i++) {
-            const x = Math.random() * w;
-            const y = Math.random() * h;
-            const size = Math.random() * 2 + 0.5;
-            const alpha = Math.random() * 0.5 + 0.2;
-            scratchCtx.beginPath();
-            scratchCtx.arc(x, y, size, 0, Math.PI * 2);
-            scratchCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-            scratchCtx.fill();
-        }
-
-        // Subtle diamond/crosshatch pattern
-        scratchCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-        scratchCtx.lineWidth = 0.5;
-        for (let i = -h; i < w + h; i += 20) {
-            scratchCtx.beginPath();
-            scratchCtx.moveTo(i, 0);
-            scratchCtx.lineTo(i + h, h);
-            scratchCtx.stroke();
-            scratchCtx.beginPath();
-            scratchCtx.moveTo(i + h, 0);
-            scratchCtx.lineTo(i, h);
-            scratchCtx.stroke();
-        }
-
-        // Text
-        scratchCtx.fillStyle = 'rgba(13, 27, 42, 0.7)';
-        scratchCtx.font = `600 ${Math.min(w * 0.04, 16)}px 'Plus Jakarta Sans', sans-serif`;
-        scratchCtx.textAlign = 'center';
-        scratchCtx.textBaseline = 'middle';
-        scratchCtx.fillText('✨  Scratch here to reveal the date  ✨', w / 2, h / 2);
-    }
-
-    function getPosition(e) {
-        const rect = scratchCanvas.getBoundingClientRect();
-        if (e.touches && e.touches.length > 0) {
-            return {
-                x: e.touches[0].clientX - rect.left,
-                y: e.touches[0].clientY - rect.top
-            };
-        }
-        return {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        };
-    }
-
-    function startScratch(e) {
-        if (scratchRevealed) return;
-        e.preventDefault();
-        isScratching = true;
-        const pos = getPosition(e);
-        scratch(pos.x, pos.y);
-    }
-
-    function doScratch(e) {
-        if (!isScratching || scratchRevealed) return;
-        e.preventDefault();
-        const pos = getPosition(e);
-        scratch(pos.x, pos.y);
-    }
-
-    function endScratch() {
-        isScratching = false;
-        if (!scratchRevealed) {
-            checkScratchProgress();
-        }
-    }
-
-    function scratch(x, y) {
-        if (!scratchCtx) return;
-        scratchCtx.globalCompositeOperation = 'destination-out';
-        scratchCtx.beginPath();
-        scratchCtx.arc(x, y, 22, 0, Math.PI * 2);
-        scratchCtx.fill();
-
-        // Extra softness
-        scratchCtx.beginPath();
-        scratchCtx.arc(x, y, 30, 0, Math.PI * 2);
-        const grad = scratchCtx.createRadialGradient(x, y, 10, x, y, 30);
-        grad.addColorStop(0, 'rgba(0,0,0,1)');
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-        scratchCtx.fillStyle = grad;
-        scratchCtx.fill();
-
-        scratchCtx.globalCompositeOperation = 'source-over';
-    }
-
-    function checkScratchProgress() {
-        if (!scratchCtx || scratchRevealed) return;
-        const imageData = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
-        const pixels = imageData.data;
-        let transparent = 0;
-        const total = pixels.length / 4;
-
-        for (let i = 3; i < pixels.length; i += 4) {
-            if (pixels[i] < 128) transparent++;
-        }
-
-        const percent = (transparent / total) * 100;
-
-        if (percent >= 50) {
-            revealScratchCard();
-        }
-    }
-
-    function revealScratchCard() {
-        scratchRevealed = true;
-
-        // Dissolve remaining cover with animation
-        scratchCanvas.style.transition = 'opacity 0.8s ease';
-        scratchCanvas.style.opacity = '0';
-
-        setTimeout(() => {
-            scratchCanvas.style.display = 'none';
-        }, 800);
-
-        // Fire confetti!
-        fireConfetti();
-    }
-
-
-    /* ------------------------------------------------------------------
-       6. GOLD CONFETTI BURST
-       ------------------------------------------------------------------ */
-    const confettiCanvas = document.getElementById('confettiCanvas');
-    let confettiCtx = null;
-
-    function fireConfetti() {
-        if (!confettiCanvas || prefersReducedMotion) return;
-        confettiCtx = confettiCanvas.getContext('2d');
-        confettiCanvas.width = window.innerWidth;
-        confettiCanvas.height = window.innerHeight;
-        confettiCanvas.classList.add('active');
-
-        const confettiPieces = [];
-        const colors = [
-            '#D4AF37', '#E8C967', '#B8942D', '#C5A046',
-            '#FAF7F0', '#F5EFE0', '#FFD700'
-        ];
-
-        for (let i = 0; i < 120; i++) {
-            confettiPieces.push({
-                x: confettiCanvas.width / 2 + (Math.random() - 0.5) * 200,
-                y: confettiCanvas.height * 0.5,
-                vx: (Math.random() - 0.5) * 12,
-                vy: Math.random() * -14 - 4,
-                rotation: Math.random() * 360,
-                rotationSpeed: (Math.random() - 0.5) * 10,
-                width: Math.random() * 8 + 4,
-                height: Math.random() * 6 + 2,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                opacity: 1,
-                gravity: 0.25 + Math.random() * 0.1,
-                drag: 0.98 + Math.random() * 0.01
-            });
-        }
-
-        function animateConfetti() {
-            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-            let alive = false;
-
-            confettiPieces.forEach(c => {
-                if (c.opacity <= 0) return;
-                alive = true;
-
-                c.vy += c.gravity;
-                c.vx *= c.drag;
-                c.x += c.vx;
-                c.y += c.vy;
-                c.rotation += c.rotationSpeed;
-                c.opacity -= 0.005;
-
-                if (c.y > confettiCanvas.height + 20) {
-                    c.opacity = 0;
-                    return;
-                }
-
-                confettiCtx.save();
-                confettiCtx.translate(c.x, c.y);
-                confettiCtx.rotate((c.rotation * Math.PI) / 180);
-                confettiCtx.globalAlpha = Math.max(0, c.opacity);
-                confettiCtx.fillStyle = c.color;
-                confettiCtx.fillRect(-c.width / 2, -c.height / 2, c.width, c.height);
-                confettiCtx.restore();
-            });
-
-            if (alive) {
-                requestAnimationFrame(animateConfetti);
-            } else {
-                confettiCanvas.classList.remove('active');
+            if (difference <= 0) {
+                daysEl.textContent = '00';
+                hoursEl.textContent = '00';
+                minutesEl.textContent = '00';
+                secondsEl.textContent = '00';
+                return;
             }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            daysEl.textContent = String(days).padStart(2, '0');
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
         }
 
-        animateConfetti();
+        updateTimer();
+        setInterval(updateTimer, 1000);
     }
 
 
-    /* ------------------------------------------------------------------
-       7. SCROLL REVEAL OBSERVER
-       ------------------------------------------------------------------ */
-    function triggerScrollObserver() {
+    /* ==========================================================================
+       7. SCROLL REVEAL & NAVIGATION
+       ========================================================================== */
+    function initScrollReveal() {
         const fadeElements = document.querySelectorAll('.fade-in');
-        if (!fadeElements.length) return;
+        const navbar = document.getElementById('navbar');
+        const backToTop = document.getElementById('backToTop');
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
 
+        // Scroll Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        }, { threshold: 0.1 });
 
         fadeElements.forEach(el => observer.observe(el));
 
-        // Also init scratch card when it comes into view
-        const scratchObs = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    initScratchCard();
-                    scratchObs.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.3 });
+        // Scroll Top / Navbar
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 150) {
+                if (navbar) navbar.classList.add('scrolled');
+                if (backToTop) backToTop.classList.add('show');
+            } else {
+                if (navbar) navbar.classList.remove('scrolled');
+                if (backToTop) backToTop.classList.remove('show');
+            }
+        });
 
-        if (scratchContainer) {
-            scratchObs.observe(scratchContainer);
+        if (backToTop) {
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        const footerTopBtn = document.getElementById('footerTopBtn');
+        if (footerTopBtn) {
+            footerTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Mobile Nav Toggle
+        if (navToggle && navLinks) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+                navToggle.setAttribute('aria-expanded', !expanded);
+            });
+
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
         }
     }
 
 
-    /* ------------------------------------------------------------------
-       8. NAVBAR SCROLL STATE + PARALLAX
-       ------------------------------------------------------------------ */
-    const navbar = document.getElementById('navbar');
-    const heroImg = document.querySelector('.hero-img');
-    const backToTop = document.getElementById('backToTop');
+    /* ==========================================================================
+       8. MUSIC PLAYER & INTERACTIVE DANCE STAGE
+       ========================================================================== */
+    function initMusicPlayer() {
+        const bgAudio = document.getElementById('bgAudio');
+        const musicToggle = document.getElementById('musicToggle');
 
-    let ticking = false;
-    function onScroll() {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-            const y = window.scrollY;
+        if (!bgAudio || !musicToggle) return;
 
-            // Navbar
-            if (navbar) navbar.classList.toggle('scrolled', y > 60);
-
-            // Hero parallax
-            if (heroImg && !prefersReducedMotion) {
-                heroImg.style.transform = `translateY(${y * 0.25}px) scale(1.08)`;
-            }
-
-            // Back to top
-            if (backToTop) {
-                backToTop.classList.toggle('visible', y > 500);
-            }
-
-            ticking = false;
-        });
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    if (backToTop) {
-        backToTop.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-
-
-    /* ------------------------------------------------------------------
-       9. MOBILE NAVIGATION TOGGLE
-       ------------------------------------------------------------------ */
-    const navToggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
-
-    if (navToggle && navLinks) {
-        const closeNav = () => {
-            navLinks.classList.remove('open');
-            navToggle.classList.remove('open');
-            navToggle.setAttribute('aria-expanded', 'false');
-        };
-
-        navToggle.addEventListener('click', () => {
-            const isOpen = navLinks.classList.toggle('open');
-            navToggle.classList.toggle('open', isOpen);
-            navToggle.setAttribute('aria-expanded', String(isOpen));
-        });
-
-        navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
-
-        document.addEventListener('click', (e) => {
-            if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !navToggle.contains(e.target)) {
-                closeNav();
+        musicToggle.addEventListener('click', () => {
+            getAudioContext();
+            if (bgAudio.paused) {
+                bgAudio.play().then(() => {
+                    musicToggle.setAttribute('aria-pressed', 'true');
+                }).catch(() => {});
+            } else {
+                bgAudio.pause();
+                musicToggle.setAttribute('aria-pressed', 'false');
             }
         });
     }
 
+    function initDanceFloor() {
+        const feelTheBeatBtn = document.getElementById('feelTheBeatBtn');
 
-    /* ------------------------------------------------------------------
-       10. RSVP FORM — with Guest Counter, Validation & Toast
-       ------------------------------------------------------------------ */
-    const rsvpForm = document.getElementById('rsvpForm');
-    const rsvpSubmitBtn = document.getElementById('rsvpSubmitBtn');
-    const rsvpConfirmation = document.getElementById('rsvpConfirmation');
-    const confirmationText = document.getElementById('confirmationText');
-    const rsvpToast = document.getElementById('rsvpToast');
-    const toastMessage = document.getElementById('toastMessage');
+        if (feelTheBeatBtn) {
+            feelTheBeatBtn.addEventListener('click', (e) => {
+                playDholBeatSound();
+                triggerConfetti();
+                triggerPetalBurstAt(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+            });
+        }
+    }
 
-    // Guest counter
-    const guestCountInput = document.getElementById('guestCount');
-    const guestMinus = document.getElementById('guestMinus');
-    const guestPlus = document.getElementById('guestPlus');
 
-    if (guestMinus && guestPlus && guestCountInput) {
-        guestMinus.addEventListener('click', () => {
-            let val = parseInt(guestCountInput.value) || 1;
-            if (val > 1) {
-                guestCountInput.value = val - 1;
+    /* ==========================================================================
+       9. GALLERY LIGHTBOX MODAL
+       ========================================================================== */
+    function initGalleryLightbox() {
+        const galleryGrid = document.getElementById('galleryGrid');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+
+        if (!galleryGrid || !lightbox || !lightboxImg) return;
+
+        const items = Array.from(galleryGrid.querySelectorAll('.gallery-item'));
+        let currentIndex = 0;
+
+        function openLightbox(index) {
+            currentIndex = index;
+            const img = items[currentIndex].querySelector('img');
+            if (img) {
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
             }
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+        }
+
+        items.forEach((item, index) => {
+            item.addEventListener('click', () => openLightbox(index));
         });
 
-        guestPlus.addEventListener('click', () => {
-            let val = parseInt(guestCountInput.value) || 1;
-            if (val < 10) {
-                guestCountInput.value = val + 1;
-            }
+        if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+        if (lightboxPrev) {
+            lightboxPrev.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex - 1 + items.length) % items.length;
+                openLightbox(currentIndex);
+            });
+        }
+        if (lightboxNext) {
+            lightboxNext.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex + 1) % items.length;
+                openLightbox(currentIndex);
+            });
+        }
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
         });
     }
 
-    function showToast(message, duration = 4000) {
-        if (!rsvpToast || !toastMessage) return;
-        toastMessage.textContent = message;
-        rsvpToast.classList.add('show');
-        setTimeout(() => {
-            rsvpToast.classList.remove('show');
-        }, duration);
-    }
 
-    if (rsvpForm) {
-        rsvpForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+    /* ==========================================================================
+       10. RSVP FORM & GUEST COUNTER
+       ========================================================================== */
+    function initRsvpForm() {
+        const rsvpForm = document.getElementById('rsvpForm');
+        const guestMinus = document.getElementById('guestMinus');
+        const guestPlus = document.getElementById('guestPlus');
+        const guestCount = document.getElementById('guestCount');
+        const rsvpConfirmation = document.getElementById('rsvpConfirmation');
 
-            // Clear previous errors
-            rsvpForm.querySelectorAll('.form-error').forEach(el => el.classList.remove('show'));
-            rsvpForm.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
+        if (guestMinus && guestPlus && guestCount) {
+            guestMinus.addEventListener('click', () => {
+                let val = parseInt(guestCount.value, 10) || 1;
+                if (val > 1) guestCount.value = val - 1;
+            });
 
-            let isValid = true;
+            guestPlus.addEventListener('click', () => {
+                let val = parseInt(guestCount.value, 10) || 1;
+                if (val < 10) guestCount.value = val + 1;
+            });
+        }
 
-            // Validate name
-            const nameInput = document.getElementById('guestName');
-            if (!nameInput.value.trim()) {
-                isValid = false;
-                nameInput.classList.add('error');
-                document.getElementById('guestNameError').classList.add('show');
-            }
+        if (rsvpForm) {
+            rsvpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nameInput = document.getElementById('guestName');
+                const nameGroup = nameInput ? nameInput.parentElement : null;
 
-            // Validate attendance
-            const attendance = rsvpForm.querySelector('input[name="attendance"]:checked');
-            if (!attendance) {
-                isValid = false;
-                document.getElementById('attendanceError').classList.add('show');
-            }
+                if (!nameInput || !nameInput.value.trim()) {
+                    if (nameGroup) nameGroup.classList.add('error');
+                    return;
+                }
+                if (nameGroup) nameGroup.classList.remove('error');
 
-            if (!isValid) return;
+                const btnText = rsvpForm.querySelector('.btn-text');
+                const btnLoading = rsvpForm.querySelector('.btn-loading');
 
-            // Simulate submission
-            rsvpSubmitBtn.classList.add('loading');
-            rsvpSubmitBtn.disabled = true;
-
-            setTimeout(() => {
-                rsvpForm.classList.add('hidden');
-
-                const guestName = nameInput.value.trim();
-                const isAccepting = attendance.value === 'accept';
-                const guestNum = guestCountInput ? guestCountInput.value : '1';
-
-                if (isAccepting) {
-                    confirmationText.textContent = `Thank you, ${guestName}! We're delighted you'll be joining us for the Walima Reception with ${guestNum} guest(s).`;
-                    showToast(`🎉 RSVP confirmed for ${guestName} — ${guestNum} guest(s)!`);
-                } else {
-                    confirmationText.textContent = `Thank you, ${guestName}. We're sorry you won't be able to make it, but we appreciate your kind response.`;
-                    showToast(`Thank you for your response, ${guestName}.`);
+                if (btnText && btnLoading) {
+                    btnText.classList.add('hidden');
+                    btnLoading.classList.remove('hidden');
                 }
 
-                rsvpConfirmation.classList.remove('hidden');
-
-                // Log to console for demo purposes
-                console.log('RSVP Demo Submission:', {
-                    name: guestName,
-                    guests: guestNum,
-                    attendance: attendance.value,
-                    meal: document.getElementById('mealPref') ? document.getElementById('mealPref').value : '',
-                    message: document.getElementById('guestMessage').value
-                });
-            }, 1500);
-        });
-
-        // Clear errors on input
-        rsvpForm.querySelectorAll('.form-input').forEach(input => {
-            input.addEventListener('input', () => {
-                input.classList.remove('error');
-                const errorEl = input.parentElement.querySelector('.form-error');
-                if (errorEl) errorEl.classList.remove('show');
+                setTimeout(() => {
+                    rsvpForm.classList.add('hidden');
+                    if (rsvpConfirmation) rsvpConfirmation.classList.remove('hidden');
+                    triggerConfetti();
+                }, 800);
             });
-        });
+        }
 
-        rsvpForm.querySelectorAll('input[name="attendance"]').forEach(radio => {
-            radio.addEventListener('change', () => {
-                document.getElementById('attendanceError').classList.remove('show');
+        const saveTheDateBtn = document.getElementById('saveTheDateBtn');
+        if (saveTheDateBtn) {
+            saveTheDateBtn.addEventListener('click', () => {
+                const icsData = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//WebCardsByDQ//Mehndi Invitation//EN
+BEGIN:VEVENT
+SUMMARY:Mehndi Night Celebration - Zaryab & Abu Bakar
+DESCRIPTION:Mehndi Celebration of Zaryab & Abu Bakar. Guest Arrival: 7:30 PM, Dinner: 8:30 PM.
+LOCATION:The Royale Palace Banquet, Main Clifton, Karachi, Pakistan
+DTSTART:20261219T143000Z
+DTEND:20261219T180000Z
+END:VEVENT
+END:VCALENDAR`;
+                const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.setAttribute('download', 'Mehndi-Zaryab-AbuBakar.ics');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             });
-        });
+        }
     }
 
 
-    /* ------------------------------------------------------------------
-       11. SAVE THE DATE — ICS Calendar Download
-       ------------------------------------------------------------------ */
-    const saveTheDateBtn = document.getElementById('saveTheDateBtn');
+    /* ==========================================================================
+       11. INITIALIZE ALL COMPONENTS
+       ========================================================================== */
+    initDholOpening();
+    initMusicPlayer();
+    initDanceFloor();
+    initGalleryLightbox();
+    initRsvpForm();
 
-    if (saveTheDateBtn) {
-        saveTheDateBtn.addEventListener('click', () => {
-            const startDate = '20261219T193000';
-            const endDate = '20261219T230000';
-
-            const icsContent = [
-                'BEGIN:VCALENDAR',
-                'VERSION:2.0',
-                'PRODID:-//Walima Invitation//EN',
-                'CALSCALE:GREGORIAN',
-                'BEGIN:VEVENT',
-                `DTSTART;TZID=Asia/Karachi:${startDate}`,
-                `DTEND;TZID=Asia/Karachi:${endDate}`,
-                `SUMMARY:${CONFIG.event} — ${CONFIG.bride} & ${CONFIG.groom}`,
-                `DESCRIPTION:Walima Reception of ${CONFIG.bride} & ${CONFIG.groom}.\\nGuest Arrival: ${CONFIG.guestArrival}\\nDinner: ${CONFIG.dinner}\\nVenue: ${CONFIG.venue}\\nRSVP: ${CONFIG.rsvpContact}`,
-                `LOCATION:${CONFIG.venue}\\, ${CONFIG.venueAddress}\\, ${CONFIG.location}`,
-                'STATUS:CONFIRMED',
-                'BEGIN:VALARM',
-                'TRIGGER:-PT2H',
-                'ACTION:DISPLAY',
-                'DESCRIPTION:Walima Reception in 2 hours',
-                'END:VALARM',
-                'END:VEVENT',
-                'END:VCALENDAR'
-            ].join('\r\n');
-
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'walima-reception-zaryab-abubakar.ics';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        });
+    // If dhol opening is already passed or hidden
+    const mainContent = document.getElementById('mainContent');
+    if (mainContent && !mainContent.classList.contains('hidden')) {
+        initParticleBackground();
+        initScratchCard();
+        initScrollReveal();
+        initCountdownTimer();
     }
-
-
-    /* ------------------------------------------------------------------
-       12. SMOOTH SCROLL for anchor links
-       ------------------------------------------------------------------ */
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            const target = document.querySelector(targetId);
-            if (target) {
-                e.preventDefault();
-                const offset = navbar ? navbar.offsetHeight : 0;
-                const top = target.getBoundingClientRect().top + window.scrollY - offset;
-                window.scrollTo({ top, behavior: 'smooth' });
-            }
-        });
-    });
-
-
-    /* ------------------------------------------------------------------
-       13. WINDOW RESIZE HANDLER for Scratch Card
-       ------------------------------------------------------------------ */
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            if (!scratchRevealed && scratchCtx && scratchContainer) {
-                const rect = scratchContainer.getBoundingClientRect();
-                scratchCanvas.width = rect.width;
-                scratchCanvas.height = rect.height;
-                drawScratchCover();
-            }
-        }, 300);
-    });
-
 });
