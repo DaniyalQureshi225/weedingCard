@@ -311,6 +311,11 @@ function triggerConfetti() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }, { passive: true });
+
   const particles = [];
   const colors = ['#3B82F6', '#2563EB', '#F59E0B', '#FCD34D', '#E0F2FE', '#60A5FA'];
 
