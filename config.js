@@ -14,7 +14,7 @@ const ANNIVERSARY_CONFIG = {
   
   // Website & Sharing Settings (WhatsApp & Social Media Link Preview Image)
   siteUrl: "", // Optional: Your deployed site domain (e.g. "https://ouranniversary.netlify.app")
-  shareImageUrl: "assets/img/romantic_hero_bg.jpg", // Preview image shown when sharing on WhatsApp
+  shareImageUrl: "assets/img/og-share.jpg", // Optimized 1200x630 preview image for WhatsApp
 
   // Audio Settings
   musicUrl: "assets/sound/bkw.mp3", // Romantic audio track

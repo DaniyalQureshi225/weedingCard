@@ -10,7 +10,7 @@ export default async (request, context) => {
 
   const annivTitle = "❤️ You're Invited to Celebrate Our Anniversary";
   const annivDesc = "Join us as we celebrate another year of laughter, countless memories, and a love that grows stronger with every passing day.";
-  const annivImage = origin + "/assets/img/romantic_hero_bg.jpg";
+  const annivImage = origin + "/assets/img/og-share.jpg";
   const annivUrl = origin + "/";
 
   html = replaceMeta(html, {
