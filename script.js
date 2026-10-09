@@ -27,6 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ------------------------------------------------------------------
+       MUSIC TRACK SELECTION — bkw1.mp3 for mehndi, bkw.mp3 otherwise
+       ------------------------------------------------------------------ */
+    const bgAudioEl = document.getElementById('bgAudio');
+    if (bgAudioEl) {
+        bgAudioEl.src = isMehndi
+            ? 'assets/sound/bkw1.mp3'
+            : 'assets/sound/bkw.mp3';
+        bgAudioEl.load(); // reload with the new source
+    }
+
+    /* ------------------------------------------------------------------
        1. ENVELOPE UNSEAL / OPEN INVITATION
        ------------------------------------------------------------------ */
     const openInviteBtn = document.getElementById('openInviteBtn');
@@ -74,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicPlayIcon = document.getElementById('musicPlayIcon');
     const musicPauseIcon = document.getElementById('musicPauseIcon');
 
-    const DEFAULT_VOLUME = 0.25;
+    const DEFAULT_VOLUME = 0.15;
 
     if (bgAudio) {
         bgAudio.volume = DEFAULT_VOLUME;
@@ -152,9 +163,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize mehndi features (after music vars are declared)
     if (isMehndi) {
-        tryPlayMusic();
-        // Also try to enable interaction handler immediately for mehndi mode
-        enablePlayOnInteraction();
+        // Mehndi entrance splash — a single tap both reveals the invite and
+        // acts as the user gesture browsers require before audio can play,
+        // mirroring how the wedding envelope's "Tap to Open" seal works.
+        const mehndiSplash = document.getElementById('mehndiSplash');
+        const mehndiEnterBtn = document.getElementById('mehndiEnterBtn');
+        if (mehndiSplash) mehndiSplash.classList.remove('hidden');
+
+        const enterMehndi = () => {
+            if (mehndiSplash) mehndiSplash.classList.add('opened');
+            tryPlayMusic();
+        };
+        if (mehndiEnterBtn) {
+            mehndiEnterBtn.addEventListener('click', enterMehndi);
+            mehndiEnterBtn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterMehndi(); }
+            });
+        }
+
         initMehndiScratchCard();
         initMehndiPetals();
         triggerScrollObserver();
