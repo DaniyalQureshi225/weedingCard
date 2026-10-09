@@ -1,59 +1,118 @@
 /**
- * Little Boss Birthday Invitation Configuration
- * Customize all party details here!
+ * Romantic Anniversary Digital Invitation Configuration
+ * Customize all details of your love story and celebration here!
  */
-const BIRTHDAY_CONFIG = {
-  // Baby Details
-  babyName: "Alexander",
-  babyAge: "1",
-  babyAgeOrdinal: "1st", // e.g. "1st", "2nd"
-  tagline: "Our Little Boss Is Turning 1!",
-  subtitle: "Come Celebrate With Us!",
+const ANNIVERSARY_CONFIG = {
+  // Couple Information
+  partner1: "Alexander",
+  partner2: "Sophia",
+  coupleTitle: "Alexander & Sophia",
+  anniversaryYears: "5th", // e.g. "5th", "1st", "10th"
+  tagline: "Every Love Story Is Beautiful, But Ours Is My Favorite ❤️",
+  invitationTitle: "You're Invited to Celebrate Our Anniversary",
+  heroSubtitle: "Another year of laughter, countless memories, and a love that grows stronger with every passing day.",
   
   // Audio Settings
-  musicUrl: "assets/sound/hbd.mp3",
-  autoPlayMusic: true,
+  musicUrl: "assets/sound/bkw.mp3", // Romantic audio track
+  musicTitle: "A Thousand Years (Piano & Violin)",
 
-  // Event Date & Time
-  eventDateISO: "2026-11-20T16:00:00", // Format: YYYY-MM-DDTHH:mm:ss for countdown
+  // Event Date & Time (for Countdown & Calendar)
+  eventDateISO: "2026-11-20T19:00:00", // YYYY-MM-DDTHH:mm:ss format
   dateText: "Saturday, November 20, 2026",
-  timeText: "4:00 PM – 8:00 PM",
+  timeText: "7:00 PM – 11:00 PM",
   
   // Venue Information
-  venueName: "The Grand Executive Ballroom",
+  venueName: "Le Jardin Romantic Dining & Ballroom",
   venueAddress: "742 Evergreen Terrace, Suite 500, New York, NY 10001",
   googleMapsUrl: "https://maps.google.com/?q=742+Evergreen+Terrace+New+York",
-  
-  // Little Boss Bio & Stats
-  bossQuote: "Our little boss is growing up! Come join us as we celebrate another amazing year filled with smiles, laughter and lots of cake.",
-  stats: [
-    { icon: "🍼", label: "Favorite Drink", value: "Warm Milk (Double Shot)" },
-    { icon: "🧸", label: "Working Hours", value: "Nap Time & Play Time" },
-    { icon: "💼", label: "Boss Moves", value: "Standing Up & Giggling" },
-    { icon: "⭐", label: "CEO Experience", value: "1 Full Year of Household Management" }
-  ],
-  
-  // Party Highlights
-  highlights: [
-    { title: "Cake Cutting", desc: "Watch the Little Boss smash his 1st birthday cake!", icon: "🎂" },
-    { title: "Balloon Fun", desc: "Magical balloon twisting & floating creation station", icon: "🎈" },
-    { title: "Gifts & Surprises", desc: "Bring joy & love to our tiny Chief Executive", icon: "🎁" },
-    { title: "Baby Games", desc: "Playful interactive mini-games for kids and adults", icon: "🎉" },
-    { title: "Sweet Treats Bar", desc: "Cupcakes, candy bar & delicious custom delights", icon: "🍭" },
-    { title: "Memory Booth", desc: "Capture fun photo memories with Little Boss props", icon: "📸" }
+  dressCode: "Elegant & Romantic (Burgundy, Gold & Dark Tie)",
+
+  // Opening Envelope Text & Secret Letter
+  openingText: "Someone has a little surprise for you…",
+  letterOpeningMessage: "To My Dearest Love,\n\nFive years ago, two paths crossed and created a story more beautiful than I ever dreamed. Today, I invite you to step into our magical world and celebrate every milestone, every laugh, and every promise of forever.\n\nWith all my love ❤️",
+
+  // Interactive Love Story Timeline Milestones
+  timeline: [
+    {
+      id: "meet",
+      icon: "✨",
+      date: "October 14, 2021",
+      title: "The Day We Met",
+      message: "A casual coffee shop glance turned into a conversation that lasted until the stars filled the night sky. We knew right then something extraordinary had begun.",
+      photo: "assets/img/gallery-bokeh.jpg"
+    },
+    {
+      id: "talk",
+      icon: "💕",
+      date: "November 02, 2021",
+      title: "Our First Conversation",
+      message: "Hours disappeared like minutes. Talking to you felt as natural as breathing, like finding a home I didn't know I was looking for.",
+      photo: "assets/img/couple.jpg"
+    },
+    {
+      id: "date",
+      icon: "🌹",
+      date: "December 18, 2021",
+      title: "Our First Date",
+      message: "Dinner under candlelit lanterns, nervous laughter, and a magical walk in the crisp night air. That evening sealed our hearts together.",
+      photo: "assets/img/gallery-lanterns.jpg"
+    },
+    {
+      id: "love",
+      icon: "💖",
+      date: "February 14, 2022",
+      title: "The Moment We Fell in Love",
+      message: "Under a blanket of soft snow and quiet starlight, holding hands, we both realized we had found our soulmate and forever partner.",
+      photo: "assets/img/story-forest.jpg"
+    },
+    {
+      id: "memory",
+      icon: "💍",
+      date: "November 20, 2024",
+      title: "Our Most Beautiful Memory",
+      message: "Whispering promises of eternal love under a canopy of romantic white lights and rose petals, promising to stand together forever.",
+      photo: "assets/img/hero-castle-alt.jpg"
+    },
+    {
+      id: "forever",
+      icon: "♾️",
+      date: "Today & Forever",
+      title: "Another Year of Forever",
+      message: "Celebrating another year of shared dreams, boundless joy, and an enduring love that grows deeper with every single heartbeat.",
+      photo: "assets/img/gallery-couple.jpg"
+    }
   ],
 
-  // Gallery Photos
+  // Romantic Photo Gallery (6 polaroid style photos)
   gallery: [
-    { url: "assets/images/hero.jpg", title: "CEO at Work", tag: "Little Boss" },
-    { url: "assets/images/cake.jpg", title: "Official Birthday Cake", tag: "Cake" },
-    { url: "assets/images/gallery1.jpg", title: "Milestone Smiles", tag: "1 Year Old" },
-    { url: "assets/images/gallery2.jpg", title: "Smash Cake Time", tag: "Smash Cake" },
-    { url: "assets/images/gallery3.jpg", title: "Boss Stance", tag: "Little Boss" }
-  ]
+    { url: "assets/img/couple.jpg", caption: "Our Favorite Golden Hour Sunset Walk", tag: "Golden Hour" },
+    { url: "assets/img/gallery-roses.jpg", caption: "Fresh Red Roses & Candlelight Evenings", tag: "Pure Romance" },
+    { url: "assets/img/gallery-couple.jpg", caption: "Laughter, Warm Hugs & Sweet Memories", tag: "Together" },
+    { url: "assets/img/gallery-lanterns.jpg", caption: "Under the Warm Glowing Lanterns", tag: "Magical Night" },
+    { url: "assets/img/gallery-sunset.jpg", caption: "Holding Hands by the Peaceful Shore", tag: "Ocean Breeze" },
+    { url: "assets/img/story-forest.jpg", caption: "Enchanted Escape into the Woods", tag: "Forever Mine" }
+  ],
+
+  // Interactive Love Notes (6 cards)
+  loveNotes: [
+    { id: 1, text: "You make ordinary days feel extraordinary." },
+    { id: 2, text: "Your smile is still my favorite sight." },
+    { id: 3, text: "You make me feel at home wherever we are." },
+    { id: 4, text: "You understand me in ways words cannot explain." },
+    { id: 5, text: "Every memory with you is worth keeping." },
+    { id: 6, text: "If I had to choose again, I would still choose you." }
+  ],
+
+  // Interactive Anniversary Surprise Box Message
+  surpriseHeading: "There's One More Thing…",
+  surpriseMessage: "My favorite place in the world will always be beside you. Thank you for being part of my life, my happiness, and my forever. Here's to every beautiful memory we've made and every wonderful moment still waiting for us. I love you, today and always. ❤️",
+
+  // Final Closing Quote
+  finalTitle: "One Lifetime Would Never Be Enough.",
+  finalSubtitle: "Here's to us, to our story, and to a love that keeps choosing each other — again and again, forever."
 };
 
-// Export for module or global use
+// Global window registration
 if (typeof window !== 'undefined') {
-  window.BIRTHDAY_CONFIG = BIRTHDAY_CONFIG;
+  window.ANNIVERSARY_CONFIG = ANNIVERSARY_CONFIG;
 }

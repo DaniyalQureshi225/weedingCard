@@ -1,113 +1,245 @@
 /**
- * Little Boss Birthday Invitation Script
- * Includes Mic blowing detection, candle animations, mp3 audio player, confetti & countdown
+ * Romantic Anniversary Digital Invitation Script
+ * Controls canvas particles, love letter reveal, music player, timeline, gallery lightbox, 
+ * love notes, surprise gift box, countdown, RSVP modal, and calendar generation.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load Configuration
-  const config = window.BIRTHDAY_CONFIG || {
-    babyName: "Alexander",
-    babyAge: "1",
-    babyAgeOrdinal: "1st",
-    tagline: "Our Little Boss Is Turning 1!",
-    subtitle: "Come Celebrate With Us!",
-    musicUrl: "assets/sound/hbd.mp3",
-    autoPlayMusic: true,
-    eventDateISO: "2026-11-20T16:00:00",
+  const config = window.ANNIVERSARY_CONFIG || {
+    partner1: "Alexander",
+    partner2: "Sophia",
+    coupleTitle: "Alexander & Sophia",
+    anniversaryYears: "5th",
+    tagline: "Every Love Story Is Beautiful, But Ours Is My Favorite ❤️",
+    invitationTitle: "You're Invited to Celebrate Our Anniversary",
+    heroSubtitle: "Another year of laughter, countless memories, and a love that grows stronger with every passing day.",
+    musicUrl: "assets/sound/bkw.mp3",
+    musicTitle: "A Thousand Years",
+    eventDateISO: "2026-11-20T19:00:00",
     dateText: "Saturday, November 20, 2026",
-    timeText: "4:00 PM – 8:00 PM",
-    venueName: "The Grand Executive Ballroom",
+    timeText: "7:00 PM – 11:00 PM",
+    venueName: "Le Jardin Romantic Dining & Ballroom",
     venueAddress: "742 Evergreen Terrace, Suite 500, New York, NY 10001",
-    googleMapsUrl: "https://maps.google.com/?q=742+Evergreen+Terrace+New+York"
+    googleMapsUrl: "https://maps.google.com/?q=742+Evergreen+Terrace+New+York",
+    dressCode: "Elegant & Romantic (Burgundy, Gold & Dark Tie)",
+    openingText: "Someone has a little surprise for you…",
+    letterOpeningMessage: "To My Dearest Love,\n\nFive years ago, two paths crossed and created a story more beautiful than I ever dreamed. Today, I invite you to step into our magical world and celebrate every milestone, every laugh, and every promise of forever.\n\nWith all my love ❤️",
+    timeline: [],
+    gallery: [],
+    loveNotes: [],
+    surpriseHeading: "There's One More Thing…",
+    surpriseMessage: "My favorite place in the world will always be beside you. Thank you for being part of my life, my happiness, and my forever. Here's to every beautiful memory we've made and every wonderful moment still waiting for us. I love you, today and always. ❤️",
+    finalTitle: "One Lifetime Would Never Be Enough.",
+    finalSubtitle: "Here's to us, to our story, and to a love that keeps choosing each other — again and again, forever."
   };
 
-  // Prevent scroll during cake reveal
-  document.body.classList.add('lock-scroll');
+  // 1. Initialize Canvas Particle System
+  initRomanticCanvas();
 
-  // Initialize UI content from config
-  initDynamicContent(config);
+  // 2. Bind Dynamic Text Content
+  bindDynamicContent(config);
 
-  // Initialize Audio Player with assets/sound/hbd.mp3
+  // 3. Initialize Audio System
   initAudioSystem(config);
 
-  // Initialize Candle Blow & Mic detection
-  initCakeCandles();
+  // 4. Initialize Envelope Opening Animation
+  initEnvelopeScreen();
 
-  // Initialize Countdown Timer
+  // 5. Render Timeline
+  renderTimeline(config.timeline);
+
+  // 6. Render Photo Gallery & Lightbox
+  renderGallery(config.gallery);
+
+  // 7. Render Love Notes
+  renderLoveNotes(config.loveNotes);
+
+  // 8. Initialize Surprise Gift Box Reveal
+  initSurpriseBox();
+
+  // 9. Initialize Event Actions (RSVP, Location, Calendar)
+  initEventActions(config);
+
+  // 10. Initialize Countdown Timer
   initCountdown(config.eventDateISO);
 
-  // Initialize Lightbox Modal
-  initGalleryLightbox();
-
-  // Initialize RSVP Form
-  initRSVPForm();
+  // 11. Initialize Replay Story Button
+  initReplayButton();
 });
 
-/* --------------------------------------------------------------------------
-   1. DYNAMIC CONTENT INJECTION
-   -------------------------------------------------------------------------- */
-function initDynamicContent(cfg) {
-  // Name & Title bindings
-  const nameElems = document.querySelectorAll('.bind-baby-name');
-  nameElems.forEach(el => el.textContent = cfg.babyName);
+/* ==========================================================================
+   1. AMBIENT PARTICLES CANVAS (Rose Petals & Golden Dust)
+   ========================================================================== */
+let canvas, ctx;
+let particles = [];
+const PARTICLE_COUNT = 40;
 
-  const ageElems = document.querySelectorAll('.bind-baby-age');
-  ageElems.forEach(el => el.textContent = cfg.babyAge);
+function initRomanticCanvas() {
+  canvas = document.getElementById('romantic-canvas');
+  if (!canvas) return;
 
-  const ordinalElems = document.querySelectorAll('.bind-baby-ordinal');
-  ordinalElems.forEach(el => el.textContent = cfg.babyAgeOrdinal);
+  ctx = canvas.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
 
-  const dateElems = document.querySelectorAll('.bind-event-date');
-  dateElems.forEach(el => el.textContent = cfg.dateText);
+  // Create Initial Particles
+  particles = [];
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(createParticle());
+  }
 
-  const timeElems = document.querySelectorAll('.bind-event-time');
-  timeElems.forEach(el => el.textContent = cfg.timeText);
-
-  const venueElems = document.querySelectorAll('.bind-venue-name');
-  venueElems.forEach(el => el.textContent = cfg.venueName);
-
-  const addressElems = document.querySelectorAll('.bind-venue-address');
-  addressElems.forEach(el => el.textContent = cfg.venueAddress);
-
-  // Directions Button link
-  const mapsBtn = document.getElementById('btn-get-directions');
-  if (mapsBtn && cfg.googleMapsUrl) {
-    mapsBtn.href = cfg.googleMapsUrl;
+  // Check Reduced Motion Preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReducedMotion) {
+    requestAnimationFrame(animateCanvas);
   }
 }
 
-/* --------------------------------------------------------------------------
-   2. AUDIO SYSTEM FOR MP3 (assets/sound/hbd.mp3) & AUTOPLAY
-   -------------------------------------------------------------------------- */
+function resizeCanvas() {
+  if (!canvas) return;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function createParticle() {
+  const isPetal = Math.random() > 0.4;
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: isPetal ? Math.random() * 8 + 6 : Math.random() * 3 + 1,
+    speedY: isPetal ? Math.random() * 1.2 + 0.5 : -(Math.random() * 0.8 + 0.2),
+    speedX: Math.random() * 0.6 - 0.3,
+    rotation: Math.random() * 360,
+    rotationSpeed: (Math.random() - 0.5) * 2,
+    opacity: Math.random() * 0.7 + 0.3,
+    type: isPetal ? 'petal' : 'gold'
+  };
+}
+
+function animateCanvas() {
+  if (!ctx || !canvas) return;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(p => {
+    p.y += p.speedY;
+    p.x += Math.sin(p.y * 0.01) + p.speedX;
+    p.rotation += p.rotationSpeed;
+
+    // Wrap around boundaries
+    if (p.y > canvas.height + 20) p.y = -20;
+    if (p.y < -20) p.y = canvas.height + 20;
+    if (p.x > canvas.width + 20) p.x = -20;
+    if (p.x < -20) p.x = canvas.width + 20;
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate((p.rotation * Math.PI) / 180);
+    ctx.globalAlpha = p.opacity;
+
+    if (p.type === 'petal') {
+      // Draw Rose Petal
+      ctx.fillStyle = '#E2738C';
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(p.size, -p.size, p.size * 1.5, p.size, 0, p.size * 1.8);
+      ctx.bezierCurveTo(-p.size * 1.5, p.size, -p.size, -p.size, 0, 0);
+      ctx.fill();
+    } else {
+      // Draw Glowing Golden Particle
+      ctx.fillStyle = '#D8B574';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#F5E5C9';
+      ctx.beginPath();
+      ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  });
+
+  requestAnimationFrame(animateCanvas);
+}
+
+// Function to trigger extra particle burst on interaction
+function triggerParticleBurst(count = 30) {
+  for (let i = 0; i < count; i++) {
+    const burst = createParticle();
+    burst.y = window.innerHeight / 2;
+    burst.x = window.innerWidth / 2;
+    burst.speedY = (Math.random() - 0.5) * 6;
+    burst.speedX = (Math.random() - 0.5) * 6;
+    particles.push(burst);
+  }
+}
+
+/* ==========================================================================
+   2. DYNAMIC CONTENT INJECTION
+   ========================================================================== */
+function bindDynamicContent(cfg) {
+  bindText('.bind-partner-1', cfg.partner1);
+  bindText('.bind-partner-2', cfg.partner2);
+  bindText('.bind-couple-title', cfg.coupleTitle || `${cfg.partner1} & ${cfg.partner2}`);
+  bindText('.bind-anniversary-years', `${cfg.anniversaryYears} Anniversary`);
+  bindText('.bind-tagline', `“${cfg.tagline}”`);
+  bindText('.bind-invitation-title', cfg.invitationTitle);
+  bindText('.bind-hero-subtitle', cfg.heroSubtitle);
+  bindText('.bind-opening-text', cfg.openingText);
+  bindText('.bind-letter-message', cfg.letterOpeningMessage.replace(/\n/g, '<br>'), true);
+  bindText('.bind-event-date', cfg.dateText);
+  bindText('.bind-event-time', cfg.timeText);
+  bindText('.bind-venue-name', cfg.venueName);
+  bindText('.bind-venue-address', cfg.venueAddress);
+  bindText('.bind-dress-code', cfg.dressCode);
+  bindText('.bind-surprise-heading', cfg.surpriseHeading);
+  bindText('.bind-surprise-message', cfg.surpriseMessage);
+  bindText('.bind-final-title', cfg.finalTitle);
+  bindText('.bind-final-subtitle', cfg.finalSubtitle);
+
+  const songTitleEl = document.getElementById('song-title');
+  if (songTitleEl && cfg.musicTitle) {
+    songTitleEl.textContent = cfg.musicTitle;
+  }
+}
+
+function bindText(selector, value, isHTML = false) {
+  if (!value) return;
+  const elements = document.querySelectorAll(selector);
+  elements.forEach(el => {
+    if (isHTML) el.innerHTML = value;
+    else el.textContent = value;
+  });
+}
+
+/* ==========================================================================
+   3. AUDIO SYSTEM
+   ========================================================================== */
 let bgAudio = null;
 let isMusicPlaying = false;
 
-function initAudioSystem(config) {
+function initAudioSystem(cfg) {
   const musicFab = document.getElementById('music-fab');
   const songTitle = document.getElementById('song-title');
-  const audioSrc = config.musicUrl || 'assets/sound/hbd.mp3';
+  const audioSrc = cfg.musicUrl || 'assets/sound/bkw.mp3';
 
   bgAudio = new Audio(audioSrc);
   bgAudio.loop = true;
-  bgAudio.volume = 0.7;
+  bgAudio.volume = 0.6;
 
-  // Function to start music playback
-  window.startAudioPlayback = function() {
+  window.playMusic = function() {
     if (bgAudio && bgAudio.paused) {
-      bgAudio.play()
-        .then(() => {
-          isMusicPlaying = true;
-          if (musicFab) musicFab.classList.add('playing');
-          if (songTitle) songTitle.textContent = "Playing Birthday Song 🎵";
-        })
-        .catch(err => {
-          console.log('Autoplay deferred until user interaction:', err);
-        });
+      bgAudio.play().then(() => {
+        isMusicPlaying = true;
+        if (musicFab) musicFab.classList.add('playing');
+        if (songTitle) songTitle.textContent = cfg.musicTitle || "Playing Romantic Music";
+      }).catch(err => {
+        console.warn('Audio play deferred until user gesture:', err);
+      });
     }
   };
 
-  // Function to pause music
-  window.pauseAudioPlayback = function() {
+  window.pauseMusic = function() {
     if (bgAudio && !bgAudio.paused) {
       bgAudio.pause();
       isMusicPlaying = false;
@@ -116,352 +248,370 @@ function initAudioSystem(config) {
     }
   };
 
-  // Attempt autoplay immediately
-  if (config.autoPlayMusic !== false) {
-    window.startAudioPlayback();
-  }
-
-  // Fallback: Start audio on first user touch/click anywhere on document
-  const enableAudioOnUserGesture = () => {
-    window.startAudioPlayback();
-    document.removeEventListener('click', enableAudioOnUserGesture);
-    document.removeEventListener('touchstart', enableAudioOnUserGesture);
-  };
-  document.addEventListener('click', enableAudioOnUserGesture, { once: true });
-  document.addEventListener('touchstart', enableAudioOnUserGesture, { once: true });
-
-  // Floating Music FAB Toggle
   if (musicFab) {
     musicFab.addEventListener('click', (e) => {
       e.stopPropagation();
       if (isMusicPlaying) {
-        window.pauseAudioPlayback();
+        window.pauseMusic();
       } else {
-        window.startAudioPlayback();
+        window.playMusic();
       }
     });
   }
 }
 
-/* --------------------------------------------------------------------------
-   3. CANDLE BLOW & MICROPHONE DETECTION ENGINE
-   -------------------------------------------------------------------------- */
-let isCandleExtinguished = false;
-let audioContext = null;
-let micStream = null;
+/* ==========================================================================
+   4. LOVE LETTER REVEAL ENVELOPE
+   ========================================================================== */
+function initEnvelopeScreen() {
+  const envelopeScreen = document.getElementById('envelope-screen');
+  const mainInvitation = document.getElementById('main-invitation');
+  const envelopeWrapper = document.getElementById('envelope-wrapper');
+  const btnOpenLetter = document.getElementById('btn-open-letter');
+  const btnOpenCta = document.getElementById('btn-open-cta');
+  const btnSkipIntro = document.getElementById('skip-intro-btn');
 
-function initCakeCandles() {
-  const blowBtn = document.getElementById('btn-blow-candles');
-  const micStatus = document.getElementById('mic-status');
+  let isOpen = false;
 
-  // Manual Blow Button Click
-  if (blowBtn) {
-    blowBtn.addEventListener('click', () => {
-      extinguishCandles();
-    });
-  }
+  const openLetterExperience = () => {
+    if (isOpen) return;
+    isOpen = true;
 
-  // Attempt Microphone Access for blowing detection
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        micStream = stream;
-        if (micStatus) {
-          micStatus.innerHTML = `<div class="mic-pulse active" id="mic-pulse"></div> Mic Active: Blow into your mic! 🎤`;
-        }
-        setupMicAnalyzer(stream);
-      })
-      .catch(err => {
-        console.log('Microphone access unavailable/denied:', err);
-        if (micStatus) {
-          micStatus.innerHTML = `<i class="fa-solid fa-microphone-slash"></i> Tap button below to blow candles`;
-        }
-      });
-  } else {
-    if (micStatus) {
-      micStatus.innerHTML = `<i class="fa-solid fa-microphone-slash"></i> Tap button below to blow candles`;
-    }
-  }
-}
+    // Start 3D Envelope opening animation
+    if (envelopeWrapper) envelopeWrapper.classList.add('open');
+    triggerParticleBurst(40);
 
-function setupMicAnalyzer(stream) {
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    audioContext = new AudioCtx();
-    const analyser = audioContext.createAnalyser();
-    const microphone = audioContext.createMediaStreamSource(stream);
-    microphone.connect(analyser);
+    // Fade in music after user interaction
+    window.playMusic();
 
-    analyser.fftSize = 256;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    function checkBlow() {
-      if (isCandleExtinguished) return;
-
-      analyser.getByteFrequencyData(dataArray);
-      let sum = 0;
-      for (let i = 0; i < bufferLength; i++) {
-        sum += dataArray[i];
-      }
-      const average = sum / bufferLength;
-
-      // Threshold for blow detection
-      if (average > 65) {
-        extinguishCandles();
-        return;
-      }
-      requestAnimationFrame(checkBlow);
-    }
-    checkBlow();
-  } catch (e) {
-    console.warn('AudioContext analyzer setup failed:', e);
-  }
-}
-
-function extinguishCandles() {
-  if (isCandleExtinguished) return;
-  isCandleExtinguished = true;
-
-  // Trigger audio playback
-  if (window.startAudioPlayback) {
-    window.startAudioPlayback();
-  }
-
-  // Extinguish flames
-  const flames = document.querySelectorAll('.candle-flame');
-  flames.forEach((flame, index) => {
+    // Transition smoothly to main invitation
     setTimeout(() => {
-      flame.classList.add('extinguished');
-      createSmokePuff(flame);
-    }, index * 120);
+      if (envelopeScreen) envelopeScreen.classList.add('fade-out');
+      if (mainInvitation) mainInvitation.classList.remove('hidden');
+      document.body.classList.remove('lock-scroll');
+    }, 1800);
+  };
+
+  if (btnOpenLetter) btnOpenLetter.addEventListener('click', openLetterExperience);
+  if (btnOpenCta) btnOpenCta.addEventListener('click', openLetterExperience);
+  if (envelopeWrapper) envelopeWrapper.addEventListener('click', openLetterExperience);
+
+  // Skip Intro for returning visitors
+  if (btnSkipIntro) {
+    btnSkipIntro.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (envelopeScreen) envelopeScreen.classList.add('fade-out');
+      if (mainInvitation) mainInvitation.classList.remove('hidden');
+      document.body.classList.remove('lock-scroll');
+      window.playMusic();
+    });
+  }
+}
+
+/* ==========================================================================
+   5. TIMELINE RENDERER
+   ========================================================================== */
+function renderTimeline(timelineItems) {
+  const track = document.getElementById('timeline-track');
+  if (!track || !timelineItems || timelineItems.length === 0) return;
+
+  track.innerHTML = timelineItems.map(item => `
+    <div class="timeline-card">
+      <div class="timeline-card-header">
+        <div class="timeline-icon">${item.icon || '❤️'}</div>
+        <span class="timeline-date">${item.date}</span>
+      </div>
+      ${item.photo ? `
+        <div class="timeline-img-wrapper">
+          <img src="${item.photo}" alt="${item.title}" loading="lazy">
+        </div>
+      ` : ''}
+      <h3 class="timeline-title">${item.title}</h3>
+      <p class="timeline-msg">${item.message}</p>
+    </div>
+  `).join('');
+}
+
+/* ==========================================================================
+   6. PHOTO GALLERY & LIGHTBOX
+   ========================================================================== */
+let galleryData = [];
+let currentPhotoIndex = 0;
+
+function renderGallery(items) {
+  galleryData = items || [];
+  const grid = document.getElementById('gallery-grid');
+  if (!grid || galleryData.length === 0) return;
+
+  grid.innerHTML = galleryData.map((item, index) => `
+    <div class="polaroid-card" data-index="${index}">
+      <div class="polaroid-img-wrapper">
+        <img src="${item.url}" alt="${item.caption}" loading="lazy">
+        ${item.tag ? `<span class="polaroid-tag">${item.tag}</span>` : ''}
+      </div>
+      <p class="polaroid-caption">${item.caption}</p>
+    </div>
+  `).join('');
+
+  // Attach Lightbox Triggers
+  const cards = grid.querySelectorAll('.polaroid-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.getAttribute('data-index'), 10);
+      openLightbox(idx);
+    });
   });
 
-  // Stop mic stream
-  if (micStream) {
-    micStream.getTracks().forEach(track => track.stop());
-  }
-
-  // Play Fanfare Chime
-  playCelebrationChime();
-
-  // Fire Confetti explosion
-  triggerConfetti();
-
-  // Smooth screen transition reveal
-  setTimeout(() => {
-    const cakeScreen = document.getElementById('cake-screen');
-    if (cakeScreen) {
-      cakeScreen.classList.add('dismissed');
-      document.body.classList.remove('lock-scroll');
-    }
-  }, 1200);
+  initLightboxControls();
 }
 
-function createSmokePuff(flameElem) {
-  const container = document.getElementById('smoke-container');
-  if (!container) return;
+function openLightbox(index) {
+  if (index < 0 || index >= galleryData.length) return;
+  currentPhotoIndex = index;
 
-  for (let i = 0; i < 4; i++) {
-    const smoke = document.createElement('div');
-    smoke.className = 'smoke-puff';
-    smoke.style.left = `${(Math.random() - 0.5) * 20}px`;
-    smoke.style.top = `${(Math.random() - 0.5) * 10}px`;
-    container.appendChild(smoke);
+  const modal = document.getElementById('lightbox-modal');
+  const img = document.getElementById('lightbox-img');
+  const caption = document.getElementById('lightbox-caption');
+  const counter = document.getElementById('lightbox-counter');
 
-    setTimeout(() => smoke.remove(), 1800);
-  }
+  const item = galleryData[currentPhotoIndex];
+  if (img) img.src = item.url;
+  if (caption) caption.textContent = item.caption;
+  if (counter) counter.textContent = `${currentPhotoIndex + 1} / ${galleryData.length}`;
+
+  if (modal) modal.classList.remove('hidden');
 }
 
-function playCelebrationChime() {
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioCtx();
-    
-    // Play celebratory arpeggio chime overlay
-    const notes = [523.25, 659.25, 783.99, 1046.50];
-    notes.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.value = freq;
-      
-      gain.gain.setValueAtTime(0.3, ctx.currentTime + idx * 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.1 + 0.6);
-      
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      
-      osc.start(ctx.currentTime + idx * 0.1);
-      osc.stop(ctx.currentTime + idx * 0.1 + 0.6);
-    });
-  } catch (e) {
-    console.log('Chime sound played.');
-  }
+function closeLightbox() {
+  const modal = document.getElementById('lightbox-modal');
+  if (modal) modal.classList.add('hidden');
 }
 
-/* --------------------------------------------------------------------------
-   4. CANVASES CONFETTI ENGINE
-   -------------------------------------------------------------------------- */
-function triggerConfetti() {
-  const canvas = document.getElementById('confetti-canvas');
-  if (!canvas) return;
+function initLightboxControls() {
+  const modal = document.getElementById('lightbox-modal');
+  const overlay = document.getElementById('lightbox-overlay');
+  const closeBtn = document.getElementById('lightbox-close');
+  const prevBtn = document.getElementById('lightbox-prev');
+  const nextBtn = document.getElementById('lightbox-next');
 
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+  if (overlay) overlay.addEventListener('click', closeLightbox);
 
-  window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }, { passive: true });
-
-  const particles = [];
-  const colors = ['#3B82F6', '#2563EB', '#F59E0B', '#FCD34D', '#E0F2FE', '#60A5FA'];
-
-  for (let i = 0; i < 120; i++) {
-    particles.push({
-      x: canvas.width / 2,
-      y: canvas.height / 2 + 50,
-      vx: (Math.random() - 0.5) * 18,
-      vy: (Math.random() - 0.8) * 18,
-      size: Math.random() * 9 + 4,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rotation: Math.random() * 360,
-      rSpeed: (Math.random() - 0.5) * 8
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      currentPhotoIndex = (currentPhotoIndex - 1 + galleryData.length) % galleryData.length;
+      openLightbox(currentPhotoIndex);
     });
   }
 
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let active = false;
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      currentPhotoIndex = (currentPhotoIndex + 1) % galleryData.length;
+      openLightbox(currentPhotoIndex);
+    });
+  }
 
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.4;
-      p.rotation += p.rSpeed;
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!modal || modal.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft' && prevBtn) prevBtn.click();
+    if (e.key === 'ArrowRight' && nextBtn) nextBtn.click();
+  });
+}
 
-      if (p.y < canvas.height) {
-        active = true;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate((p.rotation * Math.PI) / 180);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-        ctx.restore();
+/* ==========================================================================
+   7. LOVE NOTES FLIP CARDS
+   ========================================================================== */
+function renderLoveNotes(notes) {
+  const grid = document.getElementById('notes-grid');
+  if (!grid || !notes || notes.length === 0) return;
+
+  grid.innerHTML = notes.map((note, index) => `
+    <div class="note-flip-card" data-index="${index}">
+      <div class="note-flip-inner">
+        <div class="note-card-front">
+          <i class="fa-solid fa-heart-circle-check"></i>
+          <span class="note-hint">Reason #${index + 1}</span>
+          <span class="note-tap-text">Tap to reveal</span>
+        </div>
+        <div class="note-card-back">
+          <p class="note-quote">“${note.text}”</p>
+          <i class="fa-solid fa-rose"></i>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const cards = grid.querySelectorAll('.note-flip-card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+      triggerParticleBurst(10);
+    });
+  });
+}
+
+/* ==========================================================================
+   8. SURPRISE GIFT BOX
+   ========================================================================== */
+function initSurpriseBox() {
+  const giftBox = document.getElementById('gift-box-wrapper');
+  const btnUnwrap = document.getElementById('btn-unwrap-gift');
+  const revealCard = document.getElementById('surprise-reveal-card');
+
+  const unwrapAction = () => {
+    if (giftBox) giftBox.classList.add('opened');
+    triggerParticleBurst(60);
+
+    setTimeout(() => {
+      if (revealCard) revealCard.classList.remove('hidden');
+      if (revealCard) revealCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 600);
+  };
+
+  if (btnUnwrap) btnUnwrap.addEventListener('click', unwrapAction);
+  if (giftBox) giftBox.addEventListener('click', unwrapAction);
+}
+
+/* ==========================================================================
+   9. EVENT ACTIONS (RSVP, Maps & Add to Calendar)
+   ========================================================================== */
+function initEventActions(cfg) {
+  // RSVP Modal Triggers
+  const rsvpModal = document.getElementById('rsvp-modal');
+  const btnConfirmRsvp = document.getElementById('btn-confirm-rsvp');
+  const rsvpOverlay = document.getElementById('rsvp-overlay');
+  const rsvpClose = document.getElementById('rsvp-close');
+  const rsvpForm = document.getElementById('rsvp-form');
+  const rsvpSuccess = document.getElementById('rsvp-success');
+  const rsvpDoneBtn = document.getElementById('rsvp-done-btn');
+
+  const openRsvp = () => { if (rsvpModal) rsvpModal.classList.remove('hidden'); };
+  const closeRsvp = () => { if (rsvpModal) rsvpModal.classList.add('hidden'); };
+
+  if (btnConfirmRsvp) btnConfirmRsvp.addEventListener('click', openRsvp);
+  if (rsvpOverlay) rsvpOverlay.addEventListener('click', closeRsvp);
+  if (rsvpClose) rsvpClose.addEventListener('click', closeRsvp);
+  if (rsvpDoneBtn) rsvpDoneBtn.addEventListener('click', closeRsvp);
+
+  if (rsvpForm) {
+    rsvpForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const guestName = document.getElementById('rsvp-name').value;
+      const successText = document.getElementById('rsvp-success-text');
+      if (successText) {
+        successText.textContent = `Thank you, ${guestName}! Your response has been saved. We look forward to celebrating together! ❤️`;
       }
+      rsvpForm.classList.add('hidden');
+      if (rsvpSuccess) rsvpSuccess.classList.remove('hidden');
+      triggerParticleBurst(40);
     });
-
-    if (active) {
-      requestAnimationFrame(render);
-    } else {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
   }
-  render();
+
+  // Google Maps Directions
+  const mapsBtn = document.getElementById('btn-get-directions');
+  if (mapsBtn && cfg.googleMapsUrl) {
+    mapsBtn.href = cfg.googleMapsUrl;
+  }
+
+  // Add to Calendar Generator (.ics file)
+  const calendarBtn = document.getElementById('btn-add-calendar');
+  if (calendarBtn) {
+    calendarBtn.addEventListener('click', () => {
+      downloadICSFile(cfg);
+    });
+  }
 }
 
-/* --------------------------------------------------------------------------
-   5. REALTIME COUNTDOWN TIMER
-   -------------------------------------------------------------------------- */
+function downloadICSFile(cfg) {
+  const eventDate = new Date(cfg.eventDateISO || "2026-11-20T19:00:00");
+  const endDate = new Date(eventDate.getTime() + (4 * 60 * 60 * 1000)); // +4 hours
+
+  const formatDate = (date) => {
+    return date.toISOString().replace(/-|:|\.\d+/g, '');
+  };
+
+  const icsContent = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Our Romantic Anniversary Invitation//EN',
+    'BEGIN:VEVENT',
+    `SUMMARY:Anniversary Celebration — ${cfg.coupleTitle || "Alexander & Sophia"}`,
+    `DESCRIPTION:${cfg.invitationTitle}. ${cfg.heroSubtitle}`,
+    `LOCATION:${cfg.venueName}, ${cfg.venueAddress}`,
+    `DTSTART:${formatDate(eventDate)}`,
+    `DTEND:${formatDate(endDate)}`,
+    'STATUS:CONFIRMED',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'anniversary-invitation.ics');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/* ==========================================================================
+   10. COUNTDOWN TIMER
+   ========================================================================== */
 function initCountdown(targetISO) {
-  const daysEl = document.getElementById('timer-days');
-  const hoursEl = document.getElementById('timer-hours');
-  const minsEl = document.getElementById('timer-mins');
-  const secsEl = document.getElementById('timer-secs');
+  const daysEl = document.getElementById('days');
+  const hoursEl = document.getElementById('hours');
+  const minsEl = document.getElementById('minutes');
+  const secsEl = document.getElementById('seconds');
+  const displayEl = document.getElementById('timer-display');
+  const passedEl = document.getElementById('countdown-passed');
 
-  if (!daysEl) return;
+  const targetTime = new Date(targetISO).getTime();
 
-  const targetDate = new Date(targetISO).getTime();
-
-  function update() {
+  function updateTimer() {
     const now = new Date().getTime();
-    const diff = targetDate - now;
+    const difference = targetTime - now;
 
-    if (diff <= 0) {
-      daysEl.textContent = '00';
-      hoursEl.textContent = '00';
-      minsEl.textContent = '00';
-      secsEl.textContent = '00';
+    if (difference <= 0) {
+      if (displayEl) displayEl.classList.add('hidden');
+      if (passedEl) passedEl.classList.remove('hidden');
       return;
     }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-    daysEl.textContent = String(days).padStart(2, '0');
-    hoursEl.textContent = String(hours).padStart(2, '0');
-    minsEl.textContent = String(mins).padStart(2, '0');
-    secsEl.textContent = String(secs).padStart(2, '0');
+    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+    if (minsEl) minsEl.textContent = String(minutes).padStart(2, '0');
+    if (secsEl) secsEl.textContent = String(seconds).padStart(2, '0');
   }
 
-  update();
-  setInterval(update, 1000);
+  updateTimer();
+  setInterval(updateTimer, 1000);
 }
 
-/* --------------------------------------------------------------------------
-   6. GALLERY LIGHTBOX MODAL
-   -------------------------------------------------------------------------- */
-function initGalleryLightbox() {
-  const items = document.querySelectorAll('.gallery-item');
-  const modal = document.getElementById('lightbox-modal');
-  const imgElem = document.getElementById('lightbox-img');
-  const closeBtn = document.getElementById('lightbox-close');
+/* ==========================================================================
+   11. REPLAY STORY BUTTON
+   ========================================================================== */
+function initReplayButton() {
+  const replayBtn = document.getElementById('btn-replay-story');
+  const envelopeScreen = document.getElementById('envelope-screen');
+  const envelopeWrapper = document.getElementById('envelope-wrapper');
 
-  if (!modal || !imgElem) return;
-
-  items.forEach(item => {
-    item.addEventListener('click', () => {
-      const src = item.getAttribute('data-src') || item.querySelector('img').src;
-      imgElem.src = src;
-      modal.classList.add('active');
-    });
-  });
-
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
-  }
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('active');
-  });
-}
-
-/* --------------------------------------------------------------------------
-   7. RSVP FORM HANDLER
-   -------------------------------------------------------------------------- */
-function initRSVPForm() {
-  const btnYes = document.getElementById('rsvp-yes');
-  const btnNo = document.getElementById('rsvp-no');
-  const statusInput = document.getElementById('rsvp-status');
-  const form = document.getElementById('rsvp-form');
-
-  if (btnYes && btnNo) {
-    btnYes.addEventListener('click', () => {
-      btnYes.classList.add('selected');
-      btnNo.classList.remove('selected');
-      if (statusInput) statusInput.value = 'Attending';
-    });
-
-    btnNo.addEventListener('click', () => {
-      btnNo.classList.add('selected');
-      btnYes.classList.remove('selected');
-      if (statusInput) statusInput.value = 'Not Attending';
-    });
-  }
-
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const guestName = document.getElementById('guest-name').value;
+  if (replayBtn) {
+    replayBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      triggerConfetti();
-
-      alert(`🎉 Thank you, ${guestName}! The Little Boss has received your RSVP! We can't wait to see you!`);
-      form.reset();
+      setTimeout(() => {
+        if (envelopeWrapper) envelopeWrapper.classList.remove('open');
+        if (envelopeScreen) envelopeScreen.classList.remove('fade-out');
+        document.body.classList.add('lock-scroll');
+      }, 500);
     });
   }
 }

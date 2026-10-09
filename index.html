@@ -3,501 +3,559 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alexander's 1st Birthday | The Little Boss Birthday Invitation</title>
-  <meta name="description" content="You are cordially invited to celebrate the 1st Birthday of our Little Boss, Alexander! Join us for a fun-filled birthday party.">
+  <title>Our Anniversary | Romantic Digital Invitation</title>
+  <meta name="description" content="You are cordially invited to celebrate our Anniversary. Join us for a romantic evening of love, laughter, and forever memories.">
   
-  <!-- Open Graph / Meta -->
-  <meta property="og:title" content="👔 You're Invited to The Little Boss Birthday Party!">
-  <meta property="og:description" content="Come celebrate Alexander turning 1! Cake, balloons, games & lots of fun.">
+  <!-- OG-START -->
+  <meta property="og:title" content="❤️ You're Invited to Celebrate Our Anniversary">
+  <meta property="og:description" content="Join us as we celebrate another year of laughter, countless memories, and a love that grows stronger with every passing day.">
+  <meta property="og:image" content="assets/img/romantic_hero_bg.jpg">
   <meta property="og:type" content="website">
+  <!-- OG-END -->
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231E3A8A'/%3E%3Cpath d='M30 30 L70 30 L60 80 L50 90 L40 80 Z' fill='%23F59E0B'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 88 C20 60 5 40 5 25 A 20 20 0 0 1 45 15 L50 20 L55 15 A 20 20 0 0 1 95 25 C95 40 80 60 50 88 Z' fill='%234A0E24' stroke='%23D8B574' stroke-width='4'/%3E%3C/svg%3E">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Custom Stylesheets -->
+  <!-- Configuration -->
+  <script src="config.js"></script>
+
+  <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="lock-scroll">
 
-  <!-- ==========================================================================
-       SECTION 0: OPENING SCREEN — INTERACTIVE BIRTHDAY CAKE & CANDLE BLOW
-       ========================================================================== -->
-  <div id="cake-screen">
-    <div class="cake-screen-header">
-      <div class="cake-screen-tag">TOP SECRET BIRTHDAY REVEAL 💼</div>
-      <h1 class="cake-screen-title">Make a Wish! 🎂</h1>
-      <p class="cake-screen-sub">Blow the candles to start the party!</p>
+  <!-- Ambient Floating Petals & Particles Canvas -->
+  <canvas id="romantic-canvas"></canvas>
+
+  <!-- Floating Audio Player FAB -->
+  <button class="music-fab" id="music-fab" title="Toggle Romantic Music" aria-label="Toggle Romantic Music">
+    <div class="music-fab-icon">
+      <i class="fa-solid fa-music"></i>
     </div>
-
-    <!-- 3D Interactive Cake -->
-    <div class="cake-wrapper">
-      <div class="cake-container">
-        <!-- Candles Row -->
-        <div class="candles-row">
-          <div class="candle">
-            <div class="candle-wick"></div>
-            <div class="candle-flame"></div>
-          </div>
-          <div class="candle">
-            <div class="candle-wick"></div>
-            <div class="candle-flame"></div>
-          </div>
-          <div class="candle">
-            <div class="candle-wick"></div>
-            <div class="candle-flame"></div>
-          </div>
-        </div>
-
-        <!-- Smoke Particles Anchor -->
-        <div class="smoke-container" id="smoke-container"></div>
-
-        <!-- Top Cake Tier -->
-        <div class="cake-tier-top">
-          <div class="cake-tie"></div>
-        </div>
-
-        <!-- Bottom Cake Tier -->
-        <div class="cake-tier-bottom"></div>
-
-        <!-- Cake Plate -->
-        <div class="cake-plate"></div>
+    <div class="music-fab-info">
+      <span id="song-title">Romantic Music</span>
+      <div class="music-bars">
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
       </div>
-    </div>
-
-    <!-- Blow Controls & Microphone Indicator -->
-    <div class="cake-controls">
-      <div class="mic-status" id="mic-status">
-        <div class="mic-pulse" id="mic-pulse"></div>
-        Listening for your blow... 🎤
-      </div>
-      <button class="btn-blow" id="btn-blow-candles">
-        <i class="fa-solid fa-wind"></i> Blow the Candles 🎂
-      </button>
-    </div>
-  </div>
-
-  <!-- Confetti Canvas -->
-  <canvas id="confetti-canvas"></canvas>
-
-  <!-- ==========================================================================
-       FLOATING AUDIO MUSIC FAB
-       ========================================================================== -->
-  <button class="music-fab" id="music-fab" title="Toggle Birthday Music">
-    <i class="fa-solid fa-music"></i>
-    <span id="song-title">Birthday Music</span>
-    <div class="music-bars">
-      <div class="music-bar"></div>
-      <div class="music-bar"></div>
-      <div class="music-bar"></div>
     </div>
   </button>
 
   <!-- ==========================================================================
-       SECTION 1: HERO SECTION
+       SECTION 1: OPENING ANIMATION — THE LOVE LETTER REVEAL
        ========================================================================== -->
-  <section class="hero-section" id="hero">
-    <!-- Floating Background Balloons -->
-    <div class="bg-decorations">
-      <div class="floating-balloon balloon-1"></div>
-      <div class="floating-balloon balloon-2"></div>
-      <div class="floating-balloon balloon-3"></div>
-      <div class="floating-balloon balloon-4"></div>
-    </div>
+  <div id="envelope-screen" class="envelope-screen">
+    <!-- Skip Intro Button -->
+    <button id="skip-intro-btn" class="btn-skip-intro" title="Skip intro animation">
+      Skip Intro ✦
+    </button>
 
-    <div class="container">
-      <div class="hero-grid">
-        <div class="hero-content">
-          <div class="hero-badge-top">
-            <i class="fa-solid fa-briefcase"></i> OFFICIAL INVITATION PASS
-          </div>
-          <h1 class="hero-title">
-            Our Little Boss Is Turning <span class="highlight bind-baby-age">1</span>! 🎂
-          </h1>
-          <p class="hero-subtitle">
-            Come Celebrate With Us! Join our little CEO for a fun-filled birthday party!
-          </p>
+    <div class="envelope-content">
+      <div class="envelope-header">
+        <span class="envelope-tag">AN EXCLUSIVE INVITATION FOR YOU</span>
+        <h1 class="envelope-prompt bind-opening-text">Someone has a little surprise for you…</h1>
+        <p class="envelope-sub">Touch the golden heart wax seal to open your love letter</p>
+      </div>
 
-          <!-- Detail Pills -->
-          <div class="hero-pills">
-            <div class="pill-card">
-              <i class="fa-solid fa-cake-candles"></i> 🎂 Birthday Celebration
+      <!-- 3D Folded Envelope -->
+      <div class="envelope-wrapper" id="envelope-wrapper">
+        <div class="envelope" id="envelope">
+          <div class="envelope-back"></div>
+          
+          <!-- Emerging Love Letter -->
+          <div class="envelope-letter" id="envelope-letter">
+            <div class="letter-stamp">💌</div>
+            <div class="letter-header">With All My Heart</div>
+            <div class="letter-body bind-letter-message">
+              To My Dearest Love,<br><br>
+              Five years ago, two paths crossed and created a story more beautiful than I ever dreamed. Today, I invite you to step into our magical world and celebrate every milestone, every laugh, and every promise of forever.<br><br>
+              With all my love ❤️
             </div>
-            <div class="pill-card">
-              <i class="fa-solid fa-baby"></i> 👶 <span class="bind-baby-name">Alexander</span>
-            </div>
-            <div class="pill-card">
-              <i class="fa-solid fa-party-horn"></i> 🎉 Turning <span class="bind-baby-ordinal">1st</span>
-            </div>
+            <div class="letter-signature bind-couple-title">Alexander & Sophia</div>
           </div>
 
-          <!-- Hero Action Buttons -->
-          <div class="hero-cta">
-            <a href="#rsvp" class="btn-primary">
-              <i class="fa-solid fa-paper-plane"></i> RSVP Now 👔
-            </a>
-            <a href="#details" class="btn-secondary">
-              <i class="fa-solid fa-calendar-check"></i> Event Details 📍
-            </a>
-          </div>
-        </div>
+          <div class="envelope-cover-bottom"></div>
+          <div class="envelope-cover-left"></div>
+          <div class="envelope-cover-right"></div>
+          <div class="envelope-flap" id="envelope-flap"></div>
 
-        <!-- Hero Boss Character Image Card -->
-        <div class="hero-image-wrapper">
-          <div class="hero-image-card">
-            <img src="assets/images/hero.jpg" alt="Little Boss Baby" id="hero-img">
-            
-            <!-- Floating CEO Badge -->
-            <div class="hero-boss-badge">
-              <div class="badge-icon">
-                <i class="fa-solid fa-crown"></i>
+          <!-- Wax Seal Button -->
+          <div class="wax-seal-container">
+            <button class="wax-seal" id="btn-open-letter" aria-label="Open Love Letter">
+              <div class="wax-seal-inner">
+                <i class="fa-solid fa-heart"></i>
+                <span class="wax-seal-text">OPEN</span>
               </div>
-              <div class="badge-text">
-                <h4>Chief Executive Baby</h4>
-                <p>Ruling Since 2025</p>
-              </div>
-            </div>
+            </button>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ==========================================================================
-       SECTION 2: EVENT DETAILS (INVITATION PASS CARD)
-       ========================================================================== -->
-  <section class="details-section" id="details">
-    <div class="container">
-      <div class="section-tag">
-        <i class="fa-solid fa-circle-info"></i> Event Information
+      <div class="envelope-action">
+        <button class="btn-open-cta" id="btn-open-cta">
+          Open My Love Letter 💌
+        </button>
       </div>
-      <h2 class="section-title">Party Details & Time</h2>
-      <p class="section-subtitle">Mark your calendar! Here is everything you need to know about the big celebration.</p>
-
-      <!-- Executive Invitation Pass -->
-      <div class="invitation-card">
-        <div class="invitation-header">
-          <div class="invitation-stamp">
-            <i class="fa-solid fa-user-tie"></i>
-          </div>
-          <span class="section-tag">YOU'RE INVITED!</span>
-          <h3 class="invitation-title">
-            🎂 Birthday Celebration for <span class="bind-baby-name">Alexander</span>
-          </h3>
-          <p class="invitation-subtitle">Turning <span class="bind-baby-ordinal">1st</span> Birthday</p>
-        </div>
-
-        <div class="details-grid">
-          <!-- Date Card -->
-          <div class="detail-item-card">
-            <div class="detail-icon-circle">
-              <i class="fa-solid fa-calendar-days"></i>
-            </div>
-            <div class="detail-label">Date</div>
-            <div class="detail-value bind-event-date">Saturday, November 20, 2026</div>
-          </div>
-
-          <!-- Time Card -->
-          <div class="detail-item-card">
-            <div class="detail-icon-circle">
-              <i class="fa-solid fa-clock"></i>
-            </div>
-            <div class="detail-label">Time</div>
-            <div class="detail-value bind-event-time">4:00 PM – 8:00 PM</div>
-          </div>
-
-          <!-- Venue Card -->
-          <div class="detail-item-card">
-            <div class="detail-icon-circle">
-              <i class="fa-solid fa-location-dot"></i>
-            </div>
-            <div class="detail-label">Venue</div>
-            <div class="detail-value bind-venue-name">The Grand Executive Ballroom</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       SECTION 3: LIVE COUNTDOWN TIMER
-       ========================================================================== -->
-  <section class="countdown-section" id="countdown">
-    <div class="container">
-      <h2 class="countdown-title">The Party Starts In… ⏳</h2>
-      <div class="timer-grid">
-        <div class="timer-box">
-          <div class="timer-num" id="timer-days">00</div>
-          <div class="timer-label">Days</div>
-        </div>
-        <div class="timer-box">
-          <div class="timer-num" id="timer-hours">00</div>
-          <div class="timer-label">Hours</div>
-        </div>
-        <div class="timer-box">
-          <div class="timer-num" id="timer-mins">00</div>
-          <div class="timer-label">Minutes</div>
-        </div>
-        <div class="timer-box">
-          <div class="timer-num" id="timer-secs">00</div>
-          <div class="timer-label">Seconds</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       SECTION 4: MEET THE LITTLE BOSS
-       ========================================================================== -->
-  <section class="meet-section" id="meet">
-    <div class="container">
-      <div class="meet-card">
-        <div class="meet-image-container">
-          <img src="assets/images/gallery3.jpg" alt="Meet The Little Boss">
-        </div>
-        <div class="meet-body">
-          <div class="section-tag"><i class="fa-solid fa-user-ninja"></i> Executive Profile</div>
-          <h3>Meet The Little Boss 👔</h3>
-          <p class="quote-text">
-            “Our little boss is growing up! Come join us as we celebrate another amazing year filled with smiles, laughter and lots of cake.”
-          </p>
-
-          <!-- Interactive Little Boss Stats -->
-          <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-icon">🍼</div>
-              <div class="stat-info">
-                <h5>Favorite Drink</h5>
-                <p>Warm Milk (Double Shot)</p>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-icon">🧸</div>
-              <div class="stat-info">
-                <h5>Working Hours</h5>
-                <p>Nap Time & Play Time</p>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-icon">💼</div>
-              <div class="stat-info">
-                <h5>Boss Moves</h5>
-                <p>Standing Up & Giggling</p>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-icon">⭐</div>
-              <div class="stat-info">
-                <h5>CEO Experience</h5>
-                <p>1 Full Year</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       SECTION 5: PARTY HIGHLIGHTS
-       ========================================================================== -->
-  <section class="highlights-section" id="highlights">
-    <div class="container">
-      <div class="section-tag"><i class="fa-solid fa-wand-magic-sparkles"></i> Executive Schedule</div>
-      <h2 class="section-title">Party Highlights 🎉</h2>
-      <p class="section-subtitle">Get ready for an executive lineup of non-stop birthday fun and sweet treats!</p>
-
-      <div class="highlights-grid">
-        <div class="highlight-card">
-          <div class="highlight-icon">🎂</div>
-          <h4>Cake Cutting</h4>
-          <p>Watch the Little Boss smash his official 1st birthday cake!</p>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon">🎈</div>
-          <h4>Balloon Fun</h4>
-          <p>Magical balloon twisting station & floating creations.</p>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon">🎁</div>
-          <h4>Gifts & Surprises</h4>
-          <p>Bringing joy & love to our tiny Chief Executive.</p>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon">🎉</div>
-          <h4>Baby Mini-Games</h4>
-          <p>Playful interactive games for toddlers & adults.</p>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon">🍭</div>
-          <h4>Sweet Treats Bar</h4>
-          <p>Custom cupcakes, candy bar & delicious sweets.</p>
-        </div>
-        <div class="highlight-card">
-          <div class="highlight-icon">📸</div>
-          <h4>Memory Photo Booth</h4>
-          <p>Capture fun photos with Little Boss CEO props!</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       SECTION 6: PHOTO GALLERY
-       ========================================================================== -->
-  <section class="gallery-section" id="gallery">
-    <div class="container">
-      <div class="section-tag"><i class="fa-solid fa-camera"></i> Executive Memories</div>
-      <h2 class="section-title">Photo Gallery 📸</h2>
-      <p class="section-subtitle">A glimpse into the magical 1st year of our Little Boss.</p>
-
-      <div class="gallery-grid">
-        <div class="gallery-item" data-src="assets/images/hero.jpg">
-          <img src="assets/images/hero.jpg" alt="CEO Baby">
-          <div class="gallery-overlay">
-            <h5>The Executive Chair 👔</h5>
-          </div>
-        </div>
-        <div class="gallery-item" data-src="assets/images/cake.jpg">
-          <img src="assets/images/cake.jpg" alt="Birthday Cake">
-          <div class="gallery-overlay">
-            <h5>The Royal Birthday Cake 🎂</h5>
-          </div>
-        </div>
-        <div class="gallery-item" data-src="assets/images/gallery1.jpg">
-          <img src="assets/images/gallery1.jpg" alt="Milestone Photo">
-          <div class="gallery-overlay">
-            <h5>Milestone Smiles 🎈</h5>
-          </div>
-        </div>
-        <div class="gallery-item" data-src="assets/images/gallery2.jpg">
-          <img src="assets/images/gallery2.jpg" alt="Cake Smash">
-          <div class="gallery-overlay">
-            <h5>Smash Cake Fun 🍰</h5>
-          </div>
-        </div>
-        <div class="gallery-item" data-src="assets/images/gallery3.jpg">
-          <img src="assets/images/gallery3.jpg" alt="Boss Pose">
-          <div class="gallery-overlay">
-            <h5>Boss Stance 😎</h5>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Lightbox Modal Container -->
-  <div class="lightbox-modal" id="lightbox-modal">
-    <span class="lightbox-close" id="lightbox-close">&times;</span>
-    <div class="lightbox-content">
-      <img src="" id="lightbox-img" alt="Gallery Zoom">
     </div>
   </div>
 
   <!-- ==========================================================================
-       SECTION 7: VENUE & LOCATION
+       MAIN ANNIVERSARY DIGITAL INVITATION
        ========================================================================== -->
-  <section class="venue-section" id="venue">
-    <div class="container">
-      <div class="section-tag"><i class="fa-solid fa-map-location-dot"></i> Party Location</div>
-      <h2 class="section-title">Party Venue & Map 📍</h2>
-      <p class="section-subtitle">We can't wait to welcome you to the party!</p>
+  <main id="main-invitation" class="main-invitation hidden">
 
-      <div class="venue-card">
-        <div class="venue-info">
-          <h3 class="bind-venue-name">The Grand Executive Ballroom</h3>
-          <p class="venue-address bind-venue-address">
-            742 Evergreen Terrace, Suite 500, New York, NY 10001
+    <!-- ==========================================================================
+         SECTION 2: MAIN HERO SECTION
+         ========================================================================== -->
+    <section class="hero-section" id="hero">
+      <div class="hero-bg-overlay"></div>
+      <div class="glowing-moon"></div>
+      <div class="hero-candles">
+        <div class="hero-candle candle-left">
+          <div class="candle-flame-glow"></div>
+        </div>
+        <div class="hero-candle candle-right">
+          <div class="candle-flame-glow"></div>
+        </div>
+      </div>
+
+      <div class="container hero-container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-icon">✨</span>
+            <span class="badge-text">CELEBRATING ENDLESS LOVE</span>
+          </div>
+
+          <div class="hero-quote-wrapper">
+            <p class="hero-romantic-quote bind-tagline">
+              “Every Love Story Is Beautiful, But Ours Is My Favorite ❤️”
+            </p>
+          </div>
+
+          <h1 class="hero-main-title bind-invitation-title">
+            You're Invited to Celebrate Our Anniversary
+          </h1>
+
+          <div class="couple-names-display">
+            <span class="partner-name bind-partner-1">Alexander</span>
+            <span class="couple-ampersand">&</span>
+            <span class="partner-name bind-partner-2">Sophia</span>
+          </div>
+
+          <p class="hero-subtitle bind-hero-subtitle">
+            Another year of laughter, countless memories, and a love that grows stronger with every passing day.
           </p>
 
-          <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn-primary" id="btn-get-directions">
-            <i class="fa-solid fa-diamond-turn-right"></i> Get Directions 📍
-          </a>
+          <div class="hero-cta-group">
+            <a href="#timeline" class="btn-gold-glow" id="btn-discover-story">
+              <span>Discover Our Love Story</span>
+              <i class="fa-solid fa-heart"></i>
+            </a>
+          </div>
         </div>
 
-        <div class="map-placeholder">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.11976397304603!3d40.69767014331776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY!5e0!3m2!1sen!2sus!4v1680000000000!5m2!1sen!2sus" 
-            allowfullscreen="" 
-            loading="lazy" 
-            referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
+        <div class="scroll-down-indicator">
+          <span>Scroll to explore</span>
+          <i class="fa-solid fa-chevron-down"></i>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ==========================================================================
-       SECTION 8: RSVP FORM
-       ========================================================================== -->
-  <section class="rsvp-section" id="rsvp">
-    <div class="container">
-      <div class="rsvp-container">
-        <div class="section-tag"><i class="fa-solid fa-envelope-open-text"></i> RSVP Required</div>
-        <h2 class="section-title">Will You Join The Little Boss? 👔</h2>
-        <p class="section-subtitle">Please let us know if you will be attending by submitting your response below.</p>
-
-        <form id="rsvp-form">
-          <!-- Attendance Quick Buttons -->
-          <div class="rsvp-options">
-            <button type="button" class="rsvp-option-btn selected" id="rsvp-yes">
-              YES, I'LL BE THERE 🎉
-            </button>
-            <button type="button" class="rsvp-option-btn" id="rsvp-no">
-              SORRY, CAN'T MAKE IT 😢
-            </button>
+    <!-- ==========================================================================
+         SECTION 3: INTERACTIVE LOVE STORY TIMELINE
+         ========================================================================== -->
+    <section class="section-padding timeline-section" id="timeline">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">OUR JOURNEY TOGETHER</span>
+          <h2 class="section-title">The Chapters of Our Love</h2>
+          <p class="section-subtitle">Every milestone marked with a beat of our hearts</p>
+          <div class="divider-rose">
+            <span class="line"></span>
+            <i class="fa-solid fa-rose"></i>
+            <span class="line"></span>
           </div>
-          <input type="hidden" id="rsvp-status" value="Attending">
+        </div>
 
-          <!-- Guest Inputs -->
-          <div class="form-group">
-            <label for="guest-name">Your Full Name *</label>
-            <input type="text" id="guest-name" class="form-control" placeholder="e.g. Uncle John & Family" required>
+        <!-- Horizontal / Vertical Responsive Timeline -->
+        <div class="timeline-wrapper">
+          <div class="timeline-track" id="timeline-track">
+            <!-- Rendered dynamically by script.js -->
           </div>
-
-          <div class="form-group">
-            <label for="guest-count">Number of Guests</label>
-            <input type="number" id="guest-count" class="form-control" min="1" max="10" value="2">
-          </div>
-
-          <div class="form-group">
-            <label for="guest-msg">Message for the Little Boss (Optional)</label>
-            <textarea id="guest-msg" class="form-control" rows="3" placeholder="Write a cute birthday wish..."></textarea>
-          </div>
-
-          <button type="submit" class="btn-primary rsvp-submit-btn">
-            <i class="fa-solid fa-paper-plane"></i> Submit RSVP 👔
-          </button>
-        </form>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 4: ROMANTIC PHOTO GALLERY
+         ========================================================================== -->
+    <section class="section-padding gallery-section" id="gallery">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">SWEET MEMORIES</span>
+          <h2 class="section-title">Little Moments, Forever Memories</h2>
+          <p class="section-subtitle">Snapshots of laughter, romance, and shared happiness</p>
+          <div class="divider-rose">
+            <span class="line"></span>
+            <i class="fa-solid fa-heart"></i>
+            <span class="line"></span>
+          </div>
+        </div>
+
+        <!-- Scrapbook Polaroid Photo Grid -->
+        <div class="gallery-grid" id="gallery-grid">
+          <!-- Rendered dynamically by script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 5: INTERACTIVE LOVE NOTES
+         ========================================================================== -->
+    <section class="section-padding notes-section" id="love-notes">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">FROM THE HEART</span>
+          <h2 class="section-title">A Few Reasons Why I Choose You</h2>
+          <p class="section-subtitle">Tap each card to reveal a secret note from my heart</p>
+          <div class="divider-rose">
+            <span class="line"></span>
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span class="line"></span>
+          </div>
+        </div>
+
+        <!-- 6 Flip Cards Grid -->
+        <div class="notes-grid" id="notes-grid">
+          <!-- Rendered dynamically by script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 6: INTERACTIVE ANNIVERSARY SURPRISE
+         ========================================================================== -->
+    <section class="section-padding surprise-section" id="surprise">
+      <div class="container">
+        <div class="surprise-card-container">
+          <div class="surprise-header text-center">
+            <span class="section-tag">SPECIAL SURPRISE</span>
+            <h2 class="surprise-heading bind-surprise-heading">There's One More Thing…</h2>
+            <p class="surprise-sub">Touch the ribbon to unwrap a heartfelt surprise message</p>
+          </div>
+
+          <!-- Interactive Gift Box -->
+          <div class="gift-box-wrapper" id="gift-box-wrapper">
+            <div class="gift-box" id="gift-box">
+              <div class="gift-lid" id="gift-lid">
+                <div class="gift-ribbon-v"></div>
+                <div class="gift-ribbon-h"></div>
+                <div class="gift-bow">
+                  <div class="bow-loop-left"></div>
+                  <div class="bow-loop-right"></div>
+                  <div class="bow-center"></div>
+                </div>
+              </div>
+              <div class="gift-body">
+                <div class="gift-ribbon-v"></div>
+                <div class="gift-ribbon-h"></div>
+                <div class="gift-heart-emblem">❤️</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center surprise-action">
+            <button class="btn-gold-glow" id="btn-unwrap-gift">
+              <span>Unwrap Your Surprise 🎁</span>
+            </button>
+          </div>
+
+          <!-- Revealed Surprise Message Container -->
+          <div class="surprise-reveal-card hidden" id="surprise-reveal-card">
+            <div class="surprise-card-inner">
+              <div class="surprise-icon">🌹</div>
+              <h3 class="surprise-card-title">My Dearest Vow</h3>
+              <p class="surprise-card-message bind-surprise-message">
+                My favorite place in the world will always be beside you. Thank you for being part of my life, my happiness, and my forever. Here's to every beautiful memory we've made and every wonderful moment still waiting for us. I love you, today and always. ❤️
+              </p>
+              <div class="surprise-signature bind-couple-title">Alexander & Sophia</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 7: ANNIVERSARY DINNER INVITATION DETAILS
+         ========================================================================== -->
+    <section class="section-padding details-section" id="details">
+      <div class="container">
+        <div class="details-card">
+          <div class="details-card-border"></div>
+          
+          <div class="details-header text-center">
+            <span class="section-tag">JOIN OUR CELEBRATION</span>
+            <h2 class="details-title">Let's Make Another Beautiful Memory</h2>
+            <p class="details-sub">We cordially invite you to share this romantic evening with us</p>
+            <div class="divider-rose">
+              <span class="line"></span>
+              <i class="fa-solid fa-glass-cheers"></i>
+              <span class="line"></span>
+            </div>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-item">
+              <div class="detail-icon"><i class="fa-solid fa-glass-water-droplet"></i></div>
+              <div class="detail-text">
+                <span class="detail-label">Celebration</span>
+                <span class="detail-value bind-anniversary-years">5th Anniversary Celebration</span>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon"><i class="fa-solid fa-calendar-heart"></i></div>
+              <div class="detail-text">
+                <span class="detail-label">Date</span>
+                <span class="detail-value bind-event-date">Saturday, November 20, 2026</span>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon"><i class="fa-solid fa-clock"></i></div>
+              <div class="detail-text">
+                <span class="detail-label">Time</span>
+                <span class="detail-value bind-event-time">7:00 PM – 11:00 PM</span>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon"><i class="fa-solid fa-champagne-glasses"></i></div>
+              <div class="detail-text">
+                <span class="detail-label">Venue</span>
+                <span class="detail-value bind-venue-name">Le Jardin Romantic Dining & Ballroom</span>
+              </div>
+            </div>
+
+            <div class="detail-item full-width">
+              <div class="detail-icon"><i class="fa-solid fa-location-dot"></i></div>
+              <div class="detail-text">
+                <span class="detail-label">Address</span>
+                <span class="detail-value bind-venue-address">742 Evergreen Terrace, Suite 500, New York, NY 10001</span>
+              </div>
+            </div>
+
+            <div class="detail-item full-width">
+              <div class="detail-icon"><i class="fa-solid fa-user-tie"></i></div>
+              <div class="detail-text">
+                <span class="detail-label">Dress Code</span>
+                <span class="detail-value bind-dress-code">Elegant & Romantic (Burgundy, Gold & Dark Tie)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons Group -->
+          <div class="details-actions">
+            <button class="btn-gold-glow" id="btn-confirm-rsvp">
+              <i class="fa-solid fa-heart"></i>
+              <span>Confirm Attendance ❤️</span>
+            </button>
+
+            <a class="btn-burgundy-outline" id="btn-get-directions" target="_blank" rel="noopener">
+              <i class="fa-solid fa-map-location-dot"></i>
+              <span>View Location 📍</span>
+            </a>
+
+            <button class="btn-ivory-outline" id="btn-add-calendar">
+              <i class="fa-solid fa-calendar-plus"></i>
+              <span>Add to Calendar 📅</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 8: LIVE ANNIVERSARY COUNTDOWN
+         ========================================================================== -->
+    <section class="section-padding countdown-section" id="countdown">
+      <div class="container">
+        <div class="countdown-card text-center">
+          <span class="section-tag">SAVORING THE MOMENT</span>
+          <h2 class="countdown-heading">Counting Down to Our Special Day ❤️</h2>
+          
+          <div class="timer-display" id="timer-display">
+            <div class="timer-box">
+              <span class="timer-num" id="days">00</span>
+              <span class="timer-unit">DAYS</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-box">
+              <span class="timer-num" id="hours">00</span>
+              <span class="timer-unit">HOURS</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-box">
+              <span class="timer-num" id="minutes">00</span>
+              <span class="timer-unit">MINUTES</span>
+            </div>
+            <div class="timer-colon">:</div>
+            <div class="timer-box">
+              <span class="timer-num" id="seconds">00</span>
+              <span class="timer-unit">SECONDS</span>
+            </div>
+          </div>
+
+          <div class="countdown-passed hidden" id="countdown-passed">
+            <div class="passed-badge">🎉 We Are Celebrating Our Love Today! ❤️ Happy Anniversary! 🎉</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 9: FINAL LOVE MESSAGE & REPLAY
+         ========================================================================== -->
+    <section class="section-padding final-section text-center" id="final-message">
+      <div class="final-bg-overlay"></div>
+      <div class="container">
+        <div class="final-content">
+          <!-- Intertwined Golden Hearts -->
+          <div class="intertwined-hearts">
+            <div class="heart heart-1"><i class="fa-solid fa-heart"></i></div>
+            <div class="heart heart-2"><i class="fa-solid fa-heart"></i></div>
+          </div>
+
+          <h2 class="final-title bind-final-title">
+            One Lifetime Would Never Be Enough.
+          </h2>
+
+          <p class="final-subtitle bind-final-subtitle">
+            Here's to us, to our story, and to a love that keeps choosing each other — again and again, forever.
+          </p>
+
+          <div class="final-names bind-couple-title">
+            Alexander & Sophia
+          </div>
+
+          <div class="final-action">
+            <button class="btn-replay" id="btn-replay-story">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span>Replay Our Love Story ❤️</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+      <div class="container">
+        <p class="footer-text">
+          Designed with endless love for <span class="bind-couple-title">Alexander & Sophia</span>'s Anniversary
+        </p>
+        <p class="footer-sub">✦ Romantic Digital Card Experience ✦</p>
+      </div>
+    </footer>
+
+  </main>
 
   <!-- ==========================================================================
-       SECTION 9: FINAL CELEBRATION FOOTER
+       MODAL 1: PHOTO GALLERY LIGHTBOX
        ========================================================================== -->
-  <footer class="footer-section">
-    <div class="container">
-      <h2 class="footer-title">The Little Boss Can't Wait To See You! 🎉</h2>
-      <p class="footer-sub">Let's make this birthday unforgettable!</p>
+  <div class="modal-lightbox hidden" id="lightbox-modal" role="dialog" aria-modal="true">
+    <div class="lightbox-overlay" id="lightbox-overlay"></div>
+    <div class="lightbox-container">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Close Lightbox">&times;</button>
       
-      <div class="footer-emojis">👔 👶 🎂</div>
+      <button class="lightbox-arrow lightbox-prev" id="lightbox-prev" aria-label="Previous Photo">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
 
-      <div class="footer-credit">
-        <p>© 2026 The Little Boss Birthday Party. Made with ❤️ for <span class="bind-baby-name">Alexander</span>.</p>
+      <div class="lightbox-content">
+        <div class="lightbox-img-wrapper">
+          <img src="" alt="Gallery Photo" id="lightbox-img">
+        </div>
+        <div class="lightbox-caption-bar">
+          <span class="lightbox-counter" id="lightbox-counter">1 / 6</span>
+          <p class="lightbox-caption" id="lightbox-caption"></p>
+        </div>
+      </div>
+
+      <button class="lightbox-arrow lightbox-next" id="lightbox-next" aria-label="Next Photo">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: CONFIRM ATTENDANCE RSVP FORM
+       ========================================================================== -->
+  <div class="modal-rsvp hidden" id="rsvp-modal" role="dialog" aria-modal="true">
+    <div class="rsvp-overlay" id="rsvp-overlay"></div>
+    <div class="rsvp-dialog">
+      <button class="rsvp-close" id="rsvp-close" aria-label="Close RSVP Modal">&times;</button>
+      
+      <div class="rsvp-header text-center">
+        <div class="rsvp-icon">🌹</div>
+        <h3 class="rsvp-title">Confirm Your Attendance</h3>
+        <p class="rsvp-sub">Please let us know if you will join our anniversary celebration</p>
+      </div>
+
+      <form id="rsvp-form" class="rsvp-form">
+        <div class="form-group">
+          <label for="rsvp-name">Your Full Name *</label>
+          <input type="text" id="rsvp-name" required placeholder="e.g. Eleanor & James Vance">
+        </div>
+
+        <div class="form-group">
+          <label for="rsvp-attendance">Will You Join Us? *</label>
+          <select id="rsvp-attendance" required>
+            <option value="joyfully-accepts">Joyfully Accepts ❤️ (Attending)</option>
+            <option value="regretfully-declines">Regretfully Declines 💔 (Cannot Attend)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="rsvp-guests">Number of Guests</label>
+          <select id="rsvp-guests">
+            <option value="1">1 Guest</option>
+            <option value="2" selected>2 Guests</option>
+            <option value="3">3 Guests</option>
+            <option value="4+">4+ Guests</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="rsvp-message">Warm Message or Wishes for the Couple</label>
+          <textarea id="rsvp-message" rows="3" placeholder="Write a sweet message for our anniversary..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-gold-glow btn-full">
+          <span>Send Confirmation ❤️</span>
+        </button>
+      </form>
+
+      <!-- Confirmation Success Message -->
+      <div class="rsvp-success hidden" id="rsvp-success">
+        <div class="success-icon">✨</div>
+        <h4>Thank You!</h4>
+        <p id="rsvp-success-text">Your RSVP has been saved. We can't wait to celebrate with you!</p>
+        <button class="btn-burgundy" id="rsvp-done-btn">Close</button>
       </div>
     </div>
-  </footer>
+  </div>
 
-  <!-- Scripts -->
-  <script src="config.js"></script>
+  <!-- Main Application Script -->
   <script src="script.js"></script>
 </body>
 </html>
