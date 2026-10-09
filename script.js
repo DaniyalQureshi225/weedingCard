@@ -73,7 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================================================== */
 let canvas, ctx;
 let particles = [];
-const PARTICLE_COUNT = 40;
+const getParticleCount = () => window.innerWidth < 768 ? 20 : 45;
+let PARTICLE_COUNT = getParticleCount();
 
 function initRomanticCanvas() {
   canvas = document.getElementById('romantic-canvas');
@@ -81,7 +82,10 @@ function initRomanticCanvas() {
 
   ctx = canvas.getContext('2d');
   resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    PARTICLE_COUNT = getParticleCount();
+  });
 
   // Create Initial Particles
   particles = [];
@@ -418,6 +422,32 @@ function initLightboxControls() {
     if (e.key === 'ArrowLeft' && prevBtn) prevBtn.click();
     if (e.key === 'ArrowRight' && nextBtn) nextBtn.click();
   });
+
+  // Touch swipe navigation for mobile screens
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  if (modal) {
+    modal.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    modal.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+  }
+
+  function handleSwipe() {
+    const swipeDistance = touchEndX - touchStartX;
+    if (Math.abs(swipeDistance) > 40) {
+      if (swipeDistance < 0 && nextBtn) {
+        nextBtn.click();
+      } else if (swipeDistance > 0 && prevBtn) {
+        prevBtn.click();
+      }
+    }
+  }
 }
 
 /* ==========================================================================
