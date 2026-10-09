@@ -216,10 +216,60 @@ function bindDynamicContent(cfg) {
   bindText('.bind-final-title', cfg.finalTitle);
   bindText('.bind-final-subtitle', cfg.finalSubtitle);
 
+  // Dynamically update Open Graph meta tags for WhatsApp link sharing
+  updateOpenGraphMeta(cfg);
+
   const songTitleEl = document.getElementById('song-title');
   if (songTitleEl && cfg.musicTitle) {
     songTitleEl.textContent = cfg.musicTitle;
   }
+}
+
+function updateOpenGraphMeta(cfg) {
+  const origin = (cfg.siteUrl && cfg.siteUrl.trim()) 
+    ? cfg.siteUrl.replace(/\/$/, '')
+    : (window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('file://') ? window.location.origin : '');
+
+  let imgUrl = cfg.shareImageUrl || 'assets/img/romantic_hero_bg.jpg';
+  
+  if (origin && !imgUrl.startsWith('http://') && !imgUrl.startsWith('https://')) {
+    imgUrl = origin + (imgUrl.startsWith('/') ? '' : '/') + imgUrl;
+  }
+
+  setMetaProperty('og:image', imgUrl);
+  setMetaProperty('og:image:secure_url', imgUrl);
+  setMetaName('twitter:image', imgUrl);
+
+  if (cfg.invitationTitle) {
+    setMetaProperty('og:title', cfg.invitationTitle);
+    setMetaName('twitter:title', cfg.invitationTitle);
+  }
+  if (cfg.heroSubtitle) {
+    setMetaProperty('og:description', cfg.heroSubtitle);
+    setMetaName('twitter:description', cfg.heroSubtitle);
+  }
+}
+
+function setMetaProperty(prop, value) {
+  if (!value) return;
+  let meta = document.querySelector(`meta[property="${prop}"]`);
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.setAttribute('property', prop);
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute('content', value);
+}
+
+function setMetaName(name, value) {
+  if (!value) return;
+  let meta = document.querySelector(`meta[name="${name}"]`);
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.setAttribute('name', name);
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute('content', value);
 }
 
 function bindText(selector, value, isHTML = false) {

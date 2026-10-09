@@ -12,6 +12,10 @@ const ANNIVERSARY_CONFIG = {
   invitationTitle: "You're Invited to Celebrate Our Anniversary",
   heroSubtitle: "Another year of laughter, countless memories, and a love that grows stronger with every passing day.",
   
+  // Website & Sharing Settings (WhatsApp & Social Media Link Preview Image)
+  siteUrl: "", // Optional: Your deployed site domain (e.g. "https://ouranniversary.netlify.app")
+  shareImageUrl: "assets/img/romantic_hero_bg.jpg", // Preview image shown when sharing on WhatsApp
+
   // Audio Settings
   musicUrl: "assets/sound/bkw.mp3", // Romantic audio track
   musicTitle: "A Thousand Years (Piano & Violin)",
