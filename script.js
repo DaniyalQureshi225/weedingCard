@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================================================== */
 let canvas, ctx;
 let particles = [];
-const getParticleCount = () => window.innerWidth < 768 ? 20 : 45;
+const getParticleCount = () => window.innerWidth < 768 ? 10 : 28;
 let PARTICLE_COUNT = getParticleCount();
 
 function initRomanticCanvas() {
@@ -84,7 +84,10 @@ function initRomanticCanvas() {
   resizeCanvas();
   window.addEventListener('resize', () => {
     resizeCanvas();
-    PARTICLE_COUNT = getParticleCount();
+    const newCount = getParticleCount();
+    if (particles.length > newCount) {
+      particles.length = newCount;
+    }
   });
 
   // Create Initial Particles
@@ -107,16 +110,21 @@ function resizeCanvas() {
 }
 
 function createParticle() {
-  const isPetal = Math.random() > 0.4;
+  const isMobile = window.innerWidth < 768;
+  const isPetal = Math.random() > 0.45;
   return {
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: isPetal ? Math.random() * 8 + 6 : Math.random() * 3 + 1,
-    speedY: isPetal ? Math.random() * 1.2 + 0.5 : -(Math.random() * 0.8 + 0.2),
-    speedX: Math.random() * 0.6 - 0.3,
+    x: Math.random() * (canvas ? canvas.width : window.innerWidth),
+    y: Math.random() * (canvas ? canvas.height : window.innerHeight),
+    size: isPetal 
+      ? (isMobile ? Math.random() * 4 + 3.5 : Math.random() * 7 + 5)
+      : (isMobile ? Math.random() * 1.8 + 1 : Math.random() * 2.5 + 1),
+    speedY: isPetal 
+      ? (isMobile ? Math.random() * 0.4 + 0.2 : Math.random() * 0.9 + 0.4) 
+      : -(isMobile ? Math.random() * 0.3 + 0.1 : Math.random() * 0.6 + 0.2),
+    speedX: isMobile ? Math.random() * 0.2 - 0.1 : Math.random() * 0.5 - 0.25,
     rotation: Math.random() * 360,
-    rotationSpeed: (Math.random() - 0.5) * 2,
-    opacity: Math.random() * 0.7 + 0.3,
+    rotationSpeed: (Math.random() - 0.5) * (isMobile ? 0.8 : 1.5),
+    opacity: isMobile ? Math.random() * 0.3 + 0.15 : Math.random() * 0.5 + 0.25,
     type: isPetal ? 'petal' : 'gold'
   };
 }
@@ -153,7 +161,7 @@ function animateCanvas() {
     } else {
       // Draw Glowing Golden Particle
       ctx.fillStyle = '#D8B574';
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 6;
       ctx.shadowColor = '#F5E5C9';
       ctx.beginPath();
       ctx.arc(0, 0, p.size, 0, Math.PI * 2);
@@ -168,13 +176,20 @@ function animateCanvas() {
 
 // Function to trigger extra particle burst on interaction
 function triggerParticleBurst(count = 30) {
-  for (let i = 0; i < count; i++) {
+  const isMobile = window.innerWidth < 768;
+  const actualCount = isMobile ? Math.min(count, 10) : Math.min(count, 25);
+  for (let i = 0; i < actualCount; i++) {
     const burst = createParticle();
     burst.y = window.innerHeight / 2;
     burst.x = window.innerWidth / 2;
-    burst.speedY = (Math.random() - 0.5) * 6;
-    burst.speedX = (Math.random() - 0.5) * 6;
+    burst.speedY = (Math.random() - 0.5) * (isMobile ? 2.5 : 5);
+    burst.speedX = (Math.random() - 0.5) * (isMobile ? 2.5 : 5);
     particles.push(burst);
+  }
+  // Trim array on mobile so memory/screen stays clean
+  const maxAllowed = isMobile ? 18 : 50;
+  if (particles.length > maxAllowed) {
+    particles.splice(0, particles.length - maxAllowed);
   }
 }
 
