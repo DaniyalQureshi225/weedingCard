@@ -8,17 +8,17 @@ export default async (request, context) => {
   let html = await response.text();
   const origin = url.origin;
 
-  const annivTitle = "❤️ You're Invited to Celebrate Our Anniversary";
-  const annivDesc = "Join us as we celebrate another year of laughter, countless memories, and a love that grows stronger with every passing day.";
-  const annivImage = origin + "/assets/img/og-share.jpg";
-  const annivUrl = origin + "/";
+  const eventTitle = "Qawwali Night | A Soulful Evening Awaits";
+  const eventDesc = "You are cordially invited to an exclusive evening of soulful Qawwali, Sufi music, and timeless traditions. Explore the invitation, save the date, and discover the venue.";
+  const eventImage = origin + "/assets/images/qawwali-night-og.jpg";
+  const eventUrl = origin + "/";
 
   html = replaceMeta(html, {
-    title: annivTitle,
-    desc: annivDesc,
-    image: annivImage,
-    url: annivUrl,
-    siteName: "Romantic Anniversary Digital Invitation"
+    title: eventTitle,
+    desc: eventDesc,
+    image: eventImage,
+    url: eventUrl,
+    siteName: "Qawwali Night Digital Invitation"
   });
 
   return new Response(html, {

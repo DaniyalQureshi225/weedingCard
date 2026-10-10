@@ -1,122 +1,229 @@
 /**
- * Romantic Anniversary Digital Invitation Configuration
- * Customize all details of your love story and celebration here!
+ * Qawwali Night Digital Invitation Configuration
+ * Centralized details for the Mehfil, hosts, date, venue, social sharing, and translations.
  */
-const ANNIVERSARY_CONFIG = {
-  // Couple Information
-  partner1: "Alexander",
-  partner2: "Sophia",
-  coupleTitle: "Alexander & Sophia",
-  anniversaryYears: "5th", // e.g. "5th", "1st", "10th"
-  tagline: "Every Love Story Is Beautiful, But Ours Is My Favorite ❤️",
-  invitationTitle: "You're Invited to Celebrate Our Anniversary",
-  heroSubtitle: "Another year of laughter, countless memories, and a love that grows stronger with every passing day.",
+const QAWWALI_CONFIG = {
+  // Host & Event Basic Info (Preserved exact values)
+  hostNames: "The Qureshi Family",
+  eventTitle: "Qawwali Night",
+  urduTitle: "شبِ قوالی و محفلِ سماع",
+  tagline: "A Night of Soul, Sufi Melodies & Timeless Traditions",
+  invitationSubtitle: "You are cordially invited to an exclusive evening of soulful music, traditional mehfil culture, and warm hospitality.",
   
-  // Website & Sharing Settings (WhatsApp & Social Media Link Preview Image)
-  siteUrl: "", // Optional: Your deployed site domain (e.g. "https://ouranniversary.netlify.app")
-  shareImageUrl: "assets/img/og-share.jpg", // Optimized 1200x630 preview image for WhatsApp
+  // Website & Social Media Link Preview Settings (WhatsApp OG Metadata)
+  siteUrl: "https://qawwali-night.netlify.app", // Public domain URL
+  shareImageUrl: "assets/images/qawwali-night-og.jpg", // 1200x630 OG preview card
+  
+  // Floating US Dollar Bills Settings (Subtle, minimal & small size)
+  currencyDefaults: {
+    enabled: true,
+    intensity: "subtle", // Minimal floating dollars: ~3-5 bills mobile, 5-8 desktop
+    symbol: "$",
+    denominations: ["1", "5", "10", "20", "50", "100"]
+  },
 
-  // Audio Settings
-  musicUrl: "assets/sound/bkw.mp3", // Romantic audio track
-  musicTitle: "A Thousand Years (Piano & Violin)",
-
-  // Event Date & Time (for Countdown & Calendar)
-  eventDateISO: "2026-11-20T19:00:00", // YYYY-MM-DDTHH:mm:ss format
-  dateText: "Saturday, November 20, 2026",
-  timeText: "7:00 PM – 11:00 PM",
+  // Date & Time Settings
+  eventDateISO: "2026-11-21T20:00:00", // YYYY-MM-DDTHH:mm:ss format
+  dateText: "Saturday, November 21, 2026",
+  timeText: "8:00 PM onwards (PKT)",
+  timeZone: "Asia/Karachi",
   
   // Venue Information
-  venueName: "Le Jardin Romantic Dining & Ballroom",
-  venueAddress: "742 Evergreen Terrace, Suite 500, New York, NY 10001",
-  googleMapsUrl: "https://maps.google.com/?q=742+Evergreen+Terrace+New+York",
-  dressCode: "Elegant & Romantic (Burgundy, Gold & Dark Tie)",
-
-  // Opening Envelope Text & Secret Letter
-  openingText: "Someone has a little surprise for you…",
-  letterOpeningMessage: "To My Dearest Love,\n\nFive years ago, two paths crossed and created a story more beautiful than I ever dreamed. Today, I invite you to step into our magical world and celebrate every milestone, every laugh, and every promise of forever.\n\nWith all my love ❤️",
-
-  // Interactive Love Story Timeline Milestones
-  timeline: [
-    {
-      id: "meet",
-      icon: "✨",
-      date: "October 14, 2021",
-      title: "The Day We Met",
-      message: "A casual coffee shop glance turned into a conversation that lasted until the stars filled the night sky. We knew right then something extraordinary had begun.",
-      photo: "assets/img/gallery-bokeh.jpg"
+  venueName: "The Royal Palm Mehfil Hall",
+  fullAddress: "8-Km Raiwind Road, Thokar Niaz Baig, Lahore, Punjab 54000, Pakistan",
+  googleMapsUrl: "https://maps.google.com/?q=Royal+Palm+Golf+and+Country+Club+Lahore",
+  arrivalInstructions: "Valet parking available at Gate 2. Seating starts promptly at 8:00 PM. Traditional high tea & refreshments will be served.",
+  
+  // Dress Code & Cultural Guidelines
+  dressCode: "Royal Mehfil Attire (Velvet, Sherwanis, Kurta Pajama with Nehru Jackets, Traditional Dupattas / Formal Wear in Emerald, Gold, Black & Maroon)",
+  performers: "Renowned Sufi Qawwals of Punjab",
+  
+  // Interactive Secret Scratch Card Surprise Message
+  scratchTitle: "An Exclusive Mehfil Surprise",
+  scratchMessage: "Your presence will add unmatched grace and harmony to our Mehfil. We await your arrival with open hearts and soulful melodies.",
+  
+  // Contact & RSVP Settings
+  hostContactPhone: "+92 300 123 4567",
+  whatsappNumber: "923001234567",
+  rsvpDeadlineText: "Please RSVP by November 10, 2026",
+  
+  // Audio & Atmosphere Settings
+  musicUrl: "assets/sound/bkw.mp3",
+  musicTitle: "Soulful Sufi Instrumentals & Tabla",
+  
+  // Centralized English & Urdu Translation Dictionary
+  translations: {
+    en: {
+      brandTitle: "Qawwali Night",
+      brandUrdu: "شبِ قوالی",
+      navSaveDate: "Save Date",
+      navDetails: "Details",
+      navVenue: "Venue",
+      navSurprise: "Surprise",
+      navRsvp: "RSVP",
+      introEmblem: "محفلِ سماع",
+      introTag: "YOU ARE CORDIALLY INVITED",
+      introTitle: "A Night of Soul & Sufi",
+      introSubtitle: "The Mehfil Awaits You",
+      introInstruction: "Beat the Tabla 3 Times to Enter",
+      skipIntro: "Skip Intro ✦",
+      beatLabel: "Beats",
+      invitationBadge: "YOU ARE CORDIALLY INVITED BY",
+      heroTitle: "Qawwali Night",
+      heroSubtitle: "An Evening of Soulful Music, Timeless Traditions & Unforgettable Moments",
+      viewDetails: "View Event Details",
+      rsvpNow: "RSVP Now",
+      saveDateTitle: "Save The Date",
+      saveDateDesc: "Mark your calendar for an unforgettable night of melody and elegance",
+      eventTimeBadge: "8:00 PM onwards (PKT)",
+      days: "Days",
+      hours: "Hours",
+      minutes: "Minutes",
+      seconds: "Seconds",
+      expiredMsg: "✨ The Mehfil has concluded! Thank you for celebrating with us. ✨",
+      addGoogleCal: "Add to Google Calendar",
+      downloadIcs: "Download .ics File",
+      detailsTitle: "The Mehfil Experience",
+      detailsDesc: "Traditional Pakistani culture blended with luxury hospitality",
+      card1Title: "Royal Mehfil Attire",
+      card1Tag: "Dress Code",
+      card2Title: "Sufi Qawwali Ensemble",
+      card2Desc: "Experience live renditions of classic Sufi Kalaams by renowned Qawwals accompanied by harmonium, tablas, and traditional clapping rhythm.",
+      card2Tag: "Live Performance",
+      card3Title: "Royal Hospitality",
+      card3Desc: "Enjoy traditional Pakistani high tea, piping hot Kashmiri Chai, crispy Jalebis, followed by a Mughlai dinner feast.",
+      card3Tag: "Refreshments",
+      venueTitle: "Venue & Location",
+      venueDesc: "Join us at the elegant Royal Palm Mehfil Hall",
+      arrivalTitle: "Arrival & Parking Instructions",
+      getDirections: "Get Directions",
+      copyAddress: "Copy Address",
+      scratchTitle: "An Exclusive Surprise",
+      scratchDesc: "Scratch the gold foil below to reveal the secret invitation message",
+      scratchCardHeader: "An Exclusive Mehfil Surprise",
+      scratchMessage: "Your presence will add unmatched grace and harmony to our Mehfil. We await your arrival with open hearts and soulful melodies.",
+      scratchFallback: "Cannot scratch? Tap here to reveal surprise ✦",
+      rsvpTitle: "RSVP to the Mehfil",
+      rsvpDeadline: "Please RSVP by November 10, 2026 to help us make seating arrangements",
+      btnAttending: "I'll Be There ✨",
+      btnDeclined: "Unable to Attend 🌹",
+      labelFullName: "Full Name *",
+      placeholderFullName: "Enter your full name",
+      labelGuestCount: "Number of Guests *",
+      opt1Person: "1 Person",
+      opt2Persons: "2 Persons",
+      opt3Persons: "3 Persons",
+      opt4Persons: "4 Persons",
+      opt5Persons: "5 Persons (Family)",
+      labelWhatsapp: "WhatsApp Contact Number",
+      placeholderWhatsapp: "+92 300 1234567",
+      labelNotes: "Special Requests / Dietary Notes",
+      placeholderNotes: "Any dietary preferences or special wishes for the hosts...",
+      btnWaRsvp: "Confirm via WhatsApp RSVP",
+      btnSubmitOnline: "Submit Online RSVP",
+      rsvpSuccessTitle: "Thank You for Your RSVP!",
+      rsvpSuccessDesc: "Your response has been recorded. We look forward to welcoming you at the Mehfil!",
+      btnRsvpAgain: "Submit Another Response",
+      shareTitle: "Share The Invitation",
+      shareDesc: "Send this digital invitation card to family and friends",
+      shareWa: "Share via WhatsApp",
+      shareNative: "Share Invitation",
+      copyLink: "Copy Invitation Link",
+      footerSubtitle: "Hosted with love by",
+      footerCopy: "© 2026 Qawwali Night Invitation. All Rights Reserved.",
+      toastAddressCopied: "Venue address copied to clipboard! 📋",
+      toastLinkCopied: "Invitation link copied to clipboard! 🔗",
+      toastIcsDownloaded: "Downloaded .ics calendar file 📅",
+      toastRsvpSubmitted: "✨ RSVP submitted successfully! Thank you. ✨",
+      whatsappShareTemplate: `✨ You are cordially invited to Qawwali Night! ✨\n\nJoin us for a soulful evening of Sufi music, traditional mehfil culture & timeless memories.\n\n📅 Date: Saturday, Nov 21, 2026\n⏰ Time: 8:00 PM onwards\n📍 Venue: The Royal Palm Mehfil Hall, Lahore\n\nView your digital invitation & RSVP: https://qawwali-night.netlify.app`
     },
-    {
-      id: "talk",
-      icon: "💕",
-      date: "November 02, 2021",
-      title: "Our First Conversation",
-      message: "Hours disappeared like minutes. Talking to you felt as natural as breathing, like finding a home I didn't know I was looking for.",
-      photo: "assets/img/couple.jpg"
-    },
-    {
-      id: "date",
-      icon: "🌹",
-      date: "December 18, 2021",
-      title: "Our First Date",
-      message: "Dinner under candlelit lanterns, nervous laughter, and a magical walk in the crisp night air. That evening sealed our hearts together.",
-      photo: "assets/img/gallery-lanterns.jpg"
-    },
-    {
-      id: "love",
-      icon: "💖",
-      date: "February 14, 2022",
-      title: "The Moment We Fell in Love",
-      message: "Under a blanket of soft snow and quiet starlight, holding hands, we both realized we had found our soulmate and forever partner.",
-      photo: "assets/img/story-forest.jpg"
-    },
-    {
-      id: "memory",
-      icon: "💍",
-      date: "November 20, 2024",
-      title: "Our Most Beautiful Memory",
-      message: "Whispering promises of eternal love under a canopy of romantic white lights and rose petals, promising to stand together forever.",
-      photo: "assets/img/hero-castle-alt.jpg"
-    },
-    {
-      id: "forever",
-      icon: "♾️",
-      date: "Today & Forever",
-      title: "Another Year of Forever",
-      message: "Celebrating another year of shared dreams, boundless joy, and an enduring love that grows deeper with every single heartbeat.",
-      photo: "assets/img/gallery-couple.jpg"
+    ur: {
+      brandTitle: "محفلِ قوالی",
+      brandUrdu: "شبِ قوالی",
+      navSaveDate: "تاریخ",
+      navDetails: "تفصیلات",
+      navVenue: "مقام",
+      navSurprise: "سرپرائز",
+      navRsvp: "شرکت",
+      introEmblem: "محفلِ سماع",
+      introTag: "آپ کو پُرخلوص دعوت دی جاتی ہے",
+      introTitle: "روح، صوفیانہ کلام اور قوالی کی ایک حسین شام",
+      introSubtitle: "محفل آپ کی منتظر ہے",
+      introInstruction: "محفل میں داخل ہونے کے لیے طبلے پر تین بار ضرب لگائیں",
+      skipIntro: "انٹرو چھوڑیں ✦",
+      beatLabel: "ضربیں",
+      invitationBadge: "پُرخلوص دعوت نامہ از جانب",
+      heroTitle: "محفلِ قوالی",
+      heroSubtitle: "روح پرور موسیقی، صوفیانہ روایات اور یادگار لمحات سے سجی ایک حسین شام",
+      viewDetails: "تقریب کی تفصیلات دیکھیں",
+      rsvpNow: "شرکت کی تصدیق کریں",
+      saveDateTitle: "تاریخ محفوظ کر لیں",
+      saveDateDesc: "اس خوبصورت اور یادگار شام کے لیے اپنے کیلنڈر پر تاریخ محفوظ کریں",
+      eventTimeBadge: "رات ۸:۰۰ بجے سے (پاکستان وقت)",
+      days: "دن",
+      hours: "گھنٹے",
+      minutes: "منٹ",
+      seconds: "سیکنڈ",
+      expiredMsg: "✨ محفل اختتام پذیر ہو گئی۔ ہماری اس خوشی کا حصہ بننے کا شکریہ! ✨",
+      addGoogleCal: "گوگل کیلنڈر میں شامل کریں",
+      downloadIcs: "کیلنڈر فائل ڈاؤن لوڈ کریں",
+      detailsTitle: "تقریب کی تفصیلات",
+      detailsDesc: "روایتی پاکستانی ثقافت اور شاہانہ مہمان نوازی کا حسین امتزاج",
+      card1Title: "شاهانه محفل لباس",
+      card1Tag: "ڈریس کوڈ",
+      card2Title: "صوفیانہ قوالی کا سماں",
+      card2Desc: "نامور قوالوں کی آواز میں کلاسیکی صوفیانہ کلام، ہارمونیم اور طبلے کی دلکش دھنیں اور قوالی کا سحر انگیز ماحول۔",
+      card2Tag: "لائیو قوالی",
+      card3Title: "شاهانه ضیافت",
+      card3Desc: "روایتی پاکستانی ہائی ٹی، گرما گرم کشمیری چائے، کرکری جلیبیاں اور شاہانہ مغلئی کھانوں کی ضیافت۔",
+      card3Tag: "ضیافت",
+      venueTitle: "مقام و راستہ",
+      venueDesc: "رائل پام مہفل ہال میں ہماری اس باوقار محفل کا حصہ بنیں",
+      arrivalTitle: "آمد اور پارکنگ کی معلومات",
+      getDirections: "راستہ دیکھیں (گوگل میپ)",
+      copyAddress: "پتہ کاپی کریں",
+      scratchTitle: "ایک خاص پیغام",
+      scratchDesc: "دعوت نامے کا خفیہ پیغام دیکھنے کے لیے گولڈن پٹی کو کھرچیں",
+      scratchCardHeader: "ایک خاص دعوتی پیغام",
+      scratchMessage: "آپ کی آمد ہماری محفل کو چاند چاند لگا دے گی۔ ہم کھلے دل سے آپ کے استقبال کے منتظر ہیں۔",
+      scratchFallback: "کلک کر کے خفیہ پیغام دیکھیں ✦",
+      rsvpTitle: "شرکت کی تصدیق کریں (RSVP)",
+      rsvpDeadline: "براہ کرم ۱۰ نومبر ۲۰۲۶ تک اپنی شرکت سے آگاہ فرمائیں تاکہ باوقار انتظامات کیے جا سکیں",
+      btnAttending: "میں شرکت کروں گا/گی ✨",
+      btnDeclined: "شرکت ممکن نہیں 🌹",
+      labelFullName: "مکمل نام *",
+      placeholderFullName: "اپنا نام درج کریں",
+      labelGuestCount: "مہمانوں کی تعداد *",
+      opt1Person: "۱ شخص",
+      opt2Persons: "۲ افراد",
+      opt3Persons: "۳ افراد",
+      opt4Persons: "۴ افراد",
+      opt5Persons: "۵ افراد (خاندان)",
+      labelWhatsapp: "واٹس ایپ رابطہ نمبر",
+      placeholderWhatsapp: "+92 300 1234567",
+      labelNotes: "خاص ہدایات یا پیغام",
+      placeholderNotes: "میزبان کے لیے کوئی پیغام یا خاص ہدایت...",
+      btnWaRsvp: "واٹس ایپ کے ذریعے تصدیق کریں",
+      btnSubmitOnline: "آن لائن تصدیق جمع کریں",
+      rsvpSuccessTitle: "شرکت کی تصدیق کا شکریہ!",
+      rsvpSuccessDesc: "آپ کا جواب موصول ہو گیا ہے۔ ہم محفل میں آپ کا پُرخلوص استقبال کریں گے!",
+      btnRsvpAgain: "دوبارہ جواب جمع کریں",
+      shareTitle: "دعوت نامہ شیئر کریں",
+      shareDesc: "اپنے پیاروں اور دوستوں کے ساتھ دعوت نامہ شیئر کریں",
+      shareWa: "واٹس ایپ پر شیئر کریں",
+      shareNative: "دعوت نامہ شیئر کریں",
+      copyLink: "دعوت نامے کا لنک کاپی کریں",
+      footerSubtitle: "باہتمام",
+      footerCopy: "© ۲۰۲۶ محفلِ قوالی دعوت نامہ۔ جملہ حقوق محفوظ ہیں۔",
+      toastAddressCopied: "مقام کا پتہ کاپی ہو گیا! 📋",
+      toastLinkCopied: "دعوت نامے کا لنک کاپی ہو گیا! 🔗",
+      toastIcsDownloaded: "کیلنڈر فائل ڈاؤن لوڈ ہو گئی 📅",
+      toastRsvpSubmitted: "✨ شرکت کی تصدیق موصول ہو گئی۔ شکریہ! ✨",
+      whatsappShareTemplate: `✨ آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے! ✨\n\nآئیے، روح پرور صوفیانہ کلام اور خوبصورت روایات سے سجی اس شام کا حصہ بنیے۔\n\n📅 تاریخ: ہفتہ، ۲۱ نومبر ۲۰۲۶\n⏰ وقت: رات ۸:۰۰ بجے سے\n📍 مقام: رائل پام مہفل ہال، لاہور\n\nدعوت نامہ دیکھیں: https://qawwali-night.netlify.app`
     }
-  ],
-
-  // Romantic Photo Gallery (6 polaroid style photos)
-  gallery: [
-    { url: "assets/img/couple.jpg", caption: "Our Favorite Golden Hour Sunset Walk", tag: "Golden Hour" },
-    { url: "assets/img/gallery-roses.jpg", caption: "Fresh Red Roses & Candlelight Evenings", tag: "Pure Romance" },
-    { url: "assets/img/gallery-couple.jpg", caption: "Laughter, Warm Hugs & Sweet Memories", tag: "Together" },
-    { url: "assets/img/gallery-lanterns.jpg", caption: "Under the Warm Glowing Lanterns", tag: "Magical Night" },
-    { url: "assets/img/gallery-sunset.jpg", caption: "Holding Hands by the Peaceful Shore", tag: "Ocean Breeze" },
-    { url: "assets/img/story-forest.jpg", caption: "Enchanted Escape into the Woods", tag: "Forever Mine" }
-  ],
-
-  // Interactive Love Notes (6 cards)
-  loveNotes: [
-    { id: 1, text: "You make ordinary days feel extraordinary." },
-    { id: 2, text: "Your smile is still my favorite sight." },
-    { id: 3, text: "You make me feel at home wherever we are." },
-    { id: 4, text: "You understand me in ways words cannot explain." },
-    { id: 5, text: "Every memory with you is worth keeping." },
-    { id: 6, text: "If I had to choose again, I would still choose you." }
-  ],
-
-  // Interactive Anniversary Surprise Box Message
-  surpriseHeading: "There's One More Thing…",
-  surpriseMessage: "My favorite place in the world will always be beside you. Thank you for being part of my life, my happiness, and my forever. Here's to every beautiful memory we've made and every wonderful moment still waiting for us. I love you, today and always. ❤️",
-
-  // Final Closing Quote
-  finalTitle: "One Lifetime Would Never Be Enough.",
-  finalSubtitle: "Here's to us, to our story, and to a love that keeps choosing each other — again and again, forever."
+  }
 };
 
-// Global window registration
-if (typeof window !== 'undefined') {
-  window.ANNIVERSARY_CONFIG = ANNIVERSARY_CONFIG;
-}
+// Also expose as window.ANNIVERSARY_CONFIG for backward compatibility fallback
+window.ANNIVERSARY_CONFIG = QAWWALI_CONFIG;
+window.QAWWALI_CONFIG = QAWWALI_CONFIG;

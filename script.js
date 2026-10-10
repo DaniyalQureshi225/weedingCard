@@ -1,712 +1,916 @@
 /**
- * Romantic Anniversary Digital Invitation Script
- * Controls canvas particles, love letter reveal, music player, timeline, gallery lightbox, 
- * love notes, surprise gift box, countdown, RSVP modal, and calendar generation.
+ * QAWWALI NIGHT DIGITAL INVITATION — JAVASCRIPT ENGINE
+ * Handles Tabla intro beat unlock, audio synthesis, ambient canvas particles,
+ * minimal floating US dollar bills, English/Urdu language switching with full RTL support,
+ * theme switching, live countdown, calendar exports, mobile scratch card,
+ * RSVP validation, WhatsApp link generation, and Web Share API.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Load Configuration
-  const config = window.ANNIVERSARY_CONFIG || {
-    partner1: "Alexander",
-    partner2: "Sophia",
-    coupleTitle: "Alexander & Sophia",
-    anniversaryYears: "5th",
-    tagline: "Every Love Story Is Beautiful, But Ours Is My Favorite ❤️",
-    invitationTitle: "You're Invited to Celebrate Our Anniversary",
-    heroSubtitle: "Another year of laughter, countless memories, and a love that grows stronger with every passing day.",
-    musicUrl: "assets/sound/bkw.mp3",
-    musicTitle: "A Thousand Years",
-    eventDateISO: "2026-11-20T19:00:00",
-    dateText: "Saturday, November 20, 2026",
-    timeText: "7:00 PM – 11:00 PM",
-    venueName: "Le Jardin Romantic Dining & Ballroom",
-    venueAddress: "742 Evergreen Terrace, Suite 500, New York, NY 10001",
-    googleMapsUrl: "https://maps.google.com/?q=742+Evergreen+Terrace+New+York",
-    dressCode: "Elegant & Romantic (Burgundy, Gold & Dark Tie)",
-    openingText: "Someone has a little surprise for you…",
-    letterOpeningMessage: "To My Dearest Love,\n\nFive years ago, two paths crossed and created a story more beautiful than I ever dreamed. Today, I invite you to step into our magical world and celebrate every milestone, every laugh, and every promise of forever.\n\nWith all my love ❤️",
-    timeline: [],
-    gallery: [],
-    loveNotes: [],
-    surpriseHeading: "There's One More Thing…",
-    surpriseMessage: "My favorite place in the world will always be beside you. Thank you for being part of my life, my happiness, and my forever. Here's to every beautiful memory we've made and every wonderful moment still waiting for us. I love you, today and always. ❤️",
-    finalTitle: "One Lifetime Would Never Be Enough.",
-    finalSubtitle: "Here's to us, to our story, and to a love that keeps choosing each other — again and again, forever."
-  };
+  // Load Central Configuration
+  const config = window.QAWWALI_CONFIG || window.ANNIVERSARY_CONFIG || {};
 
-  // 1. Initialize Canvas Particle System
-  initRomanticCanvas();
+  // 1. Initialize Language Switcher (EN / Urdu RTL)
+  const langController = initLanguageSwitcher(config);
 
-  // 2. Bind Dynamic Text Content
+  // 2. Initialize Ambient Particle Canvas
+  initAmbientParticles();
+
+  // 3. Initialize Subtle Floating Small US Dollar Bills Animation
+  const currencyController = initCurrencyAnimation(config);
+
+  // 4. Bind Dynamic Text & Event Config
   bindDynamicContent(config);
 
-  // 3. Initialize Audio System
-  initAudioSystem(config);
+  // 5. Initialize Audio System & Synthesizer
+  const audioSystem = initAudioSystem(config);
 
-  // 4. Initialize Envelope Opening Animation
-  initEnvelopeScreen();
+  // 6. Initialize Tabla Intro Unlock Experience
+  initTablaIntro(audioSystem, currencyController);
 
-  // 5. Render Timeline
-  renderTimeline(config.timeline);
+  // 7. Initialize Theme Switcher (Dark/Bright)
+  initThemeSwitcher();
 
-  // 6. Render Photo Gallery & Lightbox
-  renderGallery(config.gallery);
-
-  // 7. Render Love Notes
-  renderLoveNotes(config.loveNotes);
-
-  // 8. Initialize Surprise Gift Box Reveal
-  initSurpriseBox();
-
-  // 9. Initialize Event Actions (RSVP, Location, Calendar)
-  initEventActions(config);
-
-  // 10. Initialize Countdown Timer
+  // 8. Initialize Save the Date & Countdown Timer
   initCountdown(config.eventDateISO);
 
-  // 11. Initialize Replay Story Button
-  initReplayButton();
+  // 9. Initialize Calendar Exports (Google & .ics)
+  initCalendarActions(config);
+
+  // 10. Initialize Venue Actions (Maps & Copy Address)
+  initVenueActions(config);
+
+  // 11. Initialize Interactive Mobile Scratch Card Canvas
+  initScratchCard(config);
+
+  // 12. Initialize RSVP Form & WhatsApp RSVP
+  initRSVPForm(config, langController);
+
+  // 13. Initialize WhatsApp Sharing & Web Share API
+  initShareActions(config, langController);
 });
 
 /* ==========================================================================
-   1. AMBIENT PARTICLES CANVAS (Rose Petals & Golden Dust)
+   1. ENGLISH / URDU LANGUAGE SWITCHER ENGINE (RTL & DICTIONARY)
    ========================================================================== */
-let canvas, ctx;
-let particles = [];
-const getParticleCount = () => window.innerWidth < 768 ? 10 : 28;
-let PARTICLE_COUNT = getParticleCount();
+function initLanguageSwitcher(config) {
+  const langBtn = document.getElementById('lang-toggle-btn');
+  const htmlEl = document.documentElement;
+  const translations = config.translations || {};
 
-function initRomanticCanvas() {
-  canvas = document.getElementById('romantic-canvas');
-  if (!canvas) return;
+  let currentLang = localStorage.getItem('qawwali_lang') || 'en';
 
-  ctx = canvas.getContext('2d');
-  resizeCanvas();
-  window.addEventListener('resize', () => {
-    resizeCanvas();
-    const newCount = getParticleCount();
-    if (particles.length > newCount) {
-      particles.length = newCount;
+  function applyLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('qawwali_lang', lang);
+
+    htmlEl.setAttribute('lang', lang);
+    htmlEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
+
+    // Update Language Toggle Button UI
+    if (langBtn) {
+      const enLabel = langBtn.querySelector('.lang-en');
+      const urLabel = langBtn.querySelector('.lang-ur');
+      if (enLabel) enLabel.classList.toggle('active', lang === 'en');
+      if (urLabel) urLabel.classList.toggle('active', lang === 'ur');
     }
-  });
 
-  // Create Initial Particles
-  particles = [];
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push(createParticle());
+    const dict = translations[lang] || translations.en || {};
+
+    // 1. Update text for all elements with data-i18n
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key]) {
+        el.textContent = dict[key];
+      }
+    });
+
+    // 2. Update placeholders for all elements with data-i18n-placeholder
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (dict[key]) {
+        el.placeholder = dict[key];
+      }
+    });
   }
 
-  // Check Reduced Motion Preference
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!prefersReducedMotion) {
-    requestAnimationFrame(animateCanvas);
+  if (langBtn) {
+    langBtn.addEventListener('click', () => {
+      const nextLang = currentLang === 'en' ? 'ur' : 'en';
+      applyLanguage(nextLang);
+      showToast(nextLang === 'ur' ? 'اردو زبان منتخب کی گئی' : 'Switched to English');
+    });
   }
-}
 
-function resizeCanvas() {
-  if (!canvas) return;
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
+  applyLanguage(currentLang);
 
-function createParticle() {
-  const isMobile = window.innerWidth < 768;
-  const isPetal = Math.random() > 0.45;
   return {
-    x: Math.random() * (canvas ? canvas.width : window.innerWidth),
-    y: Math.random() * (canvas ? canvas.height : window.innerHeight),
-    size: isPetal 
-      ? (isMobile ? Math.random() * 4 + 3.5 : Math.random() * 7 + 5)
-      : (isMobile ? Math.random() * 1.8 + 1 : Math.random() * 2.5 + 1),
-    speedY: isPetal 
-      ? (isMobile ? Math.random() * 0.4 + 0.2 : Math.random() * 0.9 + 0.4) 
-      : -(isMobile ? Math.random() * 0.3 + 0.1 : Math.random() * 0.6 + 0.2),
-    speedX: isMobile ? Math.random() * 0.2 - 0.1 : Math.random() * 0.5 - 0.25,
-    rotation: Math.random() * 360,
-    rotationSpeed: (Math.random() - 0.5) * (isMobile ? 0.8 : 1.5),
-    opacity: isMobile ? Math.random() * 0.3 + 0.15 : Math.random() * 0.5 + 0.25,
-    type: isPetal ? 'petal' : 'gold'
+    getLang: () => currentLang
   };
 }
 
-function animateCanvas() {
-  if (!ctx || !canvas) return;
+/* ==========================================================================
+   2. AMBIENT GOLDEN PARTICLES CANVAS
+   ========================================================================== */
+function initAmbientParticles() {
+  const canvas = document.getElementById('ambient-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
 
-  particles.forEach(p => {
-    p.y += p.speedY;
-    p.x += Math.sin(p.y * 0.01) + p.speedX;
-    p.rotation += p.rotationSpeed;
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
 
-    // Wrap around boundaries
-    if (p.y > canvas.height + 20) p.y = -20;
-    if (p.y < -20) p.y = canvas.height + 20;
-    if (p.x > canvas.width + 20) p.x = -20;
-    if (p.x < -20) p.x = canvas.width + 20;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) return;
 
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate((p.rotation * Math.PI) / 180);
-    ctx.globalAlpha = p.opacity;
+  const particleCount = width < 768 ? 16 : 38;
+  const particles = [];
 
-    if (p.type === 'petal') {
-      // Draw Rose Petal
-      ctx.fillStyle = '#E2738C';
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 2.5 + 0.5,
+      speedY: Math.random() * 0.4 + 0.1,
+      speedX: (Math.random() - 0.5) * 0.3,
+      opacity: Math.random() * 0.7 + 0.2,
+      pulse: Math.random() * 0.02 + 0.005,
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    particles.forEach((p) => {
+      p.y -= p.speedY;
+      p.x += p.speedX;
+      p.opacity += Math.sin(Date.now() * p.pulse) * 0.01;
+
+      if (p.y < 0) {
+        p.y = height;
+        p.x = Math.random() * width;
+      }
+
       ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(p.size, -p.size, p.size * 1.5, p.size, 0, p.size * 1.8);
-      ctx.bezierCurveTo(-p.size * 1.5, p.size, -p.size, -p.size, 0, 0);
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200, 164, 93, ${Math.max(0.1, Math.min(1, p.opacity))})`;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = '#C8A45D';
       ctx.fill();
-    } else {
-      // Draw Glowing Golden Particle
-      ctx.fillStyle = '#D8B574';
-      ctx.shadowBlur = 6;
-      ctx.shadowColor = '#F5E5C9';
-      ctx.beginPath();
-      ctx.arc(0, 0, p.size, 0, Math.PI * 2);
-      ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+/* ==========================================================================
+   3. SUBTLE FLOATING SMALL US DOLLAR BILLS ANIMATION ENGINE
+   ========================================================================== */
+function initCurrencyAnimation(config) {
+  const container = document.getElementById('currency-container');
+  if (!container) return { setIntroMode: () => {} };
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    container.style.display = 'none';
+    return { setIntroMode: () => {} };
+  }
+
+  const defaults = config.currencyDefaults || {};
+  let isIntroActive = true;
+
+  const denominations = defaults.denominations || ['1', '5', '10', '20', '50', '100'];
+
+  // Minimal, subtle density: 3-5 bills mobile, 5-8 bills desktop
+  function getSubtleCount() {
+    return window.innerWidth < 768 ? 7 : 15;
+  }
+
+  function renderNotes() {
+    container.innerHTML = '';
+
+    let count = getSubtleCount();
+    if (isIntroActive) {
+      count = 3; // Restrained during tabla intro screen
     }
 
-    ctx.restore();
+    for (let i = 0; i < count; i++) {
+      const note = document.createElement('div');
+      note.className = 'banknote';
+
+      const leftPos = Math.random() * 88 + 4; // 4% to 92%
+      const fallDuration = Math.random() * 4 + 7; // 7s to 11s slow calm drift
+      const fallDelay = Math.random() * 8; // 0s to 8s
+      const driftX = (Math.random() - 0.5) * 100; // -50px to 50px
+      const spinDeg = Math.random() * 240 + 120; // 120deg to 360deg
+      const baseOpacity = Math.random() * 0.25 + 0.65; // 0.65 to 0.90 transparency
+
+      note.style.left = `${leftPos}%`;
+      note.style.setProperty('--fall-duration', `${fallDuration}s`);
+      note.style.setProperty('--fall-delay', `${fallDelay}s`);
+      note.style.setProperty('--drift-x', `${driftX}px`);
+      note.style.setProperty('--spin-deg', `${spinDeg}deg`);
+      note.style.setProperty('--base-opacity', baseOpacity);
+
+      container.appendChild(note);
+    }
+  }
+
+  // Handle Visibility Change (Pause animations when tab is hidden)
+  document.addEventListener('visibilitychange', () => {
+    container.style.display = document.hidden ? 'none' : 'block';
   });
 
-  requestAnimationFrame(animateCanvas);
-}
+  renderNotes();
 
-// Function to trigger extra particle burst on interaction
-function triggerParticleBurst(count = 30) {
-  const isMobile = window.innerWidth < 768;
-  const actualCount = isMobile ? Math.min(count, 10) : Math.min(count, 25);
-  for (let i = 0; i < actualCount; i++) {
-    const burst = createParticle();
-    burst.y = window.innerHeight / 2;
-    burst.x = window.innerWidth / 2;
-    burst.speedY = (Math.random() - 0.5) * (isMobile ? 2.5 : 5);
-    burst.speedX = (Math.random() - 0.5) * (isMobile ? 2.5 : 5);
-    particles.push(burst);
-  }
-  // Trim array on mobile so memory/screen stays clean
-  const maxAllowed = isMobile ? 18 : 50;
-  if (particles.length > maxAllowed) {
-    particles.splice(0, particles.length - maxAllowed);
-  }
+  return {
+    setIntroMode: (active) => {
+      isIntroActive = active;
+      renderNotes();
+    }
+  };
 }
 
 /* ==========================================================================
-   2. DYNAMIC CONTENT INJECTION
+   4. BIND DYNAMIC CONTENT FROM CONFIG
    ========================================================================== */
-function bindDynamicContent(cfg) {
-  bindText('.bind-partner-1', cfg.partner1);
-  bindText('.bind-partner-2', cfg.partner2);
-  bindText('.bind-couple-title', cfg.coupleTitle || `${cfg.partner1} & ${cfg.partner2}`);
-  bindText('.bind-anniversary-years', `${cfg.anniversaryYears} Anniversary`);
-  bindText('.bind-tagline', `“${cfg.tagline}”`);
-  bindText('.bind-invitation-title', cfg.invitationTitle);
-  bindText('.bind-hero-subtitle', cfg.heroSubtitle);
-  bindText('.bind-opening-text', cfg.openingText);
-  bindText('.bind-letter-message', cfg.letterOpeningMessage.replace(/\n/g, '<br>'), true);
-  bindText('.bind-event-date', cfg.dateText);
-  bindText('.bind-event-time', cfg.timeText);
-  bindText('.bind-venue-name', cfg.venueName);
-  bindText('.bind-venue-address', cfg.venueAddress);
-  bindText('.bind-dress-code', cfg.dressCode);
-  bindText('.bind-surprise-heading', cfg.surpriseHeading);
-  bindText('.bind-surprise-message', cfg.surpriseMessage);
-  bindText('.bind-final-title', cfg.finalTitle);
-  bindText('.bind-final-subtitle', cfg.finalSubtitle);
+function bindDynamicContent(config) {
+  setText('.bind-hosts', config.hostNames || 'The Qureshi Family');
+  setText('.bind-event-title', config.eventTitle || 'Qawwali Night');
+  setText('.bind-urdu-title', config.urduTitle || 'شبِ قوالی و محفلِ سماع');
+  setText('.bind-tagline', config.tagline || 'An Evening of Soul, Sufi Melodies & Timeless Traditions');
+  setText('.bind-date', config.dateText || 'Saturday, November 21, 2026');
+  setText('.bind-time', config.timeText || '8:00 PM onwards');
+  setText('.bind-venue-short', config.venueName || 'The Royal Palm Mehfil Hall');
+  setText('.bind-venue-name', config.venueName || 'The Royal Palm Mehfil Hall');
+  setText('.bind-full-address', config.fullAddress || 'Lahore, Pakistan');
+  setText('.bind-arrival', config.arrivalInstructions || 'Valet parking available.');
+  setText('.bind-dress-code', config.dressCode || 'Royal Mehfil Attire');
+  setText('.bind-scratch-title', config.scratchTitle || 'An Exclusive Mehfil Surprise');
+  setText('.bind-scratch-message', config.scratchMessage || 'Your presence will add unmatched grace to our Mehfil.');
+  setText('.bind-rsvp-deadline', config.rsvpDeadlineText || 'Please RSVP by November 10, 2026');
 
-  // Dynamically update Open Graph meta tags for WhatsApp link sharing
-  updateOpenGraphMeta(cfg);
+  // Format Date Card
+  if (config.eventDateISO) {
+    const d = new Date(config.eventDateISO);
+    if (!isNaN(d.getTime())) {
+      const dayNames = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+      const monthNames = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+      
+      const dayName = document.getElementById('display-day-name');
+      const dayNum = document.getElementById('display-day-num');
+      const monthYear = document.getElementById('display-month-year');
 
-  const songTitleEl = document.getElementById('song-title');
-  if (songTitleEl && cfg.musicTitle) {
-    songTitleEl.textContent = cfg.musicTitle;
+      if (dayName) dayName.textContent = dayNames[d.getDay()];
+      if (dayNum) dayNum.textContent = d.getDate();
+      if (monthYear) monthYear.textContent = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+    }
   }
 }
 
-function updateOpenGraphMeta(cfg) {
-  const origin = (cfg.siteUrl && cfg.siteUrl.trim()) 
-    ? cfg.siteUrl.replace(/\/$/, '')
-    : (window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('file://') ? window.location.origin : '');
-
-  let imgUrl = cfg.shareImageUrl || 'assets/img/romantic_hero_bg.jpg';
-  
-  if (origin && !imgUrl.startsWith('http://') && !imgUrl.startsWith('https://')) {
-    imgUrl = origin + (imgUrl.startsWith('/') ? '' : '/') + imgUrl;
-  }
-
-  setMetaProperty('og:image', imgUrl);
-  setMetaProperty('og:image:secure_url', imgUrl);
-  setMetaName('twitter:image', imgUrl);
-
-  if (cfg.invitationTitle) {
-    setMetaProperty('og:title', cfg.invitationTitle);
-    setMetaName('twitter:title', cfg.invitationTitle);
-  }
-  if (cfg.heroSubtitle) {
-    setMetaProperty('og:description', cfg.heroSubtitle);
-    setMetaName('twitter:description', cfg.heroSubtitle);
-  }
-}
-
-function setMetaProperty(prop, value) {
-  if (!value) return;
-  let meta = document.querySelector(`meta[property="${prop}"]`);
-  if (!meta) {
-    meta = document.createElement('meta');
-    meta.setAttribute('property', prop);
-    document.head.appendChild(meta);
-  }
-  meta.setAttribute('content', value);
-}
-
-function setMetaName(name, value) {
-  if (!value) return;
-  let meta = document.querySelector(`meta[name="${name}"]`);
-  if (!meta) {
-    meta = document.createElement('meta');
-    meta.setAttribute('name', name);
-    document.head.appendChild(meta);
-  }
-  meta.setAttribute('content', value);
-}
-
-function bindText(selector, value, isHTML = false) {
-  if (!value) return;
-  const elements = document.querySelectorAll(selector);
-  elements.forEach(el => {
-    if (isHTML) el.innerHTML = value;
-    else el.textContent = value;
+function setText(selector, val) {
+  document.querySelectorAll(selector).forEach((el) => {
+    el.textContent = val;
   });
 }
 
 /* ==========================================================================
-   3. AUDIO SYSTEM
+   5. WEB AUDIO API SYNTHESIZER & BACKGROUND AUDIO
    ========================================================================== */
-let bgAudio = null;
-let isMusicPlaying = false;
-
-function initAudioSystem(cfg) {
-  const musicFab = document.getElementById('music-fab');
-  const songTitle = document.getElementById('song-title');
-  const audioSrc = cfg.musicUrl || 'assets/sound/bkw.mp3';
-
-  bgAudio = new Audio(audioSrc);
+function initAudioSystem(config) {
+  let audioCtx = null;
+  let bgAudio = new Audio(config.musicUrl || 'assets/sound/bkw.mp3');
   bgAudio.loop = true;
-  bgAudio.volume = 0.6;
+  let isMuted = false;
+  let isPlaying = false;
 
-  window.playMusic = function() {
-    if (bgAudio && bgAudio.paused) {
+  function getAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  // Synthesize Realistic Classical Tabla Sound (Dayan & Bayyan)
+  function playTablaBeat(beatIndex) {
+    if (isMuted) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+
+    // 1. Low Pitch Sub-Bass Bayyan Drum (Bass pitch bend down)
+    const bayyanOsc = ctx.createOscillator();
+    const bayyanGain = ctx.createGain();
+
+    bayyanOsc.type = 'sine';
+    bayyanOsc.frequency.setValueAtTime(130, now);
+    bayyanOsc.frequency.exponentialRampToValueAtTime(55, now + 0.35);
+
+    bayyanGain.gain.setValueAtTime(0.7, now);
+    bayyanGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+    bayyanOsc.connect(bayyanGain);
+    bayyanGain.connect(ctx.destination);
+
+    bayyanOsc.start(now);
+    bayyanOsc.stop(now + 0.4);
+
+    // 2. High Resonant Dayan Drum (Tuning rim hit)
+    const dayanOsc = ctx.createOscillator();
+    const dayanGain = ctx.createGain();
+
+    const baseFreq = beatIndex === 3 ? 440 : (beatIndex === 2 ? 360 : 320);
+    dayanOsc.type = 'triangle';
+    dayanOsc.frequency.setValueAtTime(baseFreq, now);
+    dayanOsc.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, now + 0.2);
+
+    dayanGain.gain.setValueAtTime(0.5, now);
+    dayanGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+    dayanOsc.connect(dayanGain);
+    dayanGain.connect(ctx.destination);
+
+    dayanOsc.start(now);
+    dayanOsc.stop(now + 0.25);
+  }
+
+  function toggleMusic() {
+    isMuted = !isMuted;
+    const fab = document.getElementById('music-fab');
+
+    if (isMuted) {
+      bgAudio.pause();
+      isPlaying = false;
+      if (fab) fab.classList.add('muted');
+      showToast('Audio muted');
+    } else {
       bgAudio.play().then(() => {
-        isMusicPlaying = true;
-        if (musicFab) musicFab.classList.add('playing');
-        if (songTitle) songTitle.textContent = cfg.musicTitle || "Playing Romantic Music";
-      }).catch(err => {
-        console.warn('Audio play deferred until user gesture:', err);
+        isPlaying = true;
+        if (fab) fab.classList.remove('muted');
+        showToast('Playing Sufi music');
+      }).catch((e) => {
+        console.warn('Audio playback restricted:', e);
       });
     }
-  };
+  }
 
-  window.pauseMusic = function() {
-    if (bgAudio && !bgAudio.paused) {
-      bgAudio.pause();
-      isMusicPlaying = false;
-      if (musicFab) musicFab.classList.remove('playing');
-      if (songTitle) songTitle.textContent = "Music Paused";
-    }
-  };
-
+  const musicFab = document.getElementById('music-fab');
   if (musicFab) {
-    musicFab.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (isMusicPlaying) {
-        window.pauseMusic();
-      } else {
-        window.playMusic();
-      }
-    });
+    musicFab.addEventListener('click', toggleMusic);
   }
-}
 
-/* ==========================================================================
-   4. LOVE LETTER REVEAL ENVELOPE
-   ========================================================================== */
-function initEnvelopeScreen() {
-  const envelopeScreen = document.getElementById('envelope-screen');
-  const mainInvitation = document.getElementById('main-invitation');
-  const envelopeWrapper = document.getElementById('envelope-wrapper');
-  const btnOpenLetter = document.getElementById('btn-open-letter');
-  const btnOpenCta = document.getElementById('btn-open-cta');
-  const btnSkipIntro = document.getElementById('skip-intro-btn');
-
-  let isOpen = false;
-
-  const openLetterExperience = () => {
-    if (isOpen) return;
-    isOpen = true;
-
-    // Start 3D Envelope opening animation
-    if (envelopeWrapper) envelopeWrapper.classList.add('open');
-    triggerParticleBurst(40);
-
-    // Fade in music after user interaction
-    window.playMusic();
-
-    // Transition smoothly to main invitation
-    setTimeout(() => {
-      if (envelopeScreen) envelopeScreen.classList.add('fade-out');
-      if (mainInvitation) mainInvitation.classList.remove('hidden');
-      document.body.classList.remove('lock-scroll');
-    }, 1800);
-  };
-
-  if (btnOpenLetter) btnOpenLetter.addEventListener('click', openLetterExperience);
-  if (btnOpenCta) btnOpenCta.addEventListener('click', openLetterExperience);
-  if (envelopeWrapper) envelopeWrapper.addEventListener('click', openLetterExperience);
-
-  // Skip Intro for returning visitors
-  if (btnSkipIntro) {
-    btnSkipIntro.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (envelopeScreen) envelopeScreen.classList.add('fade-out');
-      if (mainInvitation) mainInvitation.classList.remove('hidden');
-      document.body.classList.remove('lock-scroll');
-      window.playMusic();
-    });
-  }
-}
-
-/* ==========================================================================
-   5. TIMELINE RENDERER
-   ========================================================================== */
-function renderTimeline(timelineItems) {
-  const track = document.getElementById('timeline-track');
-  if (!track || !timelineItems || timelineItems.length === 0) return;
-
-  track.innerHTML = timelineItems.map(item => `
-    <div class="timeline-card">
-      <div class="timeline-card-header">
-        <div class="timeline-icon">${item.icon || '❤️'}</div>
-        <span class="timeline-date">${item.date}</span>
-      </div>
-      ${item.photo ? `
-        <div class="timeline-img-wrapper">
-          <img src="${item.photo}" alt="${item.title}" loading="lazy">
-        </div>
-      ` : ''}
-      <h3 class="timeline-title">${item.title}</h3>
-      <p class="timeline-msg">${item.message}</p>
-    </div>
-  `).join('');
-}
-
-/* ==========================================================================
-   6. PHOTO GALLERY & LIGHTBOX
-   ========================================================================== */
-let galleryData = [];
-let currentPhotoIndex = 0;
-
-function renderGallery(items) {
-  galleryData = items || [];
-  const grid = document.getElementById('gallery-grid');
-  if (!grid || galleryData.length === 0) return;
-
-  grid.innerHTML = galleryData.map((item, index) => `
-    <div class="polaroid-card" data-index="${index}">
-      <div class="polaroid-img-wrapper">
-        <img src="${item.url}" alt="${item.caption}" loading="lazy">
-        ${item.tag ? `<span class="polaroid-tag">${item.tag}</span>` : ''}
-      </div>
-      <p class="polaroid-caption">${item.caption}</p>
-    </div>
-  `).join('');
-
-  // Attach Lightbox Triggers
-  const cards = grid.querySelectorAll('.polaroid-card');
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      const idx = parseInt(card.getAttribute('data-index'), 10);
-      openLightbox(idx);
-    });
-  });
-
-  initLightboxControls();
-}
-
-function openLightbox(index) {
-  if (index < 0 || index >= galleryData.length) return;
-  currentPhotoIndex = index;
-
-  const modal = document.getElementById('lightbox-modal');
-  const img = document.getElementById('lightbox-img');
-  const caption = document.getElementById('lightbox-caption');
-  const counter = document.getElementById('lightbox-counter');
-
-  const item = galleryData[currentPhotoIndex];
-  if (img) img.src = item.url;
-  if (caption) caption.textContent = item.caption;
-  if (counter) counter.textContent = `${currentPhotoIndex + 1} / ${galleryData.length}`;
-
-  if (modal) modal.classList.remove('hidden');
-}
-
-function closeLightbox() {
-  const modal = document.getElementById('lightbox-modal');
-  if (modal) modal.classList.add('hidden');
-}
-
-function initLightboxControls() {
-  const modal = document.getElementById('lightbox-modal');
-  const overlay = document.getElementById('lightbox-overlay');
-  const closeBtn = document.getElementById('lightbox-close');
-  const prevBtn = document.getElementById('lightbox-prev');
-  const nextBtn = document.getElementById('lightbox-next');
-
-  if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-  if (overlay) overlay.addEventListener('click', closeLightbox);
-
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      currentPhotoIndex = (currentPhotoIndex - 1 + galleryData.length) % galleryData.length;
-      openLightbox(currentPhotoIndex);
+  const introSoundToggle = document.getElementById('intro-sound-toggle');
+  if (introSoundToggle) {
+    introSoundToggle.addEventListener('click', () => {
+      isMuted = !isMuted;
+      introSoundToggle.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+      showToast(isMuted ? 'Sound turned off' : 'Sound turned on');
     });
   }
 
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      currentPhotoIndex = (currentPhotoIndex + 1) % galleryData.length;
-      openLightbox(currentPhotoIndex);
-    });
-  }
-
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
-    if (!modal || modal.classList.contains('hidden')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft' && prevBtn) prevBtn.click();
-    if (e.key === 'ArrowRight' && nextBtn) nextBtn.click();
-  });
-
-  // Touch swipe navigation for mobile screens
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  if (modal) {
-    modal.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    modal.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    }, { passive: true });
-  }
-
-  function handleSwipe() {
-    const swipeDistance = touchEndX - touchStartX;
-    if (Math.abs(swipeDistance) > 40) {
-      if (swipeDistance < 0 && nextBtn) {
-        nextBtn.click();
-      } else if (swipeDistance > 0 && prevBtn) {
-        prevBtn.click();
+  return {
+    playTablaBeat,
+    getAudioContext,
+    startBackgroundMusic: () => {
+      if (!isMuted && !isPlaying) {
+        bgAudio.play().then(() => { isPlaying = true; }).catch(() => {});
       }
     }
+  };
+}
+
+/* ==========================================================================
+   6. TABLA INTRO BEAT UNLOCK SYSTEM
+   ========================================================================== */
+function initTablaIntro(audioSystem, currencyController) {
+  const introScreen = document.getElementById('tabla-intro-screen');
+  const mainInv = document.getElementById('main-invitation');
+  const tablaTrigger = document.getElementById('tabla-trigger');
+  const skipBtn = document.getElementById('skip-intro-btn');
+  const beatLabel = document.getElementById('beat-label');
+  const rippleCanvas = document.getElementById('tabla-ripple-canvas');
+
+  if (!introScreen || !tablaTrigger) return;
+
+  let beatCount = 0;
+  let lastTapTime = 0;
+  const DEBOUNCE_MS = 250;
+
+  // Canvas Ripple Renderer
+  let ctx = rippleCanvas ? rippleCanvas.getContext('2d') : null;
+  if (rippleCanvas) {
+    rippleCanvas.width = 360;
+    rippleCanvas.height = 360;
+  }
+
+  function triggerRipple() {
+    if (!ctx) return;
+    let radius = 10;
+    let opacity = 1;
+
+    function draw() {
+      ctx.clearRect(0, 0, 360, 360);
+      if (opacity <= 0) return;
+
+      ctx.beginPath();
+      ctx.arc(180, 180, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(200, 164, 93, ${opacity})`;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      radius += 8;
+      opacity -= 0.04;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  function handleBeat() {
+    const now = Date.now();
+    if (now - lastTapTime < DEBOUNCE_MS) return;
+    lastTapTime = now;
+
+    beatCount++;
+    audioSystem.playTablaBeat(beatCount);
+    triggerRipple();
+
+    // Update Dots
+    const dot = document.getElementById(`dot-${beatCount}`);
+    if (dot) dot.classList.add('active');
+
+    if (beatLabel) {
+      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
+      const beatText = currentLang === 'ur' ? 'ضربیں' : 'Beats';
+      beatLabel.innerHTML = `${beatCount} / 3 <span data-i18n="beatLabel">${beatText}</span>`;
+    }
+
+    if (beatCount >= 3) {
+      unlockMehfil();
+    }
+  }
+
+  function unlockMehfil() {
+    audioSystem.startBackgroundMusic();
+    if (currencyController && currencyController.setIntroMode) {
+      currencyController.setIntroMode(false); // Unlocks full subtle currency flow
+    }
+    introScreen.classList.add('unlocked');
+    document.body.classList.remove('lock-scroll');
+    
+    if (mainInv) {
+      mainInv.classList.remove('hidden-until-unlocked');
+    }
+
+    const currentLang = localStorage.getItem('qawwali_lang') || 'en';
+    const msg = currentLang === 'ur' ? '✨ محفل میں خوش آمدید! ✨' : '✨ The Mehfil is Unlocked! Welcome. ✨';
+    showToast(msg);
+  }
+
+  tablaTrigger.addEventListener('click', handleBeat);
+  tablaTrigger.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleBeat();
+  }, { passive: false });
+
+  if (skipBtn) {
+    skipBtn.addEventListener('click', unlockMehfil);
   }
 }
 
 /* ==========================================================================
-   7. LOVE NOTES FLIP CARDS
+   7. THEME SWITCHER (DARK / BRIGHT)
    ========================================================================== */
-function renderLoveNotes(notes) {
-  const grid = document.getElementById('notes-grid');
-  if (!grid || !notes || notes.length === 0) return;
+function initThemeSwitcher() {
+  const toggleBtn = document.getElementById('theme-toggle-btn');
+  const htmlEl = document.documentElement;
 
-  grid.innerHTML = notes.map((note, index) => `
-    <div class="note-flip-card" data-index="${index}">
-      <div class="note-flip-inner">
-        <div class="note-card-front">
-          <i class="fa-solid fa-heart-circle-check"></i>
-          <span class="note-hint">Reason #${index + 1}</span>
-          <span class="note-tap-text">Tap to reveal</span>
-        </div>
-        <div class="note-card-back">
-          <p class="note-quote">“${note.text}”</p>
-          <i class="fa-solid fa-rose"></i>
-        </div>
-      </div>
-    </div>
-  `).join('');
+  const savedTheme = localStorage.getItem('qawwali_theme') || 'dark';
+  htmlEl.setAttribute('data-theme', savedTheme);
 
-  const cards = grid.querySelectorAll('.note-flip-card');
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      card.classList.toggle('flipped');
-      triggerParticleBurst(10);
-    });
-  });
-}
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const current = htmlEl.getAttribute('data-theme');
+      const nextTheme = current === 'dark' ? 'bright' : 'dark';
+      htmlEl.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('qawwali_theme', nextTheme);
 
-/* ==========================================================================
-   8. SURPRISE GIFT BOX
-   ========================================================================== */
-function initSurpriseBox() {
-  const giftBox = document.getElementById('gift-box-wrapper');
-  const btnUnwrap = document.getElementById('btn-unwrap-gift');
-  const revealCard = document.getElementById('surprise-reveal-card');
-
-  const unwrapAction = () => {
-    if (giftBox) giftBox.classList.add('opened');
-    triggerParticleBurst(60);
-
-    setTimeout(() => {
-      if (revealCard) revealCard.classList.remove('hidden');
-      if (revealCard) revealCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 600);
-  };
-
-  if (btnUnwrap) btnUnwrap.addEventListener('click', unwrapAction);
-  if (giftBox) giftBox.addEventListener('click', unwrapAction);
-}
-
-/* ==========================================================================
-   9. EVENT ACTIONS (RSVP, Maps & Add to Calendar)
-   ========================================================================== */
-function initEventActions(cfg) {
-  // RSVP Modal Triggers
-  const rsvpModal = document.getElementById('rsvp-modal');
-  const btnConfirmRsvp = document.getElementById('btn-confirm-rsvp');
-  const rsvpOverlay = document.getElementById('rsvp-overlay');
-  const rsvpClose = document.getElementById('rsvp-close');
-  const rsvpForm = document.getElementById('rsvp-form');
-  const rsvpSuccess = document.getElementById('rsvp-success');
-  const rsvpDoneBtn = document.getElementById('rsvp-done-btn');
-
-  const openRsvp = () => { if (rsvpModal) rsvpModal.classList.remove('hidden'); };
-  const closeRsvp = () => { if (rsvpModal) rsvpModal.classList.add('hidden'); };
-
-  if (btnConfirmRsvp) btnConfirmRsvp.addEventListener('click', openRsvp);
-  if (rsvpOverlay) rsvpOverlay.addEventListener('click', closeRsvp);
-  if (rsvpClose) rsvpClose.addEventListener('click', closeRsvp);
-  if (rsvpDoneBtn) rsvpDoneBtn.addEventListener('click', closeRsvp);
-
-  if (rsvpForm) {
-    rsvpForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const guestName = document.getElementById('rsvp-name').value;
-      const successText = document.getElementById('rsvp-success-text');
-      if (successText) {
-        successText.textContent = `Thank you, ${guestName}! Your response has been saved. We look forward to celebrating together! ❤️`;
+      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
+      if (currentLang === 'ur') {
+        showToast(nextTheme === 'bright' ? 'روشن موڈ منتخب کیا گیا' : 'ڈارک موڈ منتخب کیا گیا');
+      } else {
+        showToast(nextTheme === 'bright' ? 'Switched to Royal Ivory Theme' : 'Switched to Midnight Mehfil Theme');
       }
-      rsvpForm.classList.add('hidden');
-      if (rsvpSuccess) rsvpSuccess.classList.remove('hidden');
-      triggerParticleBurst(40);
     });
   }
-
-  // Google Maps Directions
-  const mapsBtn = document.getElementById('btn-get-directions');
-  if (mapsBtn && cfg.googleMapsUrl) {
-    mapsBtn.href = cfg.googleMapsUrl;
-  }
-
-  // Add to Calendar Generator (.ics file)
-  const calendarBtn = document.getElementById('btn-add-calendar');
-  if (calendarBtn) {
-    calendarBtn.addEventListener('click', () => {
-      downloadICSFile(cfg);
-    });
-  }
-}
-
-function downloadICSFile(cfg) {
-  const eventDate = new Date(cfg.eventDateISO || "2026-11-20T19:00:00");
-  const endDate = new Date(eventDate.getTime() + (4 * 60 * 60 * 1000)); // +4 hours
-
-  const formatDate = (date) => {
-    return date.toISOString().replace(/-|:|\.\d+/g, '');
-  };
-
-  const icsContent = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Our Romantic Anniversary Invitation//EN',
-    'BEGIN:VEVENT',
-    `SUMMARY:Anniversary Celebration — ${cfg.coupleTitle || "Alexander & Sophia"}`,
-    `DESCRIPTION:${cfg.invitationTitle}. ${cfg.heroSubtitle}`,
-    `LOCATION:${cfg.venueName}, ${cfg.venueAddress}`,
-    `DTSTART:${formatDate(eventDate)}`,
-    `DTEND:${formatDate(endDate)}`,
-    'STATUS:CONFIRMED',
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].join('\r\n');
-
-  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', 'anniversary-invitation.ics');
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
 }
 
 /* ==========================================================================
-   10. COUNTDOWN TIMER
+   8. COUNTDOWN TIMER
    ========================================================================== */
 function initCountdown(targetISO) {
-  const daysEl = document.getElementById('days');
-  const hoursEl = document.getElementById('hours');
-  const minsEl = document.getElementById('minutes');
-  const secsEl = document.getElementById('seconds');
-  const displayEl = document.getElementById('timer-display');
-  const passedEl = document.getElementById('countdown-passed');
+  if (!targetISO) return;
 
-  const targetTime = new Date(targetISO).getTime();
+  const targetDate = new Date(targetISO).getTime();
+  const daysEl = document.getElementById('cd-days');
+  const hoursEl = document.getElementById('cd-hours');
+  const minsEl = document.getElementById('cd-minutes');
+  const secsEl = document.getElementById('cd-seconds');
+  const expiredMsg = document.getElementById('countdown-expired');
+  const wrapper = document.getElementById('countdown-wrapper');
 
-  function updateTimer() {
-    const now = new Date().getTime();
-    const difference = targetTime - now;
+  function update() {
+    const now = Date.now();
+    const diff = targetDate - now;
 
-    if (difference <= 0) {
-      if (displayEl) displayEl.classList.add('hidden');
-      if (passedEl) passedEl.classList.remove('hidden');
+    if (diff <= 0) {
+      if (wrapper) wrapper.classList.add('hidden');
+      if (expiredMsg) expiredMsg.classList.remove('hidden');
       return;
     }
 
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
     if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
     if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
-    if (minsEl) minsEl.textContent = String(minutes).padStart(2, '0');
-    if (secsEl) secsEl.textContent = String(seconds).padStart(2, '0');
+    if (minsEl) minsEl.textContent = String(mins).padStart(2, '0');
+    if (secsEl) secsEl.textContent = String(secs).padStart(2, '0');
   }
 
-  updateTimer();
-  setInterval(updateTimer, 1000);
+  update();
+  setInterval(update, 1000);
 }
 
 /* ==========================================================================
-   11. REPLAY STORY BUTTON
+   9. CALENDAR EXPORTS (GOOGLE & .ICS)
    ========================================================================== */
-function initReplayButton() {
-  const replayBtn = document.getElementById('btn-replay-story');
-  const envelopeScreen = document.getElementById('envelope-screen');
-  const envelopeWrapper = document.getElementById('envelope-wrapper');
+function initCalendarActions(config) {
+  const btnGoogle = document.getElementById('add-google-cal');
+  const btnIcs = document.getElementById('download-ics-cal');
 
-  if (replayBtn) {
-    replayBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (btnGoogle) {
+    btnGoogle.addEventListener('click', () => {
+      const title = encodeURIComponent(config.eventTitle || 'Qawwali Night');
+      const details = encodeURIComponent(config.invitationSubtitle || 'Qawwali Night Digital Invitation');
+      const location = encodeURIComponent(config.fullAddress || config.venueName || 'Lahore');
       
-      setTimeout(() => {
-        if (envelopeWrapper) envelopeWrapper.classList.remove('open');
-        if (envelopeScreen) envelopeScreen.classList.remove('fade-out');
-        document.body.classList.add('lock-scroll');
-      }, 500);
+      const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20261121T150000Z/20261121T200000Z&details=${details}&location=${location}`;
+      window.open(gCalUrl, '_blank');
     });
   }
+
+  if (btnIcs) {
+    btnIcs.addEventListener('click', () => {
+      const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Qawwali Night//Invitation//EN
+BEGIN:VEVENT
+SUMMARY:${config.eventTitle || 'Qawwali Night'}
+DESCRIPTION:${config.invitationSubtitle || 'Qawwali Night Digital Invitation'}
+LOCATION:${config.fullAddress || config.venueName || 'Lahore'}
+DTSTART:20261121T150000Z
+DTEND:20261121T200000Z
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'Qawwali_Night_Invitation.ics';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
+      const msg = currentLang === 'ur' ? 'کیلنڈر فائل ڈاؤن لوڈ ہو گئی' : 'Downloaded .ics calendar file';
+      showToast(msg);
+    });
+  }
+}
+
+/* ==========================================================================
+   10. VENUE ACTIONS
+   ========================================================================== */
+function initVenueActions(config) {
+  const btnDirections = document.getElementById('btn-get-directions');
+  const btnCopyAddress = document.getElementById('btn-copy-address');
+
+  if (btnDirections && config.googleMapsUrl) {
+    btnDirections.href = config.googleMapsUrl;
+  }
+
+  if (btnCopyAddress) {
+    btnCopyAddress.addEventListener('click', () => {
+      const addr = config.fullAddress || 'The Royal Palm Mehfil Hall, Lahore';
+      navigator.clipboard.writeText(addr).then(() => {
+        const currentLang = localStorage.getItem('qawwali_lang') || 'en';
+        const msg = currentLang === 'ur' ? 'مقام کا پتہ کاپی ہو گیا! 📋' : 'Venue address copied to clipboard! 📋';
+        showToast(msg);
+      }).catch(() => {
+        showToast('Copied address');
+      });
+    });
+  }
+}
+
+/* ==========================================================================
+   11. INTERACTIVE CANVAS SCRATCH CARD (MOBILE RESPONSIVE)
+   ========================================================================== */
+function initScratchCard(config) {
+  const canvas = document.getElementById('scratch-canvas');
+  const fallbackBtn = document.getElementById('btn-reveal-scratch');
+
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function setupFoil() {
+    canvas.width = canvas.offsetWidth || 600;
+    canvas.height = canvas.offsetHeight || 320;
+
+    // Metallic Gold Gradient
+    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    grad.addColorStop(0, '#C8A45D');
+    grad.addColorStop(0.3, '#E8D6A3');
+    grad.addColorStop(0.6, '#B08B42');
+    grad.addColorStop(1, '#8C6827');
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Decorative Text on Gold Foil
+    const currentLang = localStorage.getItem('qawwali_lang') || 'en';
+    const topText = currentLang === 'ur' ? '✦ ایک خاص پیغام ✦' : '✦ AN EXCLUSIVE SURPRISE AWAITS ✦';
+    const subText = currentLang === 'ur' ? 'پیغام دیکھنے کے لیے یہاں کھرچیں' : 'Scratch here with your finger or cursor to reveal';
+
+    ctx.fillStyle = '#080808';
+    ctx.font = 'bold clamp(16px, 4vw, 20px) "Cormorant Garamond", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(topText, canvas.width / 2, canvas.height / 2 - 10);
+    ctx.font = 'clamp(12px, 3vw, 14px) "Outfit", sans-serif';
+    ctx.fillText(subText, canvas.width / 2, canvas.height / 2 + 20);
+  }
+
+  setupFoil();
+  window.addEventListener('resize', () => {
+    if (canvas.style.opacity !== '0') {
+      setupFoil();
+    }
+  });
+
+  let isDrawing = false;
+
+  function scratch(x, y) {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, 32, 0, Math.PI * 2);
+    ctx.fill();
+
+    checkPercent();
+  }
+
+  function checkPercent() {
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imgData.data;
+    let transparentCount = 0;
+
+    for (let i = 3; i < pixels.length; i += 16) {
+      if (pixels[i] === 0) transparentCount++;
+    }
+
+    const percent = (transparentCount / (pixels.length / 16)) * 100;
+    if (percent > 45) {
+      canvas.style.opacity = '0';
+      canvas.style.pointerEvents = 'none';
+      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
+      const msg = currentLang === 'ur' ? '✨ دعوتی پیغام کھل گیا! ✨' : '✨ Secret invitation message revealed! ✨';
+      showToast(msg);
+    }
+  }
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  }
+
+  canvas.addEventListener('mousedown', (e) => { isDrawing = true; const p = getPos(e); scratch(p.x, p.y); });
+  canvas.addEventListener('mousemove', (e) => { if (isDrawing) { const p = getPos(e); scratch(p.x, p.y); } });
+  window.addEventListener('mouseup', () => { isDrawing = false; });
+
+  canvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    const p = getPos(e);
+    scratch(p.x, p.y);
+  }, { passive: true });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (isDrawing) {
+      const p = getPos(e);
+      scratch(p.x, p.y);
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => { isDrawing = false; });
+
+  if (fallbackBtn) {
+    fallbackBtn.addEventListener('click', () => {
+      canvas.style.opacity = '0';
+      canvas.style.pointerEvents = 'none';
+      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
+      const msg = currentLang === 'ur' ? 'دعوتی پیغام کھل گیا!' : 'Surprise message revealed!';
+      showToast(msg);
+    });
+  }
+}
+
+/* ==========================================================================
+   12. RSVP FORM & WHATSAPP GENERATOR
+   ========================================================================== */
+function initRSVPForm(config, langController) {
+  const btnAttending = document.getElementById('btn-attending');
+  const btnDeclined = document.getElementById('btn-declined');
+  const groupGuestCount = document.getElementById('group-guest-count');
+  const form = document.getElementById('rsvp-form');
+  const btnWhatsapp = document.getElementById('btn-submit-whatsapp');
+  const rsvpSuccess = document.getElementById('rsvp-success');
+  const btnRsvpAgain = document.getElementById('btn-rsvp-again');
+
+  let rsvpStatus = 'attending';
+
+  if (btnAttending && btnDeclined) {
+    btnAttending.addEventListener('click', () => {
+      rsvpStatus = 'attending';
+      btnAttending.classList.add('active');
+      btnDeclined.classList.remove('active');
+      if (groupGuestCount) groupGuestCount.style.display = 'block';
+    });
+
+    btnDeclined.addEventListener('click', () => {
+      rsvpStatus = 'declined';
+      btnDeclined.classList.add('active');
+      btnAttending.classList.remove('active');
+      if (groupGuestCount) groupGuestCount.style.display = 'none';
+    });
+  }
+
+  function getFormData() {
+    return {
+      name: document.getElementById('guest-name')?.value || '',
+      count: document.getElementById('guest-count')?.value || '1',
+      phone: document.getElementById('guest-phone')?.value || '',
+      notes: document.getElementById('guest-notes')?.value || '',
+      status: rsvpStatus
+    };
+  }
+
+  if (btnWhatsapp) {
+    btnWhatsapp.addEventListener('click', () => {
+      const data = getFormData();
+      const currentLang = langController.getLang();
+
+      if (!data.name.trim()) {
+        showToast(currentLang === 'ur' ? 'براہ کرم اپنا نام درج کریں' : 'Please enter your full name');
+        return;
+      }
+
+      let msg = '';
+      if (currentLang === 'ur') {
+        const statusText = data.status === 'attending' ? '✅ باخوشی شرکت کروں گا/گی' : '🌹 معذرت، شرکت ممکن نہیں';
+        msg = `السلام علیکم! محفلِ قوالی کے لیے شرکت کی تصدیق:\n\n👤 نام: ${data.name}\n📌 شرکت کی صورتحال: ${statusText}\n👥 مہمانوں کی تعداد: ${data.count}\n📞 رابطہ نمبر: ${data.phone}\n📝 خاص پیغام: ${data.notes || 'کوئی نہیں'}`;
+      } else {
+        const statusText = data.status === 'attending' ? '✅ Attending with joy!' : '🌹 Regretfully unable to attend';
+        msg = `Assalam-o-Alaikum! RSVP for Qawwali Night:\n\n👤 Name: ${data.name}\n📌 RSVP Status: ${statusText}\n👥 Guest Count: ${data.count}\n📞 Contact: ${data.phone}\n📝 Notes: ${data.notes || 'N/A'}`;
+      }
+
+      const waNumber = config.whatsappNumber || '923001234567';
+      const waUrl = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, '_blank');
+      showToast(currentLang === 'ur' ? 'واٹس ایپ RSVP کھل رہا ہے...' : 'Opening WhatsApp RSVP...');
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = getFormData();
+      const currentLang = langController.getLang();
+
+      if (!data.name.trim()) {
+        showToast(currentLang === 'ur' ? 'براہ کرم اپنا نام درج کریں' : 'Please enter your full name');
+        return;
+      }
+
+      form.classList.add('hidden');
+      if (rsvpSuccess) rsvpSuccess.classList.remove('hidden');
+
+      const msg = currentLang === 'ur' ? '✨ شرکت کی تصدیق موصول ہو گئی۔ شکریہ! ✨' : '✨ RSVP submitted successfully! Thank you. ✨';
+      showToast(msg);
+    });
+  }
+
+  if (btnRsvpAgain) {
+    btnRsvpAgain.addEventListener('click', () => {
+      if (rsvpSuccess) rsvpSuccess.classList.add('hidden');
+      if (form) form.classList.remove('hidden');
+    });
+  }
+}
+
+/* ==========================================================================
+   13. SHARE INVITATION & WEB SHARE API
+   ========================================================================== */
+function initShareActions(config, langController) {
+  const btnWa = document.getElementById('btn-share-whatsapp');
+  const btnNative = document.getElementById('btn-share-native');
+  const btnCopy = document.getElementById('btn-copy-link');
+
+  function getShareMessage() {
+    const lang = langController.getLang();
+    const translations = config.translations || {};
+    const dict = translations[lang] || translations.en || {};
+    
+    if (dict.whatsappShareTemplate) {
+      return dict.whatsappShareTemplate;
+    }
+
+    if (lang === 'ur') {
+      return `آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے۔ آئیے، روح پرور موسیقی اور خوبصورت روایات سے سجی اس شام کا حصہ بنیے۔ دعوت نامہ دیکھیں: ${window.location.href}`;
+    }
+
+    return `You are invited to our Qawwali Night! Join us for a beautiful evening of soulful music and tradition. View your digital invitation: ${window.location.href}`;
+  }
+
+  if (btnWa) {
+    btnWa.addEventListener('click', () => {
+      const shareText = getShareMessage();
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+      window.open(url, '_blank');
+    });
+  }
+
+  if (btnNative) {
+    btnNative.addEventListener('click', () => {
+      const shareText = getShareMessage();
+      const lang = langController.getLang();
+
+      if (navigator.share) {
+        navigator.share({
+          title: lang === 'ur' ? 'محفلِ قوالی دعوت نامہ' : 'Qawwali Night Digital Invitation',
+          text: lang === 'ur' ? 'آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے۔' : 'You are invited to Qawwali Night!',
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        window.open(url, '_blank');
+      }
+    });
+  }
+
+  if (btnCopy) {
+    btnCopy.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const lang = langController.getLang();
+        const msg = lang === 'ur' ? 'دعوت نامے کا لنک کاپی ہو گیا! 🔗' : 'Invitation link copied to clipboard! 🔗';
+        showToast(msg);
+      }).catch(() => {
+        showToast('Copied link');
+      });
+    });
+  }
+}
+
+/* Helper Toast Notification */
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toast-message');
+
+  if (!toast || !toastMsg) return;
+
+  toastMsg.textContent = message;
+  toast.classList.remove('hidden');
+
+  setTimeout(() => {
+    toast.classList.add('hidden');
+  }, 3500);
 }
