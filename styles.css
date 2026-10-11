@@ -583,7 +583,8 @@ html[dir="rtl"] .form-label {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: max-content;
+  min-width: 0;
+  flex-shrink: 1;
 }
 .brand-urdu {
   font-family: var(--font-urdu);
@@ -1645,7 +1646,39 @@ html[data-theme="bright"] .icon-bright { display: inline-block; color: #8C6827; 
   }
 
   .nav-container {
-    padding: 8px 14px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .brand-text {
+    font-size: clamp(0.95rem, 3.2vw, 1.15rem);
+    white-space: nowrap;
+  }
+
+  .nav-actions {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .lang-toggle-btn {
+    min-height: 38px;
+    height: 38px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+  }
+
+  .theme-toggle-btn {
+    min-width: 38px;
+    min-height: 38px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .music-fab-btn {
+    min-height: 38px;
+    height: 38px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
   }
 
   .hero-event-pills {
@@ -1680,6 +1713,56 @@ html[data-theme="bright"] .icon-bright { display: inline-block; color: #8C6827; 
 }
 
 @media (max-width: 480px) {
+  .nav-container {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .brand-urdu {
+    font-size: 1.1rem;
+  }
+
+  .brand-text {
+    font-size: 0.95rem;
+  }
+
+  .nav-actions {
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .lang-toggle-btn {
+    min-height: 36px;
+    height: 36px;
+    padding: 0 8px;
+    font-size: 0.75rem;
+  }
+
+  .theme-toggle-btn {
+    min-width: 36px;
+    min-height: 36px;
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+
+  /* Compact Circular Music Button on Mobile - Guaranteed Visible & Clipped-Proof */
+  .music-fab-btn {
+    min-width: 36px;
+    min-height: 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .music-fab-btn .eq-bars {
+    display: none;
+  }
+  .music-fab-btn .music-icon {
+    font-size: 0.9rem;
+  }
+
   .currency-toggle-btn .currency-text {
     display: none;
   }
@@ -1701,6 +1784,71 @@ html[data-theme="bright"] .icon-bright { display: inline-block; color: #8C6827; 
   .venue-action-btns a, .venue-action-btns button {
     width: 100%;
   }
+}
+
+@media (max-width: 360px) {
+  .nav-container {
+    padding: 6px 6px;
+    gap: 4px;
+  }
+
+  .brand-urdu {
+    display: none; /* Hide decorative Urdu text on ultra-narrow displays so brand text fits cleanly */
+  }
+
+  .brand-text {
+    font-size: 0.88rem;
+  }
+
+  .nav-actions {
+    gap: 4px;
+  }
+
+  .lang-toggle-btn {
+    min-height: 34px;
+    height: 34px;
+    padding: 0 6px;
+    font-size: 0.72rem;
+  }
+
+  .theme-toggle-btn {
+    min-width: 34px;
+    min-height: 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .music-fab-btn {
+    min-width: 34px;
+    min-height: 34px;
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* ==========================================================================
+   15. NETLIFY BADGE / DRAWER SUPPRESSION
+   ========================================================================== */
+iframe[src*="netlify"],
+iframe[title*="Netlify"],
+iframe[id*="netlify"],
+netlify-drawer,
+netlify-feedback-drawer,
+div[data-netlify-deploy-id],
+.netlify-badge,
+[class*="netlify-drawer"],
+[class*="netlify-feedback"],
+[id*="netlify-drawer"],
+[id*="netlify-feedback"],
+div:has(> iframe[src*="netlify"]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  z-index: -99999 !important;
 }
 
 /* Reduced Motion Accessibility */

@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 13. Initialize WhatsApp Sharing & Web Share API
   initShareActions(config, langController);
+
+  // 14. Suppress Netlify badge & drawer widgets
+  removeNetlifyBadge();
 });
 
 /* ==========================================================================
@@ -845,20 +848,27 @@ function initShareActions(config, langController) {
   const btnNative = document.getElementById('btn-share-native');
   const btnCopy = document.getElementById('btn-copy-link');
 
+  function getShareUrl() {
+    return (window.location && window.location.origin && window.location.origin !== 'null')
+      ? `${window.location.origin}${window.location.pathname}`
+      : 'https://qawwali-night.netlify.app/';
+  }
+
   function getShareMessage() {
     const lang = langController.getLang();
     const translations = config.translations || {};
     const dict = translations[lang] || translations.en || {};
+    const liveUrl = getShareUrl();
     
     if (dict.whatsappShareTemplate) {
-      return dict.whatsappShareTemplate;
+      return dict.whatsappShareTemplate.replace(/\{\{URL\}\}/g, liveUrl);
     }
 
     if (lang === 'ur') {
-      return `آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے۔ آئیے، روح پرور موسیقی اور خوبصورت روایات سے سجی اس شام کا حصہ بنیے۔ دعوت نامہ دیکھیں: ${window.location.href}`;
+      return `آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے۔ آئیے، روح پرور موسیقی اور خوبصورت روایات سے سجی اس شام کا حصہ بنیے۔ دعوت نامہ دیکھیں: ${liveUrl}`;
     }
 
-    return `You are invited to our Qawwali Night! Join us for a beautiful evening of soulful music and tradition. View your digital invitation: ${window.location.href}`;
+    return `You are invited to our Qawwali Night! Join us for a beautiful evening of soulful music and tradition. View your digital invitation: ${liveUrl}`;
   }
 
   if (btnWa) {
@@ -873,12 +883,13 @@ function initShareActions(config, langController) {
     btnNative.addEventListener('click', () => {
       const shareText = getShareMessage();
       const lang = langController.getLang();
+      const liveUrl = getShareUrl();
 
       if (navigator.share) {
         navigator.share({
           title: lang === 'ur' ? 'محفلِ قوالی دعوت نامہ' : 'Qawwali Night Digital Invitation',
           text: lang === 'ur' ? 'آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے۔' : 'You are invited to Qawwali Night!',
-          url: window.location.href
+          url: liveUrl
         }).catch(() => {});
       } else {
         const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
@@ -889,7 +900,8 @@ function initShareActions(config, langController) {
 
   if (btnCopy) {
     btnCopy.addEventListener('click', () => {
-      navigator.clipboard.writeText(window.location.href).then(() => {
+      const liveUrl = getShareUrl();
+      navigator.clipboard.writeText(liveUrl).then(() => {
         const lang = langController.getLang();
         const msg = lang === 'ur' ? 'دعوت نامے کا لنک کاپی ہو گیا! 🔗' : 'Invitation link copied to clipboard! 🔗';
         showToast(msg);
@@ -913,4 +925,60 @@ function showToast(message) {
   setTimeout(() => {
     toast.classList.add('hidden');
   }, 3500);
+}
+
+/* ==========================================================================
+   14. SUPPRESS NETLIFY BADGE & DRAWER WIDGET
+   ========================================================================== */
+function removeNetlifyBadge() {
+  const selectors = [
+    'iframe[src*="netlify"]',
+    'iframe[title*="Netlify"]',
+    'iframe[id*="netlify"]',
+    'netlify-drawer',
+    'netlify-feedback-drawer',
+    'div[data-netlify-deploy-id]',
+    '.netlify-badge',
+    '[class*="netlify-drawer"]',
+    '[class*="netlify-feedback"]',
+    '[id*="netlify-drawer"]',
+    '[id*="netlify-feedback"]'
+  ];
+
+  function purge() {
+    selectors.forEach(sel => {
+      try {
+        const els = document.querySelectorAll(sel);
+        els.forEach(el => {
+          try {
+            el.remove();
+          } catch (e) {
+            el.style.display = 'none';
+          }
+        });
+      } catch (err) {}
+    });
+  }
+
+  // Purge immediately
+  purge();
+
+  // Observe and purge any asynchronously injected badge/drawer
+  try {
+    const observer = new MutationObserver(() => {
+      purge();
+    });
+
+    const target = document.documentElement || document.body;
+    if (target) {
+      observer.observe(target, {
+        childList: true,
+        subtree: true
+      });
+    }
+  } catch (err) {}
+
+  window.addEventListener('load', purge);
+  setTimeout(purge, 800);
+  setTimeout(purge, 2500);
 }

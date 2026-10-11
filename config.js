@@ -135,7 +135,7 @@ const QAWWALI_CONFIG = {
       toastLinkCopied: "Invitation link copied to clipboard! 🔗",
       toastIcsDownloaded: "Downloaded .ics calendar file 📅",
       toastRsvpSubmitted: "✨ RSVP submitted successfully! Thank you. ✨",
-      whatsappShareTemplate: `✨ You are cordially invited to Qawwali Night! ✨\n\nJoin us for a soulful evening of Sufi music, traditional mehfil culture & timeless memories.\n\n📅 Date: Saturday, Nov 21, 2026\n⏰ Time: 8:00 PM onwards\n📍 Venue: The Royal Palm Mehfil Hall, Lahore\n\nView your digital invitation & RSVP: https://qawwali-night.netlify.app`
+      whatsappShareTemplate: `✨ You are cordially invited to Qawwali Night! ✨\n\nJoin us for a soulful evening of Sufi music, traditional mehfil culture & timeless memories.\n\n📅 Date: Saturday, Nov 21, 2026\n⏰ Time: 8:00 PM onwards\n📍 Venue: The Royal Palm Mehfil Hall, Lahore\n\nView your digital invitation & RSVP: {{URL}}`
     },
     ur: {
       brandTitle: "محفلِ قوالی",
@@ -219,7 +219,7 @@ const QAWWALI_CONFIG = {
       toastLinkCopied: "دعوت نامے کا لنک کاپی ہو گیا! 🔗",
       toastIcsDownloaded: "کیلنڈر فائل ڈاؤن لوڈ ہو گئی 📅",
       toastRsvpSubmitted: "✨ شرکت کی تصدیق موصول ہو گئی۔ شکریہ! ✨",
-      whatsappShareTemplate: `✨ آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے! ✨\n\nآئیے، روح پرور صوفیانہ کلام اور خوبصورت روایات سے سجی اس شام کا حصہ بنیے۔\n\n📅 تاریخ: ہفتہ، ۲۱ نومبر ۲۰۲۶\n⏰ وقت: رات ۸:۰۰ بجے سے\n📍 مقام: رائل پام مہفل ہال، لاہور\n\nدعوت نامہ دیکھیں: https://qawwali-night.netlify.app`
+      whatsappShareTemplate: `✨ آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے! ✨\n\nآئیے، روح پرور صوفیانہ کلام اور خوبصورت روایات سے سجی اس شام کا حصہ بنیے۔\n\n📅 تاریخ: ہفتہ، ۲۱ نومبر ۲۰۲۶\n⏰ وقت: رات ۸:۰۰ بجے سے\n📍 مقام: رائل پام مہفل ہال، لاہور\n\nدعوت نامہ دیکھیں: {{URL}}`
     }
   }
 };
