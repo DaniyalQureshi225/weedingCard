@@ -12,9 +12,10 @@ export default async (request, context) => {
   const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || url.host;
   const origin = `${proto}://${host}`;
 
-  const eventTitle = "Qawwali Night | A Soulful Evening Awaits";
-  const eventDesc = "You are cordially invited to an exclusive evening of soulful Qawwali, Sufi music, and timeless traditions. Explore the invitation, save the date, and discover the venue.";
-  const eventImage = `${origin}/assets/images/qawwali-night-og.jpg`;
+  const brideName = "Ayesha";
+  const eventTitle = `Dholki Night Invitation | ${brideName}`;
+  const eventDesc = "Join us for a colorful Pakistani Dholki Night filled with music, traditions, and celebration.";
+  const eventImage = `${origin}/assets/images/dholki-og.jpg`;
   const eventUrl = `${origin}${url.pathname}`;
 
   html = replaceMeta(html, {
@@ -22,10 +23,18 @@ export default async (request, context) => {
     desc: eventDesc,
     image: eventImage,
     url: eventUrl,
-    siteName: "Qawwali Night Digital Invitation"
+    siteName: "Dholki Night Invitation"
   });
 
+  // Strip Netlify badge & drawer widgets if present in HTML stream
+  html = html
+    .replace(/<netlify-drawer[\s\S]*?<\/netlify-drawer>/gi, "")
+    .replace(/<div[^>]*class=["'][^"']*netlify-badge[^"']*["'][\s\S]*?<\/div>/gi, "")
+    .replace(/<a[^>]*class=["'][^"']*netlify-badge[^"']*["'][\s\S]*?<\/a>/gi, "")
+    .replace(/<script[^>]*src=["'][^"']*netlify[^"']*(?:badge|feedback|preview)[^"']*["'][^>]*><\/script>/gi, "");
+
   return new Response(html, {
+
     status: response.status,
     headers: response.headers
   });
@@ -43,13 +52,14 @@ function replaceMeta(html, { title, desc, image, url, siteName }) {
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Qawwali Night Digital Invitation">
+    <meta property="og:image:alt" content="Pakistani Dholki Night digital invitation card with traditional dholak and marigold flowers">
     <meta property="og:site_name" content="${esc(siteName)}">
     <meta property="og:locale" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="${esc(title)}">
-    <meta name="twitter:description" content="${esc(desc)}">
-    <meta name="twitter:image" content="${esc(image)}">`;
+    <meta name="twitter:title" content="Dholki Night Invitation">
+    <meta name="twitter:description" content="Celebrate a beautiful Pakistani Dholki Night with us!">
+    <meta name="twitter:image" content="${esc(image)}">
+    <meta name="twitter:image:alt" content="Pakistani Dholki Night digital invitation card">`;
 
   html = html.replace(
     /<!-- OG-START -->[\s\S]*?<!-- OG-END -->/,

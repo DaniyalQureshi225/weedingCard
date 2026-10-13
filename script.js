@@ -1,55 +1,59 @@
 /**
- * QAWWALI NIGHT DIGITAL INVITATION — JAVASCRIPT ENGINE
- * Handles Tabla intro beat unlock, audio synthesis, ambient canvas particles,
- * minimal floating US dollar bills, English/Urdu language switching with full RTL support,
- * theme switching, live countdown, calendar exports, mobile scratch card,
- * RSVP validation, WhatsApp link generation, and Web Share API.
+ * PAKISTANI DHOLKI NIGHT DIGITAL INVITATION — JAVASCRIPT ENGINE
+ * Handles:
+ * - Interactive Dholak percussion synthesizer & tap unlock experience
+ * - Replay / Reopen opening animation
+ * - Floating marigold & jasmine petals canvas animation
+ * - English / Urdu language switching with RTL layout
+ * - Theme switching (Warm Festive Cream / Midnight Jamuni)
+ * - Live countdown timer to wedding event
+ * - Google Calendar & Apple/Outlook .ics export
+ * - Interactive gold scratch-to-reveal surprise card
+ * - Interactive RSVP form & WhatsApp RSVP generation
+ * - WhatsApp sharing link generation & Web Share API
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load Central Configuration
-  const config = window.QAWWALI_CONFIG || window.ANNIVERSARY_CONFIG || {};
+  const config = window.DHOLKI_CONFIG || window.QAWWALI_CONFIG || {};
 
   // 1. Initialize Language Switcher (EN / Urdu RTL)
   const langController = initLanguageSwitcher(config);
 
-  // 2. Initialize Ambient Particle Canvas
-  initAmbientParticles();
+  // 2. Initialize Floating Marigold & Jasmine Petals Canvas
+  initPetalsCanvas(config);
 
-  // 3. Initialize Subtle Floating Small US Dollar Bills Animation
-  const currencyController = initCurrencyAnimation(config);
-
-  // 4. Bind Dynamic Text & Event Config
+  // 3. Bind Dynamic Text & Event Config
   bindDynamicContent(config);
 
-  // 5. Initialize Audio System & Synthesizer
+  // 4. Initialize Web Audio API Drum Synthesizer & Background Music
   const audioSystem = initAudioSystem(config);
 
-  // 6. Initialize Tabla Intro Unlock Experience
-  initTablaIntro(audioSystem, currencyController);
+  // 5. Initialize Dholak Opening Screen & Replay Experience
+  initDholakIntro(audioSystem, config);
 
-  // 7. Initialize Theme Switcher (Dark/Bright)
+  // 6. Initialize Theme Switcher (Bright / Dark)
   initThemeSwitcher();
 
-  // 8. Initialize Save the Date & Countdown Timer
+  // 7. Initialize Save the Date & Live Countdown Timer
   initCountdown(config.eventDateISO);
 
-  // 9. Initialize Calendar Exports (Google & .ics)
+  // 8. Initialize Calendar Exports (Google & .ics)
   initCalendarActions(config);
 
-  // 10. Initialize Venue Actions (Maps & Copy Address)
+  // 9. Initialize Venue Actions (Directions & Copy Address)
   initVenueActions(config);
 
-  // 11. Initialize Interactive Mobile Scratch Card Canvas
+  // 10. Initialize Interactive Mobile Scratch Card
   initScratchCard(config);
 
-  // 12. Initialize RSVP Form & WhatsApp RSVP
+  // 11. Initialize RSVP Form & WhatsApp RSVP
   initRSVPForm(config, langController);
 
-  // 13. Initialize WhatsApp Sharing & Web Share API
+  // 12. Initialize WhatsApp Sharing & Web Share API
   initShareActions(config, langController);
 
-  // 14. Suppress Netlify badge & drawer widgets
+  // 13. Suppress Netlify badge & drawer widgets
   removeNetlifyBadge();
 });
 
@@ -61,11 +65,11 @@ function initLanguageSwitcher(config) {
   const htmlEl = document.documentElement;
   const translations = config.translations || {};
 
-  let currentLang = localStorage.getItem('qawwali_lang') || 'en';
+  let currentLang = localStorage.getItem('dholki_lang') || 'en';
 
   function applyLanguage(lang) {
     currentLang = lang;
-    localStorage.setItem('qawwali_lang', lang);
+    localStorage.setItem('dholki_lang', lang);
 
     htmlEl.setAttribute('lang', lang);
     htmlEl.setAttribute('dir', lang === 'ur' ? 'rtl' : 'ltr');
@@ -80,7 +84,7 @@ function initLanguageSwitcher(config) {
 
     const dict = translations[lang] || translations.en || {};
 
-    // 1. Update text for all elements with data-i18n
+    // 1. Update text for elements with data-i18n
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.getAttribute('data-i18n');
       if (dict[key]) {
@@ -88,7 +92,7 @@ function initLanguageSwitcher(config) {
       }
     });
 
-    // 2. Update placeholders for all elements with data-i18n-placeholder
+    // 2. Update placeholders for elements with data-i18n-placeholder
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       const key = el.getAttribute('data-i18n-placeholder');
       if (dict[key]) {
@@ -101,7 +105,7 @@ function initLanguageSwitcher(config) {
     langBtn.addEventListener('click', () => {
       const nextLang = currentLang === 'en' ? 'ur' : 'en';
       applyLanguage(nextLang);
-      showToast(nextLang === 'ur' ? 'اردو زبان منتخب کی گئی' : 'Switched to English');
+      showToast(nextLang === 'ur' ? 'اردو زبان منتخب کی گئی 🌸' : 'Switched to English 🌸');
     });
   }
 
@@ -113,13 +117,13 @@ function initLanguageSwitcher(config) {
 }
 
 /* ==========================================================================
-   2. AMBIENT GOLDEN PARTICLES CANVAS
+   2. FLOATING MARIGOLD & JASMINE PETALS CANVAS
    ========================================================================== */
-function initAmbientParticles() {
-  const canvas = document.getElementById('ambient-canvas');
+function initPetalsCanvas(config) {
+  const canvas = document.getElementById('petals-canvas');
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
 
+  const ctx = canvas.getContext('2d');
   let width = (canvas.width = window.innerWidth);
   let height = (canvas.height = window.innerHeight);
 
@@ -128,139 +132,118 @@ function initAmbientParticles() {
     height = canvas.height = window.innerHeight;
   });
 
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) return;
+  const petals = [];
+  const petalCount = window.innerWidth < 600 ? 14 : 26;
 
-  const particleCount = width < 768 ? 16 : 38;
-  const particles = [];
+  // Colors: Marigold Orange, Sunflower Yellow, Rose Pink, Fragrant Jasmine White
+  const petalColors = [
+    { color: '#FF6F00', type: 'marigold' },
+    { color: '#FFA000', type: 'marigold' },
+    { color: '#FFD54F', type: 'marigold' },
+    { color: '#E91E63', type: 'rose' },
+    { color: '#F48FB1', type: 'rose' },
+    { color: '#FFFDE7', type: 'jasmine' }
+  ];
 
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: Math.random() * 2.5 + 0.5,
-      speedY: Math.random() * 0.4 + 0.1,
-      speedX: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.7 + 0.2,
-      pulse: Math.random() * 0.02 + 0.005,
-    });
-  }
+  class Petal {
+    constructor() {
+      this.reset(true);
+    }
 
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
+    reset(initial = false) {
+      this.x = Math.random() * width;
+      this.y = initial ? Math.random() * height : -30;
+      this.size = Math.random() * 8 + 8;
+      this.speedY = Math.random() * 0.9 + 0.6;
+      this.speedX = Math.random() * 0.7 - 0.35;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.03;
+      this.swing = Math.random() * 2;
+      this.swingSpeed = Math.random() * 0.02 + 0.01;
+      this.opacity = Math.random() * 0.35 + 0.55;
+      const c = petalColors[Math.floor(Math.random() * petalColors.length)];
+      this.color = c.color;
+      this.type = c.type;
+    }
 
-    particles.forEach((p) => {
-      p.y -= p.speedY;
-      p.x += p.speedX;
-      p.opacity += Math.sin(Date.now() * p.pulse) * 0.01;
+    update() {
+      this.y += this.speedY;
+      this.x += Math.sin(this.swing) * 0.6 + this.speedX;
+      this.swing += this.swingSpeed;
+      this.rotation += this.rotSpeed;
 
-      if (p.y < 0) {
-        p.y = height;
-        p.x = Math.random() * width;
+      if (this.y > height + 30) {
+        this.reset();
       }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      ctx.globalAlpha = this.opacity;
+      ctx.fillStyle = this.color;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200, 164, 93, ${Math.max(0.1, Math.min(1, p.opacity))})`;
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = '#C8A45D';
+      if (this.type === 'jasmine') {
+        // Starry 4-petal jasmine bud
+        ctx.ellipse(0, 0, this.size * 0.5, this.size * 0.8, 0, 0, Math.PI * 2);
+      } else {
+        // Curved petal leaf shape
+        ctx.moveTo(0, -this.size);
+        ctx.quadraticCurveTo(this.size * 0.7, -this.size * 0.3, this.size * 0.4, this.size * 0.6);
+        ctx.quadraticCurveTo(0, this.size * 0.9, -this.size * 0.4, this.size * 0.6);
+        ctx.quadraticCurveTo(-this.size * 0.7, -this.size * 0.3, 0, -this.size);
+      }
       ctx.fill();
-    });
+      ctx.restore();
+    }
+  }
 
-    requestAnimationFrame(animate);
+  for (let i = 0; i < petalCount; i++) {
+    petals.push(new Petal());
+  }
+
+  let animId;
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    petals.forEach((p) => {
+      p.update();
+      p.draw();
+    });
+    animId = requestAnimationFrame(animate);
   }
 
   animate();
-}
 
-/* ==========================================================================
-   3. SUBTLE FLOATING SMALL US DOLLAR BILLS ANIMATION ENGINE
-   ========================================================================== */
-function initCurrencyAnimation(config) {
-  const container = document.getElementById('currency-container');
-  if (!container) return { setIntroMode: () => {} };
-
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) {
-    container.style.display = 'none';
-    return { setIntroMode: () => {} };
-  }
-
-  const defaults = config.currencyDefaults || {};
-  let isIntroActive = true;
-
-  const denominations = defaults.denominations || ['1', '5', '10', '20', '50', '100'];
-
-  // Minimal, subtle density: 3-5 bills mobile, 5-8 bills desktop
-  function getSubtleCount() {
-    return window.innerWidth < 768 ? 7 : 15;
-  }
-
-  function renderNotes() {
-    container.innerHTML = '';
-
-    let count = getSubtleCount();
-    if (isIntroActive) {
-      count = 3; // Restrained during tabla intro screen
-    }
-
-    for (let i = 0; i < count; i++) {
-      const note = document.createElement('div');
-      note.className = 'banknote';
-
-      const leftPos = Math.random() * 88 + 4; // 4% to 92%
-      const fallDuration = Math.random() * 4 + 7; // 7s to 11s slow calm drift
-      const fallDelay = Math.random() * 8; // 0s to 8s
-      const driftX = (Math.random() - 0.5) * 100; // -50px to 50px
-      const spinDeg = Math.random() * 240 + 120; // 120deg to 360deg
-      const baseOpacity = Math.random() * 0.25 + 0.65; // 0.65 to 0.90 transparency
-
-      note.style.left = `${leftPos}%`;
-      note.style.setProperty('--fall-duration', `${fallDuration}s`);
-      note.style.setProperty('--fall-delay', `${fallDelay}s`);
-      note.style.setProperty('--drift-x', `${driftX}px`);
-      note.style.setProperty('--spin-deg', `${spinDeg}deg`);
-      note.style.setProperty('--base-opacity', baseOpacity);
-
-      container.appendChild(note);
-    }
-  }
-
-  // Handle Visibility Change (Pause animations when tab is hidden)
   document.addEventListener('visibilitychange', () => {
-    container.style.display = document.hidden ? 'none' : 'block';
-  });
-
-  renderNotes();
-
-  return {
-    setIntroMode: (active) => {
-      isIntroActive = active;
-      renderNotes();
+    if (document.hidden) {
+      cancelAnimationFrame(animId);
+    } else {
+      animate();
     }
-  };
+  });
 }
 
 /* ==========================================================================
-   4. BIND DYNAMIC CONTENT FROM CONFIG
+   3. BIND DYNAMIC CONTENT FROM CONFIG
    ========================================================================== */
 function bindDynamicContent(config) {
-  setText('.bind-hosts', config.hostNames || 'The Qureshi Family');
-  setText('.bind-event-title', config.eventTitle || 'Qawwali Night');
-  setText('.bind-urdu-title', config.urduTitle || 'شبِ قوالی و محفلِ سماع');
-  setText('.bind-tagline', config.tagline || 'An Evening of Soul, Sufi Melodies & Timeless Traditions');
-  setText('.bind-date', config.dateText || 'Saturday, November 21, 2026');
-  setText('.bind-time', config.timeText || '8:00 PM onwards');
-  setText('.bind-venue-short', config.venueName || 'The Royal Palm Mehfil Hall');
-  setText('.bind-venue-name', config.venueName || 'The Royal Palm Mehfil Hall');
-  setText('.bind-full-address', config.fullAddress || 'Lahore, Pakistan');
+  setText('.bind-bride-name', config.brideName || 'Ayesha');
+  setText('.bind-hosts', config.hostNames || 'The Malik & Khan Family');
+  setText('.bind-date', config.dateText || 'Friday, December 18, 2026');
+  setText('.bind-time', config.timeText || '7:30 PM onwards');
+  setText('.bind-venue-short', config.venueName || 'The Haveli Courtyard');
+  setText('.bind-venue-name', config.venueName || 'The Haveli Courtyard');
+  setText('.bind-full-address', config.fullAddress || 'Gulberg III, Lahore, Pakistan');
   setText('.bind-arrival', config.arrivalInstructions || 'Valet parking available.');
-  setText('.bind-dress-code', config.dressCode || 'Royal Mehfil Attire');
-  setText('.bind-scratch-title', config.scratchTitle || 'An Exclusive Mehfil Surprise');
-  setText('.bind-scratch-message', config.scratchMessage || 'Your presence will add unmatched grace to our Mehfil.');
-  setText('.bind-rsvp-deadline', config.rsvpDeadlineText || 'Please RSVP by November 10, 2026');
+  setText('.bind-dress-code', config.dressCode || 'Vibrant Mehndi & Dholki Attire');
+  setText('.bind-rsvp-contact', config.rsvpContact || '+92 300 123 4567');
+  setText('.bind-rsvp-deadline', config.rsvpDeadlineText || 'Please RSVP by December 10, 2026');
+  setText('.bind-scratch-title', config.scratchTitle || 'A Special Dholki Note');
+  setText('.bind-scratch-message', config.scratchMessage || 'Get ready with your finest thumkas and dholak rhythms!');
 
-  // Format Date Card
+  // Format Save the Date Highlights
   if (config.eventDateISO) {
     const d = new Date(config.eventDateISO);
     if (!isNaN(d.getTime())) {
@@ -285,7 +268,7 @@ function setText(selector, val) {
 }
 
 /* ==========================================================================
-   5. WEB AUDIO API SYNTHESIZER & BACKGROUND AUDIO
+   4. WEB AUDIO API DHOLAK SYNTHESIZER & BACKGROUND AUDIO
    ========================================================================== */
 function initAudioSystem(config) {
   let audioCtx = null;
@@ -307,67 +290,121 @@ function initAudioSystem(config) {
     return audioCtx;
   }
 
-  // Synthesize Realistic Classical Tabla Sound (Dayan & Bayyan)
-  function playTablaBeat(beatIndex) {
+  // Synthesizes authentic Pakistani Dholak drum hits
+  function playDholakBeat(type = 'bass') {
     if (isMuted) return;
     const ctx = getAudioContext();
     if (!ctx) return;
 
     const now = ctx.currentTime;
 
-    // 1. Low Pitch Sub-Bass Bayyan Drum (Bass pitch bend down)
-    const bayyanOsc = ctx.createOscillator();
-    const bayyanGain = ctx.createGain();
+    if (type === 'bass' || type === 'both') {
+      // 1. Deep resonant Dholak bass drum (Dha / Ge)
+      const bassOsc = ctx.createOscillator();
+      const bassGain = ctx.createGain();
 
-    bayyanOsc.type = 'sine';
-    bayyanOsc.frequency.setValueAtTime(130, now);
-    bayyanOsc.frequency.exponentialRampToValueAtTime(55, now + 0.35);
+      bassOsc.type = 'sine';
+      bassOsc.frequency.setValueAtTime(140, now);
+      bassOsc.frequency.exponentialRampToValueAtTime(50, now + 0.32);
 
-    bayyanGain.gain.setValueAtTime(0.7, now);
-    bayyanGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      bassGain.gain.setValueAtTime(0.75, now);
+      bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
 
-    bayyanOsc.connect(bayyanGain);
-    bayyanGain.connect(ctx.destination);
+      bassOsc.connect(bassGain);
+      bassGain.connect(ctx.destination);
 
-    bayyanOsc.start(now);
-    bayyanOsc.stop(now + 0.4);
+      bassOsc.start(now);
+      bassOsc.stop(now + 0.38);
+    }
 
-    // 2. High Resonant Dayan Drum (Tuning rim hit)
-    const dayanOsc = ctx.createOscillator();
-    const dayanGain = ctx.createGain();
+    if (type === 'treble' || type === 'both') {
+      // 2. High snappy Dholak treble drum rim slap (Ta / Na)
+      const trebOsc = ctx.createOscillator();
+      const trebGain = ctx.createGain();
 
-    const baseFreq = beatIndex === 3 ? 440 : (beatIndex === 2 ? 360 : 320);
-    dayanOsc.type = 'triangle';
-    dayanOsc.frequency.setValueAtTime(baseFreq, now);
-    dayanOsc.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, now + 0.2);
+      trebOsc.type = 'triangle';
+      trebOsc.frequency.setValueAtTime(420, now);
+      trebOsc.frequency.exponentialRampToValueAtTime(280, now + 0.15);
 
-    dayanGain.gain.setValueAtTime(0.5, now);
-    dayanGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+      trebGain.gain.setValueAtTime(0.55, now);
+      trebGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
 
-    dayanOsc.connect(dayanGain);
-    dayanGain.connect(ctx.destination);
+      trebOsc.connect(trebGain);
+      trebGain.connect(ctx.destination);
 
-    dayanOsc.start(now);
-    dayanOsc.stop(now + 0.25);
+      trebOsc.start(now);
+      trebOsc.stop(now + 0.18);
+    }
+  }
+
+  // Celebratory fast Dholak roll rhythm when opening invitation
+  function playCelebrationRoll() {
+    if (isMuted) return;
+    const pattern = [
+      { time: 0, type: 'bass' },
+      { time: 100, type: 'treble' },
+      { time: 200, type: 'treble' },
+      { time: 320, type: 'bass' },
+      { time: 440, type: 'both' },
+      { time: 560, type: 'both' }
+    ];
+
+    pattern.forEach((p) => {
+      setTimeout(() => playDholakBeat(p.type), p.time);
+    });
+  }
+
+  function startBackgroundMusic() {
+    if (isMuted || isPlaying) return;
+    getAudioContext();
+    bgAudio.play().then(() => {
+      isPlaying = true;
+      updateMusicFabUI(true);
+    }).catch(() => {
+      isPlaying = false;
+      updateMusicFabUI(false);
+    });
   }
 
   function toggleMusic() {
-    isMuted = !isMuted;
-    const fab = document.getElementById('music-fab');
+    if (isPlaying) {
+      bgAudio.pause();
+      isPlaying = false;
+      updateMusicFabUI(false);
+    } else {
+      isMuted = false;
+      startBackgroundMusic();
+    }
+  }
 
+  function toggleMuteAll() {
+    isMuted = !isMuted;
     if (isMuted) {
       bgAudio.pause();
       isPlaying = false;
-      if (fab) fab.classList.add('muted');
-      showToast('Audio muted');
+      updateMusicFabUI(false);
     } else {
-      bgAudio.play().then(() => {
-        isPlaying = true;
-        if (fab) fab.classList.remove('muted');
-        showToast('Playing Sufi music');
-      }).catch((e) => {
-        console.warn('Audio playback restricted:', e);
-      });
+      startBackgroundMusic();
+    }
+    return isMuted;
+  }
+
+  function updateMusicFabUI(active) {
+    const fab = document.getElementById('music-fab');
+    if (fab) {
+      fab.classList.toggle('playing', active);
+      const icon = fab.querySelector('.music-icon');
+      if (icon) {
+        icon.className = active ? 'fa-solid fa-volume-high music-icon' : 'fa-solid fa-volume-xmark music-icon';
+      }
+    }
+
+    const introSoundToggle = document.getElementById('intro-sound-toggle');
+    if (introSoundToggle) {
+      const icon = introSoundToggle.querySelector('i');
+      if (icon) {
+        icon.className = isMuted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+      }
     }
   }
 
@@ -379,581 +416,737 @@ function initAudioSystem(config) {
   const introSoundToggle = document.getElementById('intro-sound-toggle');
   if (introSoundToggle) {
     introSoundToggle.addEventListener('click', () => {
-      isMuted = !isMuted;
-      introSoundToggle.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
-      showToast(isMuted ? 'Sound turned off' : 'Sound turned on');
+      const muted = toggleMuteAll();
+      showToast(muted ? 'Sound Muted 🔇' : 'Sound Enabled 🔊');
     });
   }
 
   return {
-    playTablaBeat,
-    getAudioContext,
-    startBackgroundMusic: () => {
-      if (!isMuted && !isPlaying) {
-        bgAudio.play().then(() => { isPlaying = true; }).catch(() => {});
-      }
-    }
+    playBeat: playDholakBeat,
+    playRoll: playCelebrationRoll,
+    startBgMusic: startBackgroundMusic,
+    toggleMusic: toggleMusic
   };
 }
 
 /* ==========================================================================
-   6. TABLA INTRO BEAT UNLOCK SYSTEM
+   5. INTERACTIVE DHOLAK OPENING SCREEN & REPLAY
    ========================================================================== */
-function initTablaIntro(audioSystem, currencyController) {
-  const introScreen = document.getElementById('tabla-intro-screen');
-  const mainInv = document.getElementById('main-invitation');
-  const tablaTrigger = document.getElementById('tabla-trigger');
-  const skipBtn = document.getElementById('skip-intro-btn');
-  const beatLabel = document.getElementById('beat-label');
-  const rippleCanvas = document.getElementById('tabla-ripple-canvas');
+function initDholakIntro(audioSystem, config) {
+  const introScreen = document.getElementById('dholak-intro-screen');
+  const mainInvitation = document.getElementById('main-invitation');
+  const dholakTrigger = document.getElementById('dholak-trigger');
+  const dholakCard = document.querySelector('.dholak-drum-card');
+  const btnOpen = document.getElementById('btn-open-invitation');
+  const btnSkip = document.getElementById('skip-intro-btn');
+  const beatCountText = document.getElementById('beat-count-text');
+  const rippleCanvas = document.getElementById('dholak-ripple-canvas');
+  const reopenBtn = document.getElementById('reopen-intro-btn');
+  const footerReplayLink = document.getElementById('footer-replay-link');
 
-  if (!introScreen || !tablaTrigger) return;
+  let beatsCount = 0;
+  const maxBeats = 3;
+  let isUnlocked = false;
 
-  let beatCount = 0;
-  let lastTapTime = 0;
-  const DEBOUNCE_MS = 250;
-
-  // Canvas Ripple Renderer
-  let ctx = rippleCanvas ? rippleCanvas.getContext('2d') : null;
+  // Initialize Canvas Ripples
+  let rCtx = null;
+  const ripples = [];
   if (rippleCanvas) {
-    rippleCanvas.width = 360;
-    rippleCanvas.height = 360;
+    rippleCanvas.width = 280;
+    rippleCanvas.height = 280;
+    rCtx = rippleCanvas.getContext('2d');
   }
 
-  function triggerRipple() {
-    if (!ctx) return;
-    let radius = 10;
-    let opacity = 1;
-
-    function draw() {
-      ctx.clearRect(0, 0, 360, 360);
-      if (opacity <= 0) return;
-
-      ctx.beginPath();
-      ctx.arc(180, 180, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(200, 164, 93, ${opacity})`;
-      ctx.lineWidth = 4;
-      ctx.stroke();
-
-      radius += 8;
-      opacity -= 0.04;
-      requestAnimationFrame(draw);
-    }
-    draw();
+  function addRipple(x, y) {
+    if (!rCtx) return;
+    ripples.push({
+      x: x || 140,
+      y: y || 140,
+      radius: 10,
+      maxRadius: 110,
+      alpha: 0.8
+    });
   }
 
-  function handleBeat() {
-    const now = Date.now();
-    if (now - lastTapTime < DEBOUNCE_MS) return;
-    lastTapTime = now;
+  function animateRipples() {
+    if (!rCtx) return;
+    rCtx.clearRect(0, 0, 280, 280);
 
-    beatCount++;
-    audioSystem.playTablaBeat(beatCount);
-    triggerRipple();
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      const r = ripples[i];
+      r.radius += 4;
+      r.alpha -= 0.025;
 
-    // Update Dots
-    const dot = document.getElementById(`dot-${beatCount}`);
-    if (dot) dot.classList.add('active');
-
-    if (beatLabel) {
-      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
-      const beatText = currentLang === 'ur' ? 'ضربیں' : 'Beats';
-      beatLabel.innerHTML = `${beatCount} / 3 <span data-i18n="beatLabel">${beatText}</span>`;
-    }
-
-    if (beatCount >= 3) {
-      unlockMehfil();
-    }
-  }
-
-  function unlockMehfil() {
-    audioSystem.startBackgroundMusic();
-    if (currencyController && currencyController.setIntroMode) {
-      currencyController.setIntroMode(false); // Unlocks full subtle currency flow
-    }
-    introScreen.classList.add('unlocked');
-    document.body.classList.remove('lock-scroll');
-    
-    if (mainInv) {
-      mainInv.classList.remove('hidden-until-unlocked');
-    }
-
-    const currentLang = localStorage.getItem('qawwali_lang') || 'en';
-    const msg = currentLang === 'ur' ? '✨ محفل میں خوش آمدید! ✨' : '✨ The Mehfil is Unlocked! Welcome. ✨';
-    showToast(msg);
-  }
-
-  tablaTrigger.addEventListener('click', handleBeat);
-  tablaTrigger.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    handleBeat();
-  }, { passive: false });
-
-  if (skipBtn) {
-    skipBtn.addEventListener('click', unlockMehfil);
-  }
-}
-
-/* ==========================================================================
-   7. THEME SWITCHER (DARK / BRIGHT)
-   ========================================================================== */
-function initThemeSwitcher() {
-  const toggleBtn = document.getElementById('theme-toggle-btn');
-  const htmlEl = document.documentElement;
-
-  const savedTheme = localStorage.getItem('qawwali_theme') || 'dark';
-  htmlEl.setAttribute('data-theme', savedTheme);
-
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      const current = htmlEl.getAttribute('data-theme');
-      const nextTheme = current === 'dark' ? 'bright' : 'dark';
-      htmlEl.setAttribute('data-theme', nextTheme);
-      localStorage.setItem('qawwali_theme', nextTheme);
-
-      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
-      if (currentLang === 'ur') {
-        showToast(nextTheme === 'bright' ? 'روشن موڈ منتخب کیا گیا' : 'ڈارک موڈ منتخب کیا گیا');
+      if (r.alpha <= 0 || r.radius >= r.maxRadius) {
+        ripples.splice(i, 1);
       } else {
-        showToast(nextTheme === 'bright' ? 'Switched to Royal Ivory Theme' : 'Switched to Midnight Mehfil Theme');
+        rCtx.save();
+        rCtx.beginPath();
+        rCtx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+        rCtx.strokeStyle = `rgba(229, 169, 16, ${r.alpha})`;
+        rCtx.lineWidth = 3;
+        rCtx.stroke();
+        rCtx.restore();
+      }
+    }
+    requestAnimationFrame(animateRipples);
+  }
+  animateRipples();
+
+  function triggerBeatHit(e) {
+    if (isUnlocked) return;
+
+    beatsCount++;
+    if (beatCountText) {
+      beatCountText.textContent = `${beatsCount} / ${maxBeats}`;
+    }
+
+    // Audio & visuals
+    const beatTypes = ['bass', 'treble', 'both'];
+    audioSystem.playBeat(beatTypes[(beatsCount - 1) % 3]);
+
+    if (dholakCard) {
+      dholakCard.classList.add('hit');
+      setTimeout(() => dholakCard.classList.remove('hit'), 150);
+    }
+
+    addRipple(140, 140);
+
+    if (beatsCount >= maxBeats) {
+      setTimeout(unlockInvitation, 250);
+    }
+  }
+
+  function unlockInvitation() {
+    if (isUnlocked) return;
+    isUnlocked = true;
+
+    // Play celebration roll & launch confetti
+    audioSystem.playRoll();
+    launchFestiveConfetti();
+
+    // Start background festive audio
+    setTimeout(() => {
+      audioSystem.startBgMusic();
+    }, 400);
+
+    // Fade out intro screen
+    if (introScreen) {
+      introScreen.classList.add('unlocked');
+    }
+
+    // Reveal main invitation card smoothly
+    if (mainInvitation) {
+      mainInvitation.classList.remove('hidden-until-unlocked');
+    }
+
+    document.body.classList.remove('lock-scroll');
+    showToast('✨ Welcome to Dholki Night! Let’s Celebrate ✨');
+  }
+
+  function reopenInvitation() {
+    isUnlocked = false;
+    beatsCount = 0;
+    if (beatCountText) {
+      beatCountText.textContent = `0 / ${maxBeats}`;
+    }
+
+    if (introScreen) {
+      introScreen.classList.remove('unlocked');
+    }
+    document.body.classList.add('lock-scroll');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('🪘 Opening Invitation Experience Replayed 🪘');
+  }
+
+  if (dholakTrigger) {
+    dholakTrigger.addEventListener('click', triggerBeatHit);
+    dholakTrigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        triggerBeatHit(e);
       }
     });
   }
+
+  if (btnOpen) {
+    btnOpen.addEventListener('click', () => {
+      unlockInvitation();
+    });
+  }
+
+  if (btnSkip) {
+    btnSkip.addEventListener('click', () => {
+      unlockInvitation();
+    });
+  }
+
+  if (reopenBtn) {
+    reopenBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      reopenInvitation();
+    });
+  }
+
+  if (footerReplayLink) {
+    footerReplayLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      reopenInvitation();
+    });
+  }
 }
 
 /* ==========================================================================
-   8. COUNTDOWN TIMER
+   FESTIVE WEDDING CONFETTI EFFECT
    ========================================================================== */
-function initCountdown(targetISO) {
-  if (!targetISO) return;
+function launchFestiveConfetti() {
+  const count = 50;
+  const colors = ['#E5A910', '#D81B60', '#7CB342', '#FF6F00', '#FFD54F', '#4A154B'];
 
-  const targetDate = new Date(targetISO).getTime();
-  const daysEl = document.getElementById('cd-days');
-  const hoursEl = document.getElementById('cd-hours');
-  const minsEl = document.getElementById('cd-minutes');
-  const secsEl = document.getElementById('cd-seconds');
-  const expiredMsg = document.getElementById('countdown-expired');
-  const wrapper = document.getElementById('countdown-wrapper');
+  for (let i = 0; i < count; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'festive-confetti';
+    confetti.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: ${Math.random() * 8 + 6}px;
+      height: ${Math.random() * 12 + 6}px;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      z-index: 9999;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.2s ease-out;
+    `;
+    document.body.appendChild(confetti);
 
-  function update() {
-    const now = Date.now();
-    const diff = targetDate - now;
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 340 + 100;
+    const destX = Math.cos(angle) * distance;
+    const destY = Math.sin(angle) * distance - 80;
+    const rotate = Math.random() * 720;
 
-    if (diff <= 0) {
-      if (wrapper) wrapper.classList.add('hidden');
-      if (expiredMsg) expiredMsg.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      confetti.style.transform = `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) rotate(${rotate}deg)`;
+      confetti.style.opacity = '0';
+    });
+
+    setTimeout(() => {
+      confetti.remove();
+    }, 1300);
+  }
+}
+
+/* ==========================================================================
+   6. THEME SWITCHER (FESTIVE BRIGHT / MIDNIGHT JAMUNI)
+   ========================================================================== */
+function initThemeSwitcher() {
+  const themeBtn = document.getElementById('theme-toggle-btn');
+  const htmlEl = document.documentElement;
+
+  let currentTheme = localStorage.getItem('dholki_theme') || 'bright';
+
+  function applyTheme(theme) {
+    currentTheme = theme;
+    localStorage.setItem('dholki_theme', theme);
+    htmlEl.setAttribute('data-theme', theme);
+  }
+
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      const nextTheme = currentTheme === 'bright' ? 'dark' : 'bright';
+      applyTheme(nextTheme);
+      showToast(nextTheme === 'dark' ? 'Midnight Theme Enabled 🌙' : 'Festive Bright Theme Enabled ☀️');
+    });
+  }
+
+  applyTheme(currentTheme);
+}
+
+/* ==========================================================================
+   7. LIVE REAL-TIME COUNTDOWN TIMER
+   ========================================================================== */
+function initCountdown(eventDateISO) {
+  const targetDate = new Date(eventDateISO || '2026-12-18T19:30:00').getTime();
+
+  const elDays = document.getElementById('cd-days');
+  const elHours = document.getElementById('cd-hours');
+  const elMinutes = document.getElementById('cd-minutes');
+  const elSeconds = document.getElementById('cd-seconds');
+  const elExpired = document.getElementById('countdown-expired');
+  const elWrapper = document.getElementById('countdown-wrapper');
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if (distance <= 0) {
+      if (elWrapper) elWrapper.classList.add('hidden');
+      if (elExpired) elExpired.classList.remove('hidden');
       return;
     }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
-    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
-    if (minsEl) minsEl.textContent = String(mins).padStart(2, '0');
-    if (secsEl) secsEl.textContent = String(secs).padStart(2, '0');
+    if (elDays) elDays.textContent = String(days).padStart(2, '0');
+    if (elHours) elHours.textContent = String(hours).padStart(2, '0');
+    if (elMinutes) elMinutes.textContent = String(minutes).padStart(2, '0');
+    if (elSeconds) elSeconds.textContent = String(seconds).padStart(2, '0');
   }
 
-  update();
-  setInterval(update, 1000);
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 }
 
 /* ==========================================================================
-   9. CALENDAR EXPORTS (GOOGLE & .ICS)
+   8. CALENDAR EXPORTS (GOOGLE & .ICS)
    ========================================================================== */
 function initCalendarActions(config) {
-  const btnGoogle = document.getElementById('add-google-cal');
-  const btnIcs = document.getElementById('download-ics-cal');
+  const googleBtn = document.getElementById('add-google-cal');
+  const icsBtn = document.getElementById('download-ics-cal');
 
-  if (btnGoogle) {
-    btnGoogle.addEventListener('click', () => {
-      const title = encodeURIComponent(config.eventTitle || 'Qawwali Night');
-      const details = encodeURIComponent(config.invitationSubtitle || 'Qawwali Night Digital Invitation');
-      const location = encodeURIComponent(config.fullAddress || config.venueName || 'Lahore');
-      
-      const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20261121T150000Z/20261121T200000Z&details=${details}&location=${location}`;
-      window.open(gCalUrl, '_blank');
+  const title = `Dholki Night | Honoring ${config.brideName || 'Ayesha'}`;
+  const details = `${config.invitationText || 'Join us for a colorful Pakistani Dholki Night filled with music, traditions, and celebration.'}\n\nHosted by: ${config.hostNames || 'The Malik & Khan Family'}\nVenue: ${config.fullAddress || 'The Haveli Courtyard, Lahore'}`;
+  const location = config.fullAddress || 'The Haveli Courtyard, 12-B Gulberg III, Lahore, Pakistan';
+
+  // 2026-12-18 19:30 PKT (14:30 UTC)
+  const startTime = '20261218T143000Z';
+  const endTime = '20261218T193000Z';
+
+  if (googleBtn) {
+    googleBtn.addEventListener('click', () => {
+      const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+      window.open(gUrl, '_blank', 'noopener,noreferrer');
     });
   }
 
-  if (btnIcs) {
-    btnIcs.addEventListener('click', () => {
-      const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Qawwali Night//Invitation//EN
-BEGIN:VEVENT
-SUMMARY:${config.eventTitle || 'Qawwali Night'}
-DESCRIPTION:${config.invitationSubtitle || 'Qawwali Night Digital Invitation'}
-LOCATION:${config.fullAddress || config.venueName || 'Lahore'}
-DTSTART:20261121T150000Z
-DTEND:20261121T200000Z
-STATUS:CONFIRMED
-END:VEVENT
-END:VCALENDAR`;
+  if (icsBtn) {
+    icsBtn.addEventListener('click', () => {
+      const icsData = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Pakistani Dholki Night//EN',
+        'CALSCALE:GREGORIAN',
+        'BEGIN:VEVENT',
+        `SUMMARY:${title}`,
+        `DESCRIPTION:${details.replace(/\n/g, '\\n')}`,
+        `LOCATION:${location}`,
+        `DTSTART:${startTime}`,
+        `DTEND:${endTime}`,
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
 
-      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = 'Qawwali_Night_Invitation.ics';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
-      const msg = currentLang === 'ur' ? 'کیلنڈر فائل ڈاؤن لوڈ ہو گئی' : 'Downloaded .ics calendar file';
-      showToast(msg);
+      const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dholki-night-invitation.ics';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded .ics calendar file 📅');
     });
   }
 }
 
 /* ==========================================================================
-   10. VENUE ACTIONS
+   9. VENUE ACTIONS (DIRECTIONS & COPY ADDRESS)
    ========================================================================== */
 function initVenueActions(config) {
-  const btnDirections = document.getElementById('btn-get-directions');
-  const btnCopyAddress = document.getElementById('btn-copy-address');
+  const dirBtn = document.getElementById('btn-get-directions');
+  const copyBtn = document.getElementById('btn-copy-address');
 
-  if (btnDirections && config.googleMapsUrl) {
-    btnDirections.href = config.googleMapsUrl;
+  if (dirBtn) {
+    dirBtn.href = config.googleMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(config.fullAddress || 'Gulberg III Lahore')}`;
   }
 
-  if (btnCopyAddress) {
-    btnCopyAddress.addEventListener('click', () => {
-      const addr = config.fullAddress || 'The Royal Palm Mehfil Hall, Lahore';
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const addr = config.fullAddress || 'The Haveli Courtyard, 12-B Gulberg III, Lahore, Punjab, Pakistan';
       navigator.clipboard.writeText(addr).then(() => {
-        const currentLang = localStorage.getItem('qawwali_lang') || 'en';
-        const msg = currentLang === 'ur' ? 'مقام کا پتہ کاپی ہو گیا! 📋' : 'Venue address copied to clipboard! 📋';
-        showToast(msg);
+        showToast('Venue address copied to clipboard! 📋');
       }).catch(() => {
-        showToast('Copied address');
+        showToast('Venue address: ' + addr);
       });
     });
   }
 }
 
 /* ==========================================================================
-   11. INTERACTIVE CANVAS SCRATCH CARD (MOBILE RESPONSIVE)
+   10. INTERACTIVE MOBILE SCRATCH CARD CANVAS
    ========================================================================== */
 function initScratchCard(config) {
   const canvas = document.getElementById('scratch-canvas');
-  const fallbackBtn = document.getElementById('btn-reveal-scratch');
-
   if (!canvas) return;
+
   const ctx = canvas.getContext('2d');
+  const container = canvas.parentElement;
+  let isScratching = false;
+  let scratchedPercent = 0;
+  let isRevealed = false;
 
-  function setupFoil() {
-    canvas.width = canvas.offsetWidth || 600;
-    canvas.height = canvas.offsetHeight || 320;
-
-    // Metallic Gold Gradient
-    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    grad.addColorStop(0, '#C8A45D');
-    grad.addColorStop(0.3, '#E8D6A3');
-    grad.addColorStop(0.6, '#B08B42');
-    grad.addColorStop(1, '#8C6827');
-
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Decorative Text on Gold Foil
-    const currentLang = localStorage.getItem('qawwali_lang') || 'en';
-    const topText = currentLang === 'ur' ? '✦ ایک خاص پیغام ✦' : '✦ AN EXCLUSIVE SURPRISE AWAITS ✦';
-    const subText = currentLang === 'ur' ? 'پیغام دیکھنے کے لیے یہاں کھرچیں' : 'Scratch here with your finger or cursor to reveal';
-
-    ctx.fillStyle = '#080808';
-    ctx.font = 'bold clamp(16px, 4vw, 20px) "Cormorant Garamond", serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(topText, canvas.width / 2, canvas.height / 2 - 10);
-    ctx.font = 'clamp(12px, 3vw, 14px) "Outfit", sans-serif';
-    ctx.fillText(subText, canvas.width / 2, canvas.height / 2 + 20);
+  function resizeCanvas() {
+    const rect = container.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+    drawGoldFoil();
   }
 
-  setupFoil();
-  window.addEventListener('resize', () => {
-    if (canvas.style.opacity !== '0') {
-      setupFoil();
-    }
-  });
+  function drawGoldFoil() {
+    if (isRevealed) return;
+    const w = canvas.width;
+    const h = canvas.height;
 
-  let isDrawing = false;
+    // Metallic gold & marigold foil gradient
+    const grad = ctx.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, '#E5A910');
+    grad.addColorStop(0.25, '#FFD54F');
+    grad.addColorStop(0.5, '#F5A623');
+    grad.addColorStop(0.75, '#D81B60');
+    grad.addColorStop(1, '#FF6F00');
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Subtle sparkles pattern
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    for (let i = 0; i < 40; i++) {
+      const sx = (i * 37) % w;
+      const sy = (i * 23) % h;
+      ctx.beginPath();
+      ctx.arc(sx, sy, (i % 3) + 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Centered label text
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 16px "Outfit", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('✨ Scratch Here to Reveal Secret Message ✨', w / 2, h / 2);
+  }
 
   function scratch(x, y) {
+    if (isRevealed) return;
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.arc(x, y, 32, 0, Math.PI * 2);
+    ctx.arc(x, y, 28, 0, Math.PI * 2);
     ctx.fill();
 
-    checkPercent();
+    checkProgress();
   }
 
-  function checkPercent() {
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imgData.data;
+  function checkProgress() {
+    if (isRevealed) return;
+    // Check every few moves
+    if (Math.random() > 0.4) return;
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const imgData = ctx.getImageData(0, 0, w, h);
+    const data = imgData.data;
     let transparentCount = 0;
 
-    for (let i = 3; i < pixels.length; i += 16) {
-      if (pixels[i] === 0) transparentCount++;
+    for (let i = 3; i < data.length; i += 32) {
+      if (data[i] === 0) transparentCount++;
     }
 
-    const percent = (transparentCount / (pixels.length / 16)) * 100;
-    if (percent > 45) {
-      canvas.style.opacity = '0';
-      canvas.style.pointerEvents = 'none';
-      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
-      const msg = currentLang === 'ur' ? '✨ دعوتی پیغام کھل گیا! ✨' : '✨ Secret invitation message revealed! ✨';
-      showToast(msg);
+    scratchedPercent = transparentCount / (data.length / 32);
+    if (scratchedPercent > 0.42) {
+      revealAll();
     }
   }
 
-  function getPos(e) {
+  function revealAll() {
+    isRevealed = true;
+    canvas.style.transition = 'opacity 0.6s ease';
+    canvas.style.opacity = '0';
+    setTimeout(() => {
+      canvas.style.display = 'none';
+    }, 600);
+    showToast('✨ Surprise Message Revealed! ✨');
+  }
+
+  function getCoords(e) {
     const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    if (e.touches && e.touches[0]) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    }
     return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
     };
   }
 
-  canvas.addEventListener('mousedown', (e) => { isDrawing = true; const p = getPos(e); scratch(p.x, p.y); });
-  canvas.addEventListener('mousemove', (e) => { if (isDrawing) { const p = getPos(e); scratch(p.x, p.y); } });
-  window.addEventListener('mouseup', () => { isDrawing = false; });
+  // Pointer events
+  canvas.addEventListener('mousedown', (e) => {
+    isScratching = true;
+    const { x, y } = getCoords(e);
+    scratch(x, y);
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isScratching) return;
+    const { x, y } = getCoords(e);
+    scratch(x, y);
+  });
+
+  window.addEventListener('mouseup', () => {
+    isScratching = false;
+  });
 
   canvas.addEventListener('touchstart', (e) => {
-    isDrawing = true;
-    const p = getPos(e);
-    scratch(p.x, p.y);
+    isScratching = true;
+    const { x, y } = getCoords(e);
+    scratch(x, y);
   }, { passive: true });
 
   canvas.addEventListener('touchmove', (e) => {
-    if (isDrawing) {
-      const p = getPos(e);
-      scratch(p.x, p.y);
-    }
+    if (!isScratching) return;
+    const { x, y } = getCoords(e);
+    scratch(x, y);
   }, { passive: true });
 
-  window.addEventListener('touchend', () => { isDrawing = false; });
+  canvas.addEventListener('touchend', () => {
+    isScratching = false;
+  });
 
+  const fallbackBtn = document.getElementById('btn-reveal-scratch');
   if (fallbackBtn) {
-    fallbackBtn.addEventListener('click', () => {
-      canvas.style.opacity = '0';
-      canvas.style.pointerEvents = 'none';
-      const currentLang = localStorage.getItem('qawwali_lang') || 'en';
-      const msg = currentLang === 'ur' ? 'دعوتی پیغام کھل گیا!' : 'Surprise message revealed!';
-      showToast(msg);
-    });
+    fallbackBtn.addEventListener('click', revealAll);
   }
+
+  window.addEventListener('resize', resizeCanvas);
+  setTimeout(resizeCanvas, 100);
 }
 
 /* ==========================================================================
-   12. RSVP FORM & WHATSAPP GENERATOR
+   11. RSVP FORM & WHATSAPP RSVP
    ========================================================================== */
 function initRSVPForm(config, langController) {
+  const form = document.getElementById('rsvp-form');
   const btnAttending = document.getElementById('btn-attending');
   const btnDeclined = document.getElementById('btn-declined');
-  const groupGuestCount = document.getElementById('group-guest-count');
-  const form = document.getElementById('rsvp-form');
-  const btnWhatsapp = document.getElementById('btn-submit-whatsapp');
-  const rsvpSuccess = document.getElementById('rsvp-success');
+  const btnSubmitOnline = document.getElementById('btn-submit-online');
+  const btnSubmitWa = document.getElementById('btn-submit-whatsapp');
+  const guestCountGroup = document.getElementById('group-guest-count');
+  const successState = document.getElementById('rsvp-success');
   const btnRsvpAgain = document.getElementById('btn-rsvp-again');
 
-  let rsvpStatus = 'attending';
+  let currentStatus = 'attending';
 
   if (btnAttending && btnDeclined) {
     btnAttending.addEventListener('click', () => {
-      rsvpStatus = 'attending';
+      currentStatus = 'attending';
       btnAttending.classList.add('active');
       btnDeclined.classList.remove('active');
-      if (groupGuestCount) groupGuestCount.style.display = 'block';
+      if (guestCountGroup) guestCountGroup.style.display = 'block';
     });
 
     btnDeclined.addEventListener('click', () => {
-      rsvpStatus = 'declined';
+      currentStatus = 'declined';
       btnDeclined.classList.add('active');
       btnAttending.classList.remove('active');
-      if (groupGuestCount) groupGuestCount.style.display = 'none';
+      if (guestCountGroup) guestCountGroup.style.display = 'none';
     });
   }
 
   function getFormData() {
-    return {
-      name: document.getElementById('guest-name')?.value || '',
-      count: document.getElementById('guest-count')?.value || '1',
-      phone: document.getElementById('guest-phone')?.value || '',
-      notes: document.getElementById('guest-notes')?.value || '',
-      status: rsvpStatus
-    };
+    const name = document.getElementById('guest-name')?.value.trim() || '';
+    const count = document.getElementById('guest-count')?.value || '1';
+    const phone = document.getElementById('guest-phone')?.value.trim() || '';
+    const notes = document.getElementById('guest-notes')?.value.trim() || '';
+    return { name, count, phone, notes, status: currentStatus };
   }
 
-  if (btnWhatsapp) {
-    btnWhatsapp.addEventListener('click', () => {
+  if (btnSubmitWa) {
+    btnSubmitWa.addEventListener('click', () => {
       const data = getFormData();
-      const currentLang = langController.getLang();
-
-      if (!data.name.trim()) {
-        showToast(currentLang === 'ur' ? 'براہ کرم اپنا نام درج کریں' : 'Please enter your full name');
+      if (!data.name) {
+        showToast('Please enter your name ⚠️');
+        document.getElementById('guest-name')?.focus();
         return;
       }
 
-      let msg = '';
-      if (currentLang === 'ur') {
-        const statusText = data.status === 'attending' ? '✅ باخوشی شرکت کروں گا/گی' : '🌹 معذرت، شرکت ممکن نہیں';
-        msg = `السلام علیکم! محفلِ قوالی کے لیے شرکت کی تصدیق:\n\n👤 نام: ${data.name}\n📌 شرکت کی صورتحال: ${statusText}\n👥 مہمانوں کی تعداد: ${data.count}\n📞 رابطہ نمبر: ${data.phone}\n📝 خاص پیغام: ${data.notes || 'کوئی نہیں'}`;
-      } else {
-        const statusText = data.status === 'attending' ? '✅ Attending with joy!' : '🌹 Regretfully unable to attend';
-        msg = `Assalam-o-Alaikum! RSVP for Qawwali Night:\n\n👤 Name: ${data.name}\n📌 RSVP Status: ${statusText}\n👥 Guest Count: ${data.count}\n📞 Contact: ${data.phone}\n📝 Notes: ${data.notes || 'N/A'}`;
-      }
+      const waPhone = config.whatsappNumber || '923001234567';
+      const statusText = data.status === 'attending' ? 'Attending with Joy! ✨' : 'Unable to Attend 🌹';
+      
+      const msg = `🪘 *Dholki Night RSVP | Honoring ${config.brideName || 'Ayesha'}*\n\n` +
+        `👤 *Guest Name:* ${data.name}\n` +
+        `✨ *Status:* ${statusText}\n` +
+        (data.status === 'attending' ? `👥 *Guests:* ${data.count} Person(s)\n` : '') +
+        (data.phone ? `📱 *Phone:* ${data.phone}\n` : '') +
+        (data.notes ? `🎶 *Favorite Song / Wishes:* ${data.notes}\n` : '') +
+        `\nSent via Dholki Night Digital Invitation`;
 
-      const waNumber = config.whatsappNumber || '923001234567';
-      const waUrl = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodeURIComponent(msg)}`;
-      window.open(waUrl, '_blank');
-      showToast(currentLang === 'ur' ? 'واٹس ایپ RSVP کھل رہا ہے...' : 'Opening WhatsApp RSVP...');
+      const waUrl = `https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      showToast('Opening WhatsApp RSVP... 💬');
     });
   }
 
-  if (form) {
-    form.addEventListener('submit', (e) => {
+  if (btnSubmitOnline) {
+    btnSubmitOnline.addEventListener('click', (e) => {
       e.preventDefault();
       const data = getFormData();
-      const currentLang = langController.getLang();
-
-      if (!data.name.trim()) {
-        showToast(currentLang === 'ur' ? 'براہ کرم اپنا نام درج کریں' : 'Please enter your full name');
+      if (!data.name) {
+        showToast('Please enter your name ⚠️');
+        document.getElementById('guest-name')?.focus();
         return;
       }
 
-      form.classList.add('hidden');
-      if (rsvpSuccess) rsvpSuccess.classList.remove('hidden');
+      // Save to localStorage
+      try {
+        const stored = JSON.parse(localStorage.getItem('dholki_rsvps') || '[]');
+        stored.push({ ...data, date: new Date().toISOString() });
+        localStorage.setItem('dholki_rsvps', JSON.stringify(stored));
+      } catch (err) {
+        // graceful ignore
+      }
 
-      const msg = currentLang === 'ur' ? '✨ شرکت کی تصدیق موصول ہو گئی۔ شکریہ! ✨' : '✨ RSVP submitted successfully! Thank you. ✨';
-      showToast(msg);
+      if (form) form.classList.add('hidden');
+      if (successState) successState.classList.remove('hidden');
+      showToast('✨ RSVP recorded successfully! Thank you. ✨');
     });
   }
 
   if (btnRsvpAgain) {
     btnRsvpAgain.addEventListener('click', () => {
-      if (rsvpSuccess) rsvpSuccess.classList.add('hidden');
-      if (form) form.classList.remove('hidden');
+      if (form) {
+        form.reset();
+        form.classList.remove('hidden');
+      }
+      if (successState) successState.classList.add('hidden');
     });
   }
 }
 
 /* ==========================================================================
-   13. SHARE INVITATION & WEB SHARE API
+   12. WHATSAPP SHARING & SOCIAL PREVIEWS
    ========================================================================== */
 function initShareActions(config, langController) {
   const btnWa = document.getElementById('btn-share-whatsapp');
   const btnNative = document.getElementById('btn-share-native');
   const btnCopy = document.getElementById('btn-copy-link');
 
-  function getShareUrl() {
-    return (window.location && window.location.origin && window.location.origin !== 'null')
-      ? `${window.location.origin}${window.location.pathname}`
-      : 'https://qawwali-night.netlify.app/';
-  }
+  const publicUrl = config.siteUrl || window.location.origin;
 
   function getShareMessage() {
     const lang = langController.getLang();
-    const translations = config.translations || {};
-    const dict = translations[lang] || translations.en || {};
-    const liveUrl = getShareUrl();
-    
-    if (dict.whatsappShareTemplate) {
-      return dict.whatsappShareTemplate.replace(/\{\{URL\}\}/g, liveUrl);
-    }
+    const dict = config.translations?.[lang] || config.translations?.en || {};
+    const template = dict.whatsappShareTemplate || config.translations?.en?.whatsappShareTemplate || '';
 
-    if (lang === 'ur') {
-      return `آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے۔ آئیے، روح پرور موسیقی اور خوبصورت روایات سے سجی اس شام کا حصہ بنیے۔ دعوت نامہ دیکھیں: ${liveUrl}`;
-    }
-
-    return `You are invited to our Qawwali Night! Join us for a beautiful evening of soulful music and tradition. View your digital invitation: ${liveUrl}`;
+    return template
+      .replace(/{{BRIDE}}/g, config.brideName || 'Ayesha')
+      .replace(/{{DATE}}/g, config.dateText || 'Friday, Dec 18, 2026')
+      .replace(/{{TIME}}/g, config.timeText || '7:30 PM onwards')
+      .replace(/{{VENUE}}/g, config.venueName || 'The Haveli Courtyard, Lahore')
+      .replace(/{{HOSTS}}/g, config.hostNames || 'The Malik & Khan Family')
+      .replace(/{{URL}}/g, publicUrl);
   }
 
   if (btnWa) {
     btnWa.addEventListener('click', () => {
-      const shareText = getShareMessage();
-      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
-      window.open(url, '_blank');
+      const msg = getShareMessage();
+      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
     });
   }
 
   if (btnNative) {
     btnNative.addEventListener('click', () => {
-      const shareText = getShareMessage();
-      const lang = langController.getLang();
-      const liveUrl = getShareUrl();
-
       if (navigator.share) {
         navigator.share({
-          title: lang === 'ur' ? 'محفلِ قوالی دعوت نامہ' : 'Qawwali Night Digital Invitation',
-          text: lang === 'ur' ? 'آپ کو محفلِ قوالی میں شرکت کی دعوت دی جاتی ہے۔' : 'You are invited to Qawwali Night!',
-          url: liveUrl
-        }).catch(() => {});
+          title: `Dholki Night Invitation | ${config.brideName || 'Ayesha'}`,
+          text: `Join us for a colorful Pakistani Dholki Night celebration!`,
+          url: publicUrl
+        }).catch(() => {
+          // cancelled or unsupported
+        });
       } else {
-        const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
-        window.open(url, '_blank');
+        copyLinkToClipboard();
       }
     });
   }
 
-  if (btnCopy) {
-    btnCopy.addEventListener('click', () => {
-      const liveUrl = getShareUrl();
-      navigator.clipboard.writeText(liveUrl).then(() => {
-        const lang = langController.getLang();
-        const msg = lang === 'ur' ? 'دعوت نامے کا لنک کاپی ہو گیا! 🔗' : 'Invitation link copied to clipboard! 🔗';
-        showToast(msg);
-      }).catch(() => {
-        showToast('Copied link');
-      });
+  function copyLinkToClipboard() {
+    navigator.clipboard.writeText(publicUrl).then(() => {
+      showToast('Invitation link copied to clipboard! 🔗');
+    }).catch(() => {
+      showToast('Invitation Link: ' + publicUrl);
     });
+  }
+
+  if (btnCopy) {
+    btnCopy.addEventListener('click', copyLinkToClipboard);
   }
 }
 
-/* Helper Toast Notification */
+/* ==========================================================================
+   13. TOAST NOTIFICATION UTILITY
+   ========================================================================== */
+let toastTimeout = null;
 function showToast(message) {
   const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toast-message');
+  const msgEl = document.getElementById('toast-message');
+  if (!toast || !msgEl) return;
 
-  if (!toast || !toastMsg) return;
-
-  toastMsg.textContent = message;
+  msgEl.textContent = message;
   toast.classList.remove('hidden');
 
-  setTimeout(() => {
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
     toast.classList.add('hidden');
-  }, 3500);
+  }, 3200);
 }
 
 /* ==========================================================================
-   14. SUPPRESS NETLIFY BADGE & DRAWER WIDGET
+   14. SUPPRESS NETLIFY BADGE & DRAWER WIDGETS
    ========================================================================== */
 function removeNetlifyBadge() {
   const selectors = [
     'iframe[src*="netlify"]',
-    'iframe[title*="Netlify"]',
-    'iframe[id*="netlify"]',
+    'iframe[title*="Netlify" i]',
+    'iframe[id*="netlify" i]',
     'netlify-drawer',
     'netlify-feedback-drawer',
     'div[data-netlify-deploy-id]',
+    '[data-netlify-deploy-id]',
     '.netlify-badge',
+    '#netlify-badge',
     '[class*="netlify-drawer"]',
     '[class*="netlify-feedback"]',
     '[id*="netlify-drawer"]',
-    '[id*="netlify-feedback"]'
+    '[id*="netlify-feedback"]',
+    '[data-netlify-preview]',
+    'a[href*="netlify.com"][class*="badge"]',
+    'a[href*="netlify.app"][class*="badge"]',
+    'div[class*="netlify-badge"]'
   ];
 
   function purge() {
-    selectors.forEach(sel => {
+    selectors.forEach((sel) => {
       try {
         const els = document.querySelectorAll(sel);
-        els.forEach(el => {
+        els.forEach((el) => {
           try {
             el.remove();
           } catch (e) {
-            el.style.display = 'none';
+            el.style.setProperty('display', 'none', 'important');
+            el.style.setProperty('visibility', 'hidden', 'important');
+            el.style.setProperty('opacity', '0', 'important');
+            el.style.setProperty('pointer-events', 'none', 'important');
           }
         });
       } catch (err) {}
@@ -963,22 +1156,27 @@ function removeNetlifyBadge() {
   // Purge immediately
   purge();
 
-  // Observe and purge any asynchronously injected badge/drawer
-  try {
-    const observer = new MutationObserver(() => {
-      purge();
-    });
-
-    const target = document.documentElement || document.body;
-    if (target) {
-      observer.observe(target, {
-        childList: true,
-        subtree: true
+  // Watch for any dynamically injected Netlify elements
+  if (typeof MutationObserver !== 'undefined') {
+    try {
+      const observer = new MutationObserver(() => {
+        purge();
       });
-    }
-  } catch (err) {}
+      const rootTarget = document.documentElement || document.body;
+      if (rootTarget) {
+        observer.observe(rootTarget, {
+          childList: true,
+          subtree: true
+        });
+      }
+    } catch (err) {}
+  }
 
+  // Fallback lifecycle checks
+  window.addEventListener('DOMContentLoaded', purge);
   window.addEventListener('load', purge);
-  setTimeout(purge, 800);
-  setTimeout(purge, 2500);
+  setTimeout(purge, 500);
+  setTimeout(purge, 1500);
+  setTimeout(purge, 3500);
 }
+
